@@ -3,129 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VTC 攤位集印挑戰</title>
+    <title>綠色繽紛嘉年華 - 電子集印</title>
     <style>
-        body { font-family: "Microsoft JhengHei", sans-serif; background: #f4f4f9; margin: 0; padding: 20px; text-align: center; }
-        .container { background: white; border-radius: 20px; padding: 25px; max-width: 350px; margin: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
-        .header-box { background: #0066b3; color: white; padding: 15px; border-radius: 15px; margin-bottom: 20px; }
-        h2 { margin: 0; font-size: 20px; }
+        :root { --primary: #2ecc71; --secondary: #27ae60; --bg: #f0f9f4; }
+        body { font-family: "Microsoft JhengHei", sans-serif; background: var(--bg); margin: 0; padding: 15px; text-align: center; }
+        .container { background: white; border-radius: 25px; padding: 20px; max-width: 400px; margin: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; }
         
-        .stamp-container { display: flex; justify-content: space-between; margin: 30px 0; }
-        .stamp-slot { flex: 1; display: flex; flex-direction: column; align-items: center; }
-        .stamp { width: 75px; height: 75px; border: 2px dashed #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; background: #fff; transition: all 0.4s ease; }
-        .stamp.active { border: 2px solid #e67e22; background: #fff4e6; transform: scale(1.05); }
-        .label { font-size: 12px; color: #666; margin-top: 8px; font-weight: bold; }
+        /* 12格網格 */
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
+        .slot { display: flex; flex-direction: column; align-items: center; }
+        .stamp { width: 65px; height: 65px; border: 2px dashed #ddd; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 28px; background: #fff; transition: 0.3s; }
+        .stamp.active { border: 2px solid var(--primary); background: #e8f8f0; transform: scale(1.05); }
+        .label { font-size: 10px; color: #7f8c8d; margin-top: 5px; white-space: nowrap; }
 
-        .progress-text { font-size: 16px; font-weight: bold; color: #333; margin: 15px 0; }
+        /* 進度條與獎勵 */
+        .reward-info { background: #fff8e1; border: 1px solid #ffe082; padding: 10px; border-radius: 10px; font-size: 13px; margin: 15px 0; color: #795548; }
+        .progress-bar-wrap { background: #eee; height: 12px; border-radius: 6px; overflow: hidden; margin: 10px 0; position: relative; }
+        .bar { background: var(--primary); height: 100%; width: 0%; transition: 0.5s; }
         
-        .btn-redeem { background: #27ae60; color: white; border: none; padding: 15px; border-radius: 10px; font-size: 18px; font-weight: bold; width: 100%; display: none; cursor: pointer; }
-        .redeemed-text { color: #27ae60; font-weight: bold; border: 2px solid #27ae60; padding: 10px; border-radius: 10px; display: none; }
-        
-        .footer-logo { margin-top: 25px; color: #999; font-size: 11px; }
+        .btn { background: var(--secondary); color: white; border: none; padding: 15px; border-radius: 12px; font-size: 18px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; display: none; }
+        .redeemed-note { color: #27ae60; font-weight: bold; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header-box">
-        <h2>🎪 攤位嘉年華</h2>
-        <div style="font-size: 12px;">集齊 3 個印章換領紀念品</div>
+    <div class="header">
+        <h1 style="margin:0; font-size: 22px;">🌿 綠色繽紛嘉年華</h1>
+        <p style="margin:5px 0 0; font-size: 14px;">支持環保 ‧ 收集印章換好禮</p>
     </div>
 
-    <div class="stamp-container">
-        <div class="stamp-slot">
-            <div id="slot-QR1" class="stamp"></div>
-            <div class="label">攤位 1</div>
-        </div>
-        <div class="stamp-slot">
-            <div id="slot-QR2" class="stamp"></div>
-            <div class="label">攤位 2</div>
-        </div>
-        <div class="stamp-slot">
-            <div id="slot-QR3" class="stamp"></div>
-            <div class="label">攤位 3</div>
-        </div>
+    <div class="reward-info">
+        🎁 獎勵：6個(銅獎) | 9個(銀獎) | 12個(金獎)
     </div>
 
-    <p id="statusMsg" class="progress-text">進度: 0 / 3</p>
+    <div class="grid" id="gameGrid"></div>
 
-    <button id="redeemBtn" class="btn-redeem" onclick="doRedeem()">🎁 換領紀念品</button>
-    <div id="doneMsg" class="redeemed-text">✅ 已成功換領獎品</div>
+    <div class="progress-bar-wrap"><div class="bar" id="progressBar"></div></div>
+    <p id="counter">已集齊: 0 / 12</p>
 
-    <div class="footer-logo">VTC CESDO 活動系統</div>
-    <button onclick="resetAll()" style="margin-top:40px; opacity:0.2; background:none; border:none; font-size:10px;">重設</button>
+    <button id="btnRedeem" class="btn" onclick="handleRedeem()">🎁 換領獎品</button>
+    <div id="redeemStatus" class="redeemed-note">✅ 獎品已成功換領</div>
+
+    <p style="font-size: 10px; color: #bdc3c7; margin-top: 20px;">VTC 綠色生活推廣小組</p>
+    <button onclick="localStorage.clear(); location.reload();" style="opacity:0.1; border:none; background:none;">重設</button>
 </div>
 
 <script>
-    // 定義攤位清單 (對應你提供的圖片檔名)
-    const BOOTHS = ['QR1', 'QR2', 'QR3'];
-    
-    // 從手機讀取紀錄
-    let myStamps = JSON.parse(localStorage.getItem('vtc_event_2026')) || [];
-    let hasRedeemed = localStorage.getItem('vtc_redeemed_2026') === 'true';
+    // 12 個環保主題 Icon 及 ID
+    const STALLS = [
+        { id: 'QR1', icon: '♻️', name: '廢物分類' }, { id: 'QR2', icon: '☀️', name: '太陽能' },
+        { id: 'QR3', icon: '🚲', name: '綠色出行' }, { id: 'QR4', icon: '🌲', name: '植樹造林' },
+        { id: 'QR5', icon: '💧', name: '節約用水' }, { id: 'QR6', icon: '🔋', name: '乾電池回收' },
+        { id: 'QR7', icon: '🥦', name: '低碳飲食' }, { id: 'QR8', icon: '💡', name: '節能照明' },
+        { id: 'QR9', icon: '🌊', name: '海洋保護' }, { id: 'QR10', icon: '🐝', name: '生態平衡' },
+        { id: 'QR11', icon: '👕', name: '衣物回收' }, { id: 'QR12', icon: '🌬️', name: '減少碳排' }
+    ];
 
-    function checkURL() {
+    const SECURITY_KEY = "vtcgc260421"; // 安全防弊碼
+    let myStamps = JSON.parse(localStorage.getItem('green_stamps_2026')) || [];
+    let redeemedLevel = parseInt(localStorage.getItem('redeemed_level')) || 0; // 記錄已換領到邊級
+
+    function init() {
         const params = new URLSearchParams(window.location.search);
-        const currentID = params.get('id'); // 獲取網址中的 id 參數
+        const tid = params.get('id');
+        const key = params.get('key');
 
-        if (currentID && BOOTHS.includes(currentID)) {
-            if (!myStamps.includes(currentID) && !hasRedeemed) {
-                myStamps.push(currentID);
-                localStorage.setItem('vtc_event_2026', JSON.stringify(myStamps));
-                alert("恭喜！成功獲得攤位 " + currentID.replace('QR', '') + " 的印章！");
+        if (tid && key === SECURITY_KEY) {
+            if (!myStamps.includes(tid) && myStamps.length < 12) {
+                myStamps.push(tid);
+                localStorage.setItem('green_stamps_2026', JSON.stringify(myStamps));
+                
+                // --- 數據外發後台統計 ---
+                logToBackend(tid); 
+                
+                alert("恭喜！你已完成：" + STALLS.find(s => s.id === tid).name);
             }
-            // 清除網址參數，防止重新整理
             window.history.replaceState({}, '', window.location.pathname);
         }
-        updateDisplay();
+        render();
     }
 
-    function updateDisplay() {
-        // 更新印章顯示
-        BOOTHS.forEach(id => {
-            const slot = document.getElementById('slot-' + id);
-            if (myStamps.includes(id)) {
-                slot.classList.add('active');
-                slot.innerHTML = '🧡'; // 蓋章圖案
-            } else {
-                slot.classList.remove('active');
-                slot.innerHTML = '';
-            }
+    function render() {
+        const grid = document.getElementById('gameGrid');
+        grid.innerHTML = '';
+        STALLS.forEach(s => {
+            const active = myStamps.includes(s.id);
+            grid.innerHTML += `
+                <div class="slot">
+                    <div class="stamp ${active ? 'active' : ''}">${active ? s.icon : ''}</div>
+                    <div class="label">${s.name}</div>
+                </div>
+            `;
         });
 
-        // 更新進度文字
-        document.getElementById('statusMsg').innerText = `進度: ${myStamps.length} / ${BOOTHS.length}`;
+        const count = myStamps.length;
+        document.getElementById('counter').innerText = `已集齊: ${count} / 12`;
+        document.getElementById('progressBar').style.width = (count / 12 * 100) + '%';
 
-        // 顯示換領按鈕
-        if (myStamps.length === BOOTHS.length && !hasRedeemed) {
-            document.getElementById('redeemBtn').style.display = 'block';
-        }
+        // 判斷換領按鈕顯示
+        const btn = document.getElementById('btnRedeem');
+        const status = document.getElementById('redeemStatus');
         
-        // 顯示已換領狀態
-        if (hasRedeemed) {
-            document.getElementById('redeemBtn').style.display = 'none';
-            document.getElementById('doneMsg').style.display = 'block';
+        if ( (count >= 12 && redeemedLevel < 12) || 
+             (count >= 9 && redeemedLevel < 9) || 
+             (count >= 6 && redeemedLevel < 6) ) {
+            btn.style.display = 'block';
+            status.style.display = 'none';
+        } else if (redeemedLevel > 0) {
+            btn.style.display = 'none';
+            status.style.display = 'block';
+            status.innerText = `✅ 已換領第 ${redeemedLevel} 關獎品`;
         }
     }
 
-    function doRedeem() {
-        if (confirm("請交給工作人員確認，點擊後將無法撤銷。確定換領嗎？")) {
-            hasRedeemed = true;
-            localStorage.setItem('vtc_redeemed_2026', 'true');
-            updateDisplay();
+    function handleRedeem() {
+        let currentLevel = 0;
+        if (myStamps.length >= 12) currentLevel = 12;
+        else if (myStamps.length >= 9) currentLevel = 9;
+        else if (myStamps.length >= 6) currentLevel = 6;
+
+        if (confirm(`請出示給工作人員確認換領【${currentLevel}枚印章】獎勵？`)) {
+            redeemedLevel = currentLevel;
+            localStorage.setItem('redeemed_level', redeemedLevel);
+            logToBackend('REDEEM_' + currentLevel); // 統計換領情況
+            render();
         }
     }
 
-    function resetAll() {
-        if (confirm("管理員專用：確定清除所有紀錄？")) {
-            localStorage.clear();
-            location.reload();
-        }
+    // 將數據傳送到後台 (範例：Google Form)
+    function logToBackend(action) {
+        // 你可以申請一個 Google Form 並將網址填喺下面
+        // console.log("傳送數據到後台:", action, "時間:", new Date().toLocaleString());
+        
+        /* fetch('你的GoogleForm提交網址', {
+            method: 'POST',
+            mode: 'no-cors',
+            body: new URLSearchParams({ 'entry.123456': action, 'entry.789012': new Date().getTime() })
+        });
+        */
     }
 
-    // 啟動檢查
-    checkURL();
+    init();
 </script>
-
 </body>
 </html>
