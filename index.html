@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTC 攤位集印挑戰</title>
+    <style>
+        body { font-family: "Microsoft JhengHei", sans-serif; background: #f4f4f9; margin: 0; padding: 20px; text-align: center; }
+        .container { background: white; border-radius: 20px; padding: 25px; max-width: 350px; margin: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        .header-box { background: #0066b3; color: white; padding: 15px; border-radius: 15px; margin-bottom: 20px; }
+        h2 { margin: 0; font-size: 20px; }
+        
+        .stamp-container { display: flex; justify-content: space-between; margin: 30px 0; }
+        .stamp-slot { flex: 1; display: flex; flex-direction: column; align-items: center; }
+        .stamp { width: 75px; height: 75px; border: 2px dashed #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; background: #fff; transition: all 0.4s ease; }
+        .stamp.active { border: 2px solid #e67e22; background: #fff4e6; transform: scale(1.05); }
+        .label { font-size: 12px; color: #666; margin-top: 8px; font-weight: bold; }
+
+        .progress-text { font-size: 16px; font-weight: bold; color: #333; margin: 15px 0; }
+        
+        .btn-redeem { background: #27ae60; color: white; border: none; padding: 15px; border-radius: 10px; font-size: 18px; font-weight: bold; width: 100%; display: none; cursor: pointer; }
+        .redeemed-text { color: #27ae60; font-weight: bold; border: 2px solid #27ae60; padding: 10px; border-radius: 10px; display: none; }
+        
+        .footer-logo { margin-top: 25px; color: #999; font-size: 11px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-box">
+        <h2>🎪 攤位嘉年華</h2>
+        <div style="font-size: 12px;">集齊 3 個印章換領紀念品</div>
+    </div>
+
+    <div class="stamp-container">
+        <div class="stamp-slot">
+            <div id="slot-QR1" class="stamp"></div>
+            <div class="label">攤位 1</div>
+        </div>
+        <div class="stamp-slot">
+            <div id="slot-QR2" class="stamp"></div>
+            <div class="label">攤位 2</div>
+        </div>
+        <div class="stamp-slot">
+            <div id="slot-QR3" class="stamp"></div>
+            <div class="label">攤位 3</div>
+        </div>
+    </div>
+
+    <p id="statusMsg" class="progress-text">進度: 0 / 3</p>
+
+    <button id="redeemBtn" class="btn-redeem" onclick="doRedeem()">🎁 換領紀念品</button>
+    <div id="doneMsg" class="redeemed-text">✅ 已成功換領獎品</div>
+
+    <div class="footer-logo">VTC CESDO 活動系統</div>
+    <button onclick="resetAll()" style="margin-top:40px; opacity:0.2; background:none; border:none; font-size:10px;">重設</button>
+</div>
+
+<script>
+    // 定義攤位清單 (對應你提供的圖片檔名)
+    const BOOTHS = ['QR1', 'QR2', 'QR3'];
+    
+    // 從手機讀取紀錄
+    let myStamps = JSON.parse(localStorage.getItem('vtc_event_2026')) || [];
+    let hasRedeemed = localStorage.getItem('vtc_redeemed_2026') === 'true';
+
+    function checkURL() {
+        const params = new URLSearchParams(window.location.search);
+        const currentID = params.get('id'); // 獲取網址中的 id 參數
+
+        if (currentID && BOOTHS.includes(currentID)) {
+            if (!myStamps.includes(currentID) && !hasRedeemed) {
+                myStamps.push(currentID);
+                localStorage.setItem('vtc_event_2026', JSON.stringify(myStamps));
+                alert("恭喜！成功獲得攤位 " + currentID.replace('QR', '') + " 的印章！");
+            }
+            // 清除網址參數，防止重新整理
+            window.history.replaceState({}, '', window.location.pathname);
+        }
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        // 更新印章顯示
+        BOOTHS.forEach(id => {
+            const slot = document.getElementById('slot-' + id);
+            if (myStamps.includes(id)) {
+                slot.classList.add('active');
+                slot.innerHTML = '🧡'; // 蓋章圖案
+            } else {
+                slot.classList.remove('active');
+                slot.innerHTML = '';
+            }
+        });
+
+        // 更新進度文字
+        document.getElementById('statusMsg').innerText = `進度: ${myStamps.length} / ${BOOTHS.length}`;
+
+        // 顯示換領按鈕
+        if (myStamps.length === BOOTHS.length && !hasRedeemed) {
+            document.getElementById('redeemBtn').style.display = 'block';
+        }
+        
+        // 顯示已換領狀態
+        if (hasRedeemed) {
+            document.getElementById('redeemBtn').style.display = 'none';
+            document.getElementById('doneMsg').style.display = 'block';
+        }
+    }
+
+    function doRedeem() {
+        if (confirm("請交給工作人員確認，點擊後將無法撤銷。確定換領嗎？")) {
+            hasRedeemed = true;
+            localStorage.setItem('vtc_redeemed_2026', 'true');
+            updateDisplay();
+        }
+    }
+
+    function resetAll() {
+        if (confirm("管理員專用：確定清除所有紀錄？")) {
+            localStorage.clear();
+            location.reload();
+        }
+    }
+
+    // 啟動檢查
+    checkURL();
+</script>
+
+</body>
+</html>
