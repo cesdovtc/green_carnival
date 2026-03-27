@@ -145,8 +145,26 @@
     }
 
     function sendStat(action) {
-        // 呢度可以放入你的 Google Apps Script 網址，將數據寫入 Excel
-        console.log("數據統計發送:", action, "時間:", new Date().toISOString());
+        const API_URL = "https://script.google.com/macros/s/AKfycbySGCPsBNDjXo7iH2PCMkOlppRqOVcsrNF-AIyXbatOD2lhfhPMKvuXjUbuQO09ETst/exec"; // 👈 貼喺呢度
+        
+        // 用 LocalStorage 隨機生一個 ID 畀呢個用家，方便統計有幾多個獨立訪客
+        let uid = localStorage.getItem('vtc_uid');
+        if (!uid) {
+            uid = 'User_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('vtc_uid', uid);
+        }
+    
+        fetch(API_URL, {
+            method: 'POST',
+            mode: 'no-cors', // 解決跨域問題
+            cache: 'no-cache',
+            body: JSON.stringify({
+                action: action,
+                userId: uid
+            })
+        }).then(() => {
+            console.log("數據已同步到 Google Sheet");
+        }).catch(err => console.error("傳送失敗:", err));
     }
 
     initApp();
