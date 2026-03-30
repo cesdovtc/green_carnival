@@ -7,53 +7,71 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root { --green: #27ae60; --dark-green: #1b5e20; --gold: #f1c40f; --bg: #f4fbf7; }
-        * { box-sizing: border-box; font-family: "Microsoft JhengHei", sans-serif; }
-        body { background: var(--bg); margin: 0; padding-bottom: 80px; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; }
+        body { background: var(--bg); margin: 0; padding-bottom: 90px; -webkit-tap-highlight-color: transparent; color: #333; }
         
-        /* 鼠標優化 */
-        .stamp-box, .nav-item, .btn-prize.state-ready, .btn-main, .btn-cancel, .map-img { cursor: pointer; }
-        
-        .header { background: linear-gradient(135deg, var(--dark-green), var(--green)); color: white; padding: 25px 15px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .header h2 { margin: 0; font-size: 22px; }
-        #live-clock { font-size: 13px; opacity: 0.8; margin-top: 5px; }
+        /* 標題區域微調 */
+        .header { 
+            background: linear-gradient(135deg, var(--dark-green), var(--green)); 
+            color: white; 
+            padding: 30px 15px; 
+            text-align: center; 
+            border-radius: 0 0 35px 35px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15); 
+        }
+        .header h2 { margin: 0; font-size: 24px; letter-spacing: 1px; }
+        .header .slogan { font-size: 16px; margin: 8px 0; opacity: 0.95; font-weight: 300; }
+        .header #live-clock { font-size: 14px; opacity: 0.9; margin-top: 5px; font-family: inherit; }
         
         .tab-content { display: none; padding: 15px; max-width: 500px; margin: auto; animation: fadeIn 0.4s; }
         .active-tab { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .progress-section { background: white; border-radius: 20px; padding: 18px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .bar-bg { background: #eee; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 10px; }
-        .bar-fill { background: var(--green); height: 100%; width: 0%; transition: 1s; }
+        /* 進度條 */
+        .progress-section { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: center; }
+        .bar-bg { background: #eee; height: 14px; border-radius: 7px; overflow: hidden; margin-top: 10px; border: 1px solid #e0e0e0; }
+        .bar-fill { background: linear-gradient(90deg, #58d68d, var(--green)); height: 100%; width: 0%; transition: 1.2s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
 
+        /* 印花網格 */
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .stamp-box { display: flex; flex-direction: column; align-items: center; }
-        .stamp { width: 80px; height: 80px; border: 2px dashed #ccc; border-radius: 20px; background: white; display: flex; align-items: center; justify-content: center; font-size: 32px; position: relative; transition: 0.3s; }
-        .stamp.active { border: 2px solid var(--gold); background: #fffde7; transform: rotate(2deg); }
-        .stamp.active::after { content: '✓'; position: absolute; bottom: -5px; right: -5px; background: var(--green); color: white; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; display: flex; align-items: center; justify-content: center; border: 2px solid white; }
-        .label { font-size: 12px; margin-top: 6px; font-weight: bold; }
+        .stamp-box { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .stamp { width: 85px; height: 85px; border: 2px dashed #ccc; border-radius: 22px; background: white; display: flex; align-items: center; justify-content: center; font-size: 34px; position: relative; transition: 0.3s; }
+        .stamp.active { border: 2.5px solid var(--gold); background: #fffde7; transform: rotate(3deg); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+        .stamp.active::after { content: '✓'; position: absolute; bottom: -5px; right: -5px; background: var(--green); color: white; border-radius: 50%; width: 24px; height: 24px; font-size: 13px; display: flex; align-items: center; justify-content: center; border: 2px solid white; }
+        .label { font-size: 12px; margin-top: 8px; font-weight: bold; color: #555; }
 
-        .redeem-container { background: white; border-radius: 25px; padding: 20px; margin-top: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
-        .redeem-grid { display: flex; gap: 8px; margin-top: 15px; }
-        .btn-prize { flex: 1; padding: 12px 5px; border-radius: 12px; border: none; font-weight: bold; font-size: 13px; transition: 0.3s; }
-        .state-locked { background: #f5f5f5; color: #bbb; }
-        .state-ready { color: white; animation: pulse 1.5s infinite; background: var(--green); }
-        .state-done { background: #e8f5e9; color: #81c784; border: 1.5px dashed #81c784; }
+        /* 獎勵區優化 */
+        .redeem-container { background: white; border-radius: 25px; padding: 20px; margin-top: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); text-align: center; }
+        .redeem-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+        .btn-prize { 
+            width: 100%; padding: 15px; border-radius: 15px; border: none; font-weight: bold; 
+            display: flex; justify-content: space-between; align-items: center; transition: 0.3s;
+            cursor: pointer;
+        }
+        .state-locked { background: #f8f9fa; color: #aaa; cursor: not-allowed; border: 1px solid #eee; }
+        .state-ready { background: linear-gradient(135deg, #f1c40f, #f39c12); color: white; box-shadow: 0 4px 12px rgba(241,196,15,0.3); animation: pulse 2s infinite; }
+        .state-done { background: #e8f5e9; color: #2ecc71; cursor: default; border: 1.5px dashed #2ecc71; }
+        .btn-prize span.status-tag { font-size: 11px; padding: 4px 8px; border-radius: 8px; background: rgba(0,0,0,0.05); }
+        
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
-
-        .map-img { width: 100%; border-radius: 20px; border: 5px solid white; box-shadow: 0 6px 18px rgba(0,0,0,0.1); margin-top: 15px; }
-
-        /* 彈窗 */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
-        .modal-content { background: white; margin: 25% auto; padding: 30px 20px; border-radius: 25px; width: 85%; max-width: 340px; text-align: center; }
-        .code-input { width: 80%; padding: 12px; font-size: 24px; text-align: center; letter-spacing: 5px; border: 2px solid #eee; border-radius: 10px; margin: 15px 0; outline: none; }
-        .btn-main { background: var(--green); color: white; border: none; padding: 14px; border-radius: 50px; width: 100%; font-weight: bold; margin-top: 10px; }
-        .btn-cancel { background: none; color: #888; border: none; margin-top: 15px; }
-
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; border-top: 1px solid #eee; height: 70px; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #bdc3c7; font-size: 11px; }
+        /* 導航 */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); display: flex; border-top: 1px solid #eee; height: 75px; z-index: 1000; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #bdc3c7; font-size: 12px; cursor: pointer; }
         .nav-item.active { color: var(--green); font-weight: bold; }
-        .nav-item span { font-size: 20px; }
+        .nav-item span { font-size: 24px; margin-bottom: 2px; }
+
+        /* 彈窗 UI */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); }
+        .modal-content { 
+            background: white; margin: 20% auto; padding: 35px 25px; border-radius: 30px; 
+            width: 88%; max-width: 350px; text-align: center; position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4); animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .code-input { width: 100%; padding: 15px; font-size: 32px; text-align: center; letter-spacing: 8px; border: 2px solid #eee; border-radius: 15px; margin: 20px 0; outline: none; background: #fdfdfd; }
+        .btn-main { background: var(--green); color: white; border: none; padding: 16px; border-radius: 50px; font-weight: bold; width: 100%; font-size: 17px; box-shadow: 0 5px 15px rgba(39,174,96,0.3); }
+        .btn-cancel { background: none; color: #999; border: none; margin-top: 20px; font-size: 14px; text-decoration: underline; }
     </style>
 </head>
 <body onclick="unlockAudio()">
@@ -63,60 +81,71 @@
 
     <div class="header">
         <h2>🌿 綠色繽紛嘉年華 2026</h2>
-        <div id="live-clock">載入中...</div>
+        <div class="slogan">集印花 . 換好禮 . 愛地球</div>
+        <div id="live-clock">--:--:--</div>
     </div>
 
     <div id="tab-stamps" class="tab-content active-tab">
         <div class="progress-section">
-            <div id="progText" style="font-weight: bold;">我的成就：0 / 12</div>
+            <div id="progText" style="font-size: 18px; color: var(--dark-green);">我的印花進度：0 / 12</div>
             <div class="bar-bg"><div class="bar-fill" id="pBar"></div></div>
         </div>
+
         <div class="grid" id="mainGrid"></div>
+
         <div class="redeem-container">
-            <div style="font-weight: bold;">🎁 獎勵領取處</div>
+            <div style="font-weight: bold; color: var(--dark-green); margin-bottom: 5px;">🎁 獎勵領取處</div>
             <div class="redeem-grid">
-                <button id="btn-6" class="btn-prize state-locked" onclick="openRedeemModal(6)">細獎</button>
-                <button id="btn-9" class="btn-prize state-locked" onclick="openRedeemModal(9)">中獎</button>
-                <button id="btn-12" class="btn-prize state-locked" onclick="openRedeemModal(12)">大獎</button>
+                <button id="btn-6" class="btn-prize state-locked" onclick="openRedeemModal(6)">
+                    <span>細獎 (6枚)</span><span class="status-tag" id="status-6">鎖定中</span>
+                </button>
+                <button id="btn-9" class="btn-prize state-locked" onclick="openRedeemModal(9)">
+                    <span>中獎 (9枚)</span><span class="status-tag" id="status-9">鎖定中</span>
+                </button>
+                <button id="btn-12" class="btn-prize state-locked" onclick="openRedeemModal(12)">
+                    <span>大獎 (12枚)</span><span class="status-tag" id="status-12">鎖定中</span>
+                </button>
             </div>
         </div>
     </div>
 
     <div id="tab-map" class="tab-content">
-        <div style="background: white; padding: 20px; border-radius: 20px; font-size: 14px;">
-            <p><b>📅 日期：</b>2026年4月21日 (星期二)</p>
-            <p><b>📍 地點：</b>九龍灣 KBC 校舍</p>
-            <p>掃描各攤位 QR Code，完成環保挑戰集齊印花！</p>
+        <div style="background: white; padding: 25px; border-radius: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <h3 style="color: var(--dark-green); margin-top:0;">活動資訊</h3>
+            <p><b>日期：</b>2026年3月30日 (測試期)</p>
+            <p><b>正式：</b>2026年4月21日</p>
+            <p><b>地點：</b>九龍灣 KBC 校舍</p>
+            <img src="KBC_Address.jpg" style="width:100%; border-radius:15px; margin-top:10px;" onclick="window.open(this.src)">
         </div>
-        <img src="KBC_Address.jpg" class="map-img" onclick="window.open(this.src)">
     </div>
 
     <div class="nav-bar">
-        <div id="nav-stamps" class="nav-item active" onclick="switchTab('stamps')"><span>🎫</span>我的印花</div>
-        <div id="nav-map" class="nav-item" onclick="switchTab('map')"><span>🗺️</span>活動地圖</div>
+        <div id="nav-stamps" class="nav-item active" onclick="switchTab('stamps')"><span>🎫</span>集印</div>
+        <div id="nav-map" class="nav-item" onclick="switchTab('map')"><span>🗺️</span>地圖</div>
     </div>
 
     <div id="uiModal" class="modal">
         <div class="modal-content">
-            <div id="modalIcon" style="font-size: 50px;"></div>
-            <h3 id="modalTitle" style="margin: 10px 0;"></h3>
-            <p id="modalDesc" style="font-size: 14px; color: #666;"></p>
+            <div id="modalIcon" style="font-size: 65px;"></div>
+            <h3 id="modalTitle"></h3>
+            <p id="modalDesc"></p>
+            
             <div id="verifyArea" style="display:none;">
-                <input type="number" id="vCodeInput" class="code-input" placeholder="----">
+                <input type="number" id="vCodeInput" class="code-input" placeholder="密碼" inputmode="numeric">
                 <button class="btn-main" id="confirmBtn">確認蓋印</button>
             </div>
+            
             <div id="redeemArea" style="display:none;">
-                <button class="btn-main" id="redeemConfirmBtn">確認已領取獎項</button>
+                <button class="btn-main" id="redeemConfirmBtn">確認已領取獎品</button>
             </div>
+            
             <button class="btn-cancel" onclick="closeModal()">返回</button>
         </div>
     </div>
 
 <script>
-    // --- 基礎配置 ---
-    const API_URL = "https://script.google.com/macros/s/AKfycbxxda1dggo2Pmt4yXRn3c866mUmnVP8bpenDDCi9i_RKhOZRVWlFcu37-ISUNARRmQ8/exec"; // 請更換為你的 URL
-    
-    const EVENT_DATE = "2026-03-20";
+    // --- 後台配置 ---
+    const API_URL = "https://script.google.com/macros/s/AKfycbySGCPsBNDjXo7iH2PCMkOlppRqOVcsrNF-AIyXbatOD2lhfhPMKvuXjUbuQO09ETst/exec"; 
     const SALT = 1111;
     const STALLS = [
         { id: 'QR1', icon: '♻️', name: '分類回收' }, { id: 'QR2', icon: '☀️', name: '再生能源' },
@@ -127,12 +156,9 @@
         { id: 'QR11', icon: '👕', name: '舊衣重用' }, { id: 'QR12', icon: '🌬️', name: '空氣清新' }
     ];
 
-    // --- 用戶 ID 生成與存儲 ---
-    let userId = localStorage.getItem('vtc_user_id');
-    if (!userId) {
-        userId = 'U' + Date.now() + 'R' + Math.floor(Math.random()*1000);
-        localStorage.setItem('vtc_user_id', userId);
-    }
+    // --- 用戶 ID 與 本地存儲 ---
+    let userId = localStorage.getItem('vtc_user_id') || ('U' + Date.now() + 'R' + Math.floor(Math.random()*1000));
+    localStorage.setItem('vtc_user_id', userId);
 
     let myStamps = JSON.parse(localStorage.getItem('vtc_stamps_2026')) || [];
     let redeemedHistory = JSON.parse(localStorage.getItem('vtc_redeemed_history')) || [];
@@ -151,10 +177,10 @@
 
     function init() {
         setInterval(() => {
-            document.getElementById('live-clock').innerText = new Date().toLocaleString();
+            const now = new Date();
+            document.getElementById('live-clock').innerText = now.toLocaleString('zh-HK', { hour12: false });
         }, 1000);
 
-        // 自動檢測 URL 參數 (掃碼後)
         const qid = new URLSearchParams(window.location.search).get('id');
         if (qid && STALLS.some(s => s.id === qid)) {
             if (myStamps.includes(qid)) { showTooltip(qid); } 
@@ -177,27 +203,43 @@
         });
 
         const count = myStamps.length;
-        document.getElementById('progText').innerText = `我的成就：${count} / 12`;
+        document.getElementById('progText').innerText = `我的印花進度：${count} / 12`;
         document.getElementById('pBar').style.width = (count / 12 * 100) + '%';
 
+        // 獎勵按鈕邏輯
         [6, 9, 12].forEach(lv => {
             const btn = document.getElementById(`btn-${lv}`);
-            if (redeemedHistory.includes(lv)) { btn.className = "btn-prize state-done"; btn.innerText = "已領取"; } 
-            else if (count >= lv) { btn.className = "btn-prize state-ready"; btn.innerText = "領取"; }
+            const status = document.getElementById(`status-${lv}`);
+            if (redeemedHistory.includes(lv)) {
+                btn.className = "btn-prize state-done";
+                status.innerText = "已領取獎品";
+            } else if (count >= lv) {
+                btn.className = "btn-prize state-ready";
+                status.innerText = "已解鎖，立即領取";
+            } else {
+                btn.className = "btn-prize state-locked";
+                status.innerText = `還差 ${lv - count} 個`;
+            }
         });
     }
 
-    // 數據發送函數 (Image Beacon 方式最穩定)
     function sendToSheet(action, val) {
-        const url = `${API_URL}?action=${action}&${action==='log'?'id':'lv'}=${val}&uid=${userId}`;
+        // 映射獎項名稱
+        let finalVal = val;
+        if (action === 'redeem') {
+            const map = { 6: 'small gift (6)', 9: 'middle gift (9)', 12: 'large gift (12)' };
+            finalVal = map[val];
+        }
+        const url = `${API_URL}?action=${action}&${action==='log'?'id':'lv'}=${encodeURIComponent(finalVal)}&uid=${userId}`;
         new Image().src = url;
     }
 
+    // --- 彈窗邏輯 ---
     function openVerifyModal(id) {
         const stall = STALLS.find(s => s.id === id);
         document.getElementById('modalIcon').innerText = "🔑";
         document.getElementById('modalTitle').innerText = stall.name;
-        document.getElementById('modalDesc').innerText = "請輸入工作人員提供的 4 位密碼";
+        document.getElementById('modalDesc').innerText = "請輸入工作人員提供的 4 位密碼以完成蓋印。";
         document.getElementById('verifyArea').style.display = 'block';
         document.getElementById('redeemArea').style.display = 'none';
         document.getElementById('uiModal').style.display = 'block';
@@ -209,17 +251,19 @@
                     myStamps.push(id);
                     localStorage.setItem('vtc_stamps_2026', JSON.stringify(myStamps));
                     sendToSheet('log', id);
+                    triggerEffect('stamp'); // 驗證成功才發聲
                 }
-                triggerEffect('stamp'); closeModal(); render();
-            } else { alert("密碼錯誤"); }
+                closeModal(); render();
+            } else { alert("密碼不正確，請重試。"); }
         };
     }
 
     function openRedeemModal(lv) {
         if (myStamps.length < lv || redeemedHistory.includes(lv)) return;
+        const prizes = { 6: '細獎', 9: '中獎', 12: '大獎' };
         document.getElementById('modalIcon').innerText = "🎁";
-        document.getElementById('modalTitle').innerText = "領取獎勵";
-        document.getElementById('modalDesc').innerText = "請向工作人員確認領取";
+        document.getElementById('modalTitle').innerText = "領取 " + prizes[lv];
+        document.getElementById('modalDesc').innerText = "請向禮品換領處工作人員出示此畫面。";
         document.getElementById('verifyArea').style.display = 'none';
         document.getElementById('redeemArea').style.display = 'block';
         document.getElementById('uiModal').style.display = 'block';
@@ -228,7 +272,8 @@
             redeemedHistory.push(lv);
             localStorage.setItem('vtc_redeemed_history', JSON.stringify(redeemedHistory));
             sendToSheet('redeem', lv);
-            triggerEffect('gift'); closeModal(); render();
+            triggerEffect('gift'); // 領取成功才發聲
+            closeModal(); render();
         };
     }
 
@@ -241,15 +286,16 @@
 
     function triggerEffect(type) {
         const sound = document.getElementById(type === 'stamp' ? 'stampAudio' : 'giftAudio');
-        sound.currentTime = 0; sound.play().catch(()=>{});
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        sound.currentTime = 0;
+        sound.play().catch(()=>{});
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
     }
 
     function showTooltip(id) {
         const s = STALLS.find(x => x.id === id);
         document.getElementById('modalIcon').innerText = s.icon;
         document.getElementById('modalTitle').innerText = s.name;
-        document.getElementById('modalDesc').innerText = myStamps.includes(id) ? "✅ 已完成挑戰" : "📍 尚未完成";
+        document.getElementById('modalDesc').innerText = myStamps.includes(id) ? "✅ 恭喜！您已完成此攤位挑戰。" : "📍 掃描 QR Code 並輸入密碼即可蓋印。";
         document.getElementById('verifyArea').style.display = 'none';
         document.getElementById('redeemArea').style.display = 'none';
         document.getElementById('uiModal').style.display = 'block';
