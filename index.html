@@ -3,64 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>綠色繽紛嘉年華 測試版</title>
+    <title>綠色繽紛嘉年華 2026</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root { --green: #27ae60; --dark-green: #1b5e20; --gold: #f1c40f; --bg: #f4fbf7; }
         body { font-family: "Microsoft JhengHei", sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; -webkit-tap-highlight-color: transparent; }
-        .header { background: linear-gradient(135deg, var(--dark-green), var(--green)); color: white; padding: 25px 15px; text-align: center; border-radius: 0 0 25px 25px; }
+        
+        /* Header */
+        .header { background: linear-gradient(135deg, var(--dark-green), var(--green)); color: white; padding: 25px 15px; text-align: center; border-radius: 0 0 25px 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        
+        /* Tab Control */
         .tab-content { display: none; padding: 15px; max-width: 500px; margin: auto; animation: fadeIn 0.4s; }
         .active-tab { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Progress Bar */
         .progress-section { background: white; border-radius: 15px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .bar-bg { background: #eee; height: 10px; border-radius: 5px; overflow: hidden; margin-top: 8px; }
         .bar-fill { background: var(--green); height: 100%; width: 0%; transition: 0.8s ease; }
+
+        /* Stamp Grid */
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         .stamp-box { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
         .stamp { width: 75px; height: 75px; border: 2px dashed #ccc; border-radius: 18px; background: white; display: flex; align-items: center; justify-content: center; font-size: 30px; transition: 0.3s; position: relative; }
-        .stamp.active { border: 2px solid var(--gold); background: #fffde7; transform: rotate(3deg); }
+        .stamp.active { border: 2px solid var(--gold); background: #fffde7; transform: rotate(3deg); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .stamp.active::after { content: '✓'; position: absolute; bottom: -5px; right: -5px; background: var(--green); color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center; border: 2px solid white; }
-        .label { font-size: 11px; margin-top: 5px; color: #444; font-weight: bold; }
+        .label { font-size: 11px; margin-top: 5px; color: #444; font-weight: bold; text-align: center; line-height: 1.2; }
+
+        /* Redeem Section */
         .redeem-container { background: white; border-radius: 20px; padding: 15px; margin-top: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; }
         .redeem-grid { display: flex; gap: 8px; margin-top: 12px; }
-        .btn-prize { flex: 1; padding: 12px 5px; border-radius: 12px; border: none; font-weight: bold; font-size: 12px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; }
-        .state-locked { background: #f0f0f0; color: #aaa; }
-        .state-ready { color: white; animation: pulse 1.5s infinite; cursor: pointer; }
-        #btn-6.state-ready { background: #66bb6a; } #btn-9.state-ready { background: #42a5f5; } #btn-12.state-ready { background: #ffa726; }
-        .state-done { background: #e8f5e9; color: #81c784; border: 1px dashed #81c784; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; border-top: 1px solid #eee; height: 60px; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #95a5a6; font-size: 11px; }
+        .btn-prize { flex: 1; padding: 12px 5px; border-radius: 12px; border: none; font-weight: bold; font-size: 12px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
+        .state-locked { background: #f0f0f0; color: #aaa; cursor: not-allowed; }
+        .state-ready { color: white; cursor: pointer; animation: pulse 1.5s infinite; }
+        #btn-6.state-ready { background: #66bb6a; }
+        #btn-9.state-ready { background: #42a5f5; }
+        #btn-12.state-ready { background: #ffa726; }
+        .state-done { background: #e8f5e9; color: #81c784; border: 1px dashed #81c784; cursor: not-allowed; }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        /* Map Image Styles */
+        .map-img { width: 100%; border-radius: 15px; border: 4px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: zoom-in; }
+
+        /* Bottom Nav */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; border-top: 1px solid #eee; height: 65px; z-index: 1000; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #95a5a6; font-size: 12px; }
         .nav-item.active { color: var(--green); font-weight: bold; }
+
+        /* Modal */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
-        .modal-content { background: white; margin: 25% auto; padding: 25px; border-radius: 20px; width: 75%; max-width: 300px; text-align: center; }
-        .btn-verify { background: var(--green); color: white; border: none; padding: 12px; border-radius: 25px; width: 100%; font-weight: bold; margin-top: 15px; cursor: pointer; }
+        .modal-content { background: white; margin: 25% auto; padding: 25px; border-radius: 20px; width: 75%; max-width: 300px; text-align: center; position: relative; }
+        .btn-verify { background: var(--green); color: white; border: none; padding: 15px; border-radius: 50px; width: 100%; font-weight: bold; margin-top: 15px; cursor: pointer; }
     </style>
 </head>
 <body>
+
     <audio id="stampSound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-reward-952.mp3"></audio>
-    <div id="app-container">
-        <div class="header"><h2>🌿 綠色繽紛嘉年華 (測試)</h2><div style="font-size: 12px; opacity: 0.8;">今日測試日期：2026-03-30</div></div>
-        <div id="tab-stamps" class="tab-content active-tab">
-            <div class="progress-section"><div id="progText" style="font-weight: bold;">已收集：0 / 12</div><div class="bar-bg"><div class="bar-fill" id="pBar"></div></div></div>
-            <div class="grid" id="mainGrid"></div>
-            <div class="redeem-container"><div style="font-weight: bold; color: var(--dark-green); font-size: 14px;">🎁 獎勵領取 (累計制)</div>
-                <div class="redeem-grid">
-                    <button id="btn-6" class="btn-prize state-locked" onclick="doRedeem(6)"><span>細獎</span><small id="text-6">6枚解鎖</small></button>
-                    <button id="btn-9" class="btn-prize state-locked" onclick="doRedeem(9)"><span>中獎</span><small id="text-9">9枚解鎖</small></button>
-                    <button id="btn-12" class="btn-prize state-locked" onclick="doRedeem(12)"><span>大獎</span><small id="text-12">12枚解鎖</small></button>
-                </div>
+
+    <div class="header">
+        <h2 style="margin:0;">🌿 綠色繽紛嘉年華</h2>
+        <div id="dateHeader" style="font-size: 12px; opacity: 0.8; margin-top: 5px;">4月21日 活動限定</div>
+    </div>
+
+    <div id="tab-stamps" class="tab-content active-tab">
+        <div class="progress-section">
+            <div id="progText" style="font-weight: bold;">已收集：0 / 12</div>
+            <div class="bar-bg"><div class="bar-fill" id="pBar"></div></div>
+        </div>
+
+        <div class="grid" id="mainGrid"></div>
+
+        <div class="redeem-container">
+            <div style="font-weight: bold; color: var(--dark-green); font-size: 14px;">🎁 獎勵領取 (累計制)</div>
+            <div class="redeem-grid">
+                <button id="btn-6" class="btn-prize state-locked" onclick="doRedeem(6)"><span>細獎</span><small id="text-6">6枚解鎖</small></button>
+                <button id="btn-9" class="btn-prize state-locked" onclick="doRedeem(9)"><span>中獎</span><small id="text-9">9枚解鎖</small></button>
+                <button id="btn-12" class="btn-prize state-locked" onclick="doRedeem(12)"><span>大獎</span><small id="text-12">12枚解鎖</small></button>
             </div>
         </div>
-        <div id="tab-map" class="tab-content"><h3>📍 會場地圖</h3><div style="background:#ddd; height:300px; border-radius:15px; display:flex; align-items:center; justify-content:center; color:#666;">[請在此更換地圖圖片]</div></div>
-        <div class="nav-bar"><div class="nav-item active" onclick="switchTab('stamps')"><span>🎫</span>我的印花</div><div class="nav-item" onclick="switchTab('map')"><span>🗺️</span>活動地圖</div></div>
     </div>
-    <div id="detailModal" class="modal"><div class="modal-content"><div id="modalIcon" style="font-size: 40px;"></div><h3 id="modalTitle"></h3><p id="modalDesc" style="font-size: 12px; color: #777;"></p><button class="btn-verify" id="actionBtn">輸入驗證碼</button><p style="font-size: 11px; color: #aaa; margin-top: 10px;" onclick="closeModal()">返回</p></div></div>
+
+    <div id="tab-map" class="tab-content">
+        <h3 style="text-align: center; color: var(--dark-green);">📍 九龍灣 KBC 會場地圖</h3>
+        <p style="text-align: center; font-size: 12px; color: #666;">點擊圖片可放大查看</p>
+        <img src="KBC_Address.jpg" class="map-img" alt="會場地圖" onclick="window.open(this.src)">
+        <div style="margin-top: 20px; font-size: 13px; color: #444; line-height: 1.6; background: white; padding: 15px; border-radius: 15px;">
+            <b>💡 找攤位小貼士：</b><br>
+            1. 根據地圖編號尋找對應 QR Code<br>
+            2. 完成挑戰後請工作人員蓋印<br>
+            3. 集齊印章後前往「獎品換領處」
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <div id="nav-stamps" class="nav-item active" onclick="switchTab('stamps')"><span>🎫</span>我的印花</div>
+        <div id="nav-map" class="nav-item" onclick="switchTab('map')"><span>🗺️</span>活動地圖</div>
+    </div>
+
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div id="modalIcon" style="font-size: 40px;"></div>
+            <h3 id="modalTitle" style="margin: 10px 0;"></h3>
+            <p id="modalDesc" style="font-size: 12px; color: #777;"></p>
+            <button class="btn-verify" id="actionBtn">輸入驗證碼</button>
+            <p style="font-size: 11px; color: #aaa; margin-top: 15px;" onclick="closeModal()">返回集印卡</p>
+        </div>
+    </div>
 
 <script>
-    // === 測試日期設為今天 ===
-    const EVENT_DATE = "2026-03-30"; 
-    const SALT = 1111;
+    // === 系統設定 ===
+    const EVENT_DATE = "2026-04-21"; // 活動當天日期
+    const SALT = 1111; // 驗證碼基數
     const STALLS = [
         { id: 'QR1', icon: '♻️', name: '分類回收' }, { id: 'QR2', icon: '☀️', name: '再生能源' },
         { id: 'QR3', icon: '🚲', name: '低碳交通' }, { id: 'QR4', icon: '🌲', name: '森林保護' },
@@ -75,12 +130,22 @@
 
     function init() {
         const today = new Date().toISOString().split('T')[0];
+        
+        // 日期總掣檢測
         if (today !== EVENT_DATE) {
-            document.body.innerHTML = `<div style="text-align:center; padding:50px; font-family:sans-serif;"><h2>🌿 綠色繽紛嘉年華 測試版</h2><p>系統目前日期為 ${today}，測試設定日期為 ${EVENT_DATE}。</p><p>請確保兩者一致方可進入測試。</p></div>`;
+            document.body.innerHTML = `
+                <div style="text-align:center; padding:100px 20px; font-family:sans-serif; background:#f4fbf7; height:100vh;">
+                    <h2 style="color:#27ae60;">🌿 綠色繽紛嘉年華 2026</h2>
+                    <p style="color:#666;">本系統僅於活動當天 <b>${EVENT_DATE}</b> 開放。</p>
+                    <p style="font-size:14px; color:#999; margin-top:20px;">期待在活動現場見到你！</p>
+                </div>`;
             return;
         }
+
         const urlParams = new URLSearchParams(window.location.search);
         const qid = urlParams.get('id');
+
+        // 防止多視窗：掃碼後立即洗走網址參數
         if (qid && STALLS.some(s => s.id === qid)) {
             showDetail(qid);
             window.history.replaceState({}, '', window.location.pathname);
@@ -93,17 +158,35 @@
         grid.innerHTML = '';
         STALLS.forEach(s => {
             const isDone = myStamps.includes(s.id);
-            grid.innerHTML += `<div class="stamp-box" onclick="showDetail('${s.id}')"><div class="stamp ${isDone ? 'active' : ''}">${isDone ? s.icon : ''}</div><div class="label">${s.name}</div></div>`;
+            grid.innerHTML += `
+                <div class="stamp-box" onclick="showDetail('${s.id}')">
+                    <div class="stamp ${isDone ? 'active' : ''}">${isDone ? s.icon : ''}</div>
+                    <div class="label">${s.name}</div>
+                </div>
+            `;
         });
+
         const count = myStamps.length;
         document.getElementById('progText').innerText = `已收集：${count} / 12`;
         document.getElementById('pBar').style.width = (count / 12 * 100) + '%';
+
+        // 累計制按鈕更新
         [6, 9, 12].forEach(lv => {
             const btn = document.getElementById(`btn-${lv}`);
             const txt = document.getElementById(`text-${lv}`);
-            if (redeemedHistory.includes(lv)) { btn.className = "btn-prize state-done"; btn.disabled = true; txt.innerText = "已領取"; }
-            else if (count >= lv) { btn.className = "btn-prize state-ready"; btn.disabled = false; txt.innerText = "立即領取"; }
-            else { btn.className = "btn-prize state-locked"; btn.disabled = true; txt.innerText = `${lv}枚解鎖`; }
+            if (redeemedHistory.includes(lv)) {
+                btn.className = "btn-prize state-done";
+                btn.disabled = true;
+                txt.innerText = "已領取 ✓";
+            } else if (count >= lv) {
+                btn.className = "btn-prize state-ready";
+                btn.disabled = false;
+                txt.innerText = "立即領取";
+            } else {
+                btn.className = "btn-prize state-locked";
+                btn.disabled = true;
+                txt.innerText = `${lv}枚解鎖`;
+            }
         });
     }
 
@@ -111,37 +194,56 @@
         const stall = STALLS.find(s => s.id === id);
         document.getElementById('modalIcon').innerText = stall.icon;
         document.getElementById('modalTitle').innerText = stall.name;
-        document.getElementById('modalDesc').innerText = "請輸入工作人員驗證碼以獲取印章。";
+        document.getElementById('modalDesc').innerText = "完成攤位挑戰後，請工作人員輸入驗證碼蓋印。";
+        
         const btn = document.getElementById('actionBtn');
-        if (myStamps.includes(id)) { btn.innerText = "已完成"; btn.disabled = true; btn.style.background = "#ccc"; }
-        else { btn.innerText = "輸入驗證碼"; btn.disabled = false; btn.style.background = "var(--green)"; btn.onclick = () => verifyCode(id); }
+        if (myStamps.includes(id)) {
+            btn.innerText = "此攤位已完成";
+            btn.disabled = true;
+            btn.style.background = "#ccc";
+        } else {
+            btn.innerText = "輸入工作人員驗證碼";
+            btn.disabled = false;
+            btn.style.background = "var(--green)";
+            btn.onclick = () => verifyCode(id);
+        }
         document.getElementById('detailModal').style.display = 'block';
     }
 
     function verifyCode(id) {
-        const input = prompt("驗證碼計算方式：目前時間 HHMM + 1111\n例如現在 14:07，請輸入 2518：");
+        const input = prompt("請輸入 4 位驗證碼：\n(提示：HHMM + 1111)");
         if (!input) return;
+
         const now = new Date();
         const times = [new Date(now.getTime() - 60000), now, new Date(now.getTime() + 60000)];
         let success = false;
+
         times.forEach(t => {
             let timeVal = parseInt(t.getHours().toString().padStart(2, '0') + t.getMinutes().toString().padStart(2, '0'));
             if (input === (timeVal + SALT).toString()) success = true;
         });
+
         if (success) {
             myStamps.push(id);
             localStorage.setItem('vtc_stamps_2026', JSON.stringify(myStamps));
             triggerConfetti();
             document.getElementById('stampSound').play();
-            closeModal(); render();
-        } else { alert("驗證碼錯誤。"); }
+            alert("✅ 蓋印成功！");
+            closeModal();
+            render();
+            // 此處可 fetch 你的 GAS URL 發送統計數據
+        } else {
+            alert("❌ 驗證碼不正確，請再試一次。");
+        }
     }
 
     function doRedeem(lv) {
-        if (confirm(`確定領取獎勵？`)) {
+        if (confirm(`【工作人員核實】\n確認領取 ${lv} 枚獎項？\n(印章將保留，可繼續累積挑戰大獎！)`)) {
             redeemedHistory.push(lv);
             localStorage.setItem('vtc_redeemed_history', JSON.stringify(redeemedHistory));
-            triggerConfetti(); render();
+            triggerConfetti();
+            render();
+            alert("🎉 獎勵兌換成功！");
         }
     }
 
@@ -149,10 +251,12 @@
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab'));
         document.getElementById('tab-' + t).classList.add('active-tab');
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        event.currentTarget.classList.add('active');
+        document.getElementById('nav-' + t).classList.add('active');
     }
-    function triggerConfetti() { confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } }); }
+
+    function triggerConfetti() { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); }
     function closeModal() { document.getElementById('detailModal').style.display = 'none'; }
+
     init();
 </script>
 </body>
