@@ -7,16 +7,15 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root { --green: #27ae60; --dark-green: #1b5e20; --gold: #f1c40f; --bg: #f4fbf7; }
-        * { box-sizing: border-box; font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; }
-        body { background: var(--bg); margin: 0; padding-bottom: 80px; -webkit-tap-highlight-color: transparent; color: #333; }
+        * { box-sizing: border-box; font-family: "Microsoft JhengHei", sans-serif; }
+        body { background: var(--bg); margin: 0; padding-bottom: 80px; -webkit-tap-highlight-color: transparent; }
         
-        /* 手指滑鼠游標 */
+        /* 鼠標優化 */
         .stamp-box, .nav-item, .btn-prize.state-ready, .btn-main, .btn-cancel, .map-img { cursor: pointer; }
         
         .header { background: linear-gradient(135deg, var(--dark-green), var(--green)); color: white; padding: 25px 15px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .header h2 { margin: 0; font-size: 22px; font-weight: bold; }
-        .slogan { font-size: 16px; margin: 8px 0; opacity: 0.9; letter-spacing: 1px; }
-        #live-clock { font-size: 13px; opacity: 0.8; font-family: monospace; }
+        .header h2 { margin: 0; font-size: 22px; }
+        #live-clock { font-size: 13px; opacity: 0.8; margin-top: 5px; }
         
         .tab-content { display: none; padding: 15px; max-width: 500px; margin: auto; animation: fadeIn 0.4s; }
         .active-tab { display: block; }
@@ -24,42 +23,37 @@
 
         .progress-section { background: white; border-radius: 20px; padding: 18px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .bar-bg { background: #eee; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 10px; }
-        .bar-fill { background: var(--green); height: 100%; width: 0%; transition: 1s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
+        .bar-fill { background: var(--green); height: 100%; width: 0%; transition: 1s; }
 
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .stamp-box { display: flex; flex-direction: column; align-items: center; transition: 0.2s; }
-        .stamp-box:active { transform: scale(0.95); }
-        .stamp { width: 80px; height: 80px; border: 2px dashed #ccc; border-radius: 20px; background: white; display: flex; align-items: center; justify-content: center; font-size: 32px; transition: 0.3s; position: relative; }
-        .stamp.active { border: 2px solid var(--gold); background: #fffde7; transform: rotate(2deg); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .stamp.active::after { content: '✓'; position: absolute; bottom: -5px; right: -5px; background: var(--green); color: white; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .label { font-size: 12px; margin-top: 6px; color: #444; font-weight: bold; text-align: center; }
+        .stamp-box { display: flex; flex-direction: column; align-items: center; }
+        .stamp { width: 80px; height: 80px; border: 2px dashed #ccc; border-radius: 20px; background: white; display: flex; align-items: center; justify-content: center; font-size: 32px; position: relative; transition: 0.3s; }
+        .stamp.active { border: 2px solid var(--gold); background: #fffde7; transform: rotate(2deg); }
+        .stamp.active::after { content: '✓'; position: absolute; bottom: -5px; right: -5px; background: var(--green); color: white; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; display: flex; align-items: center; justify-content: center; border: 2px solid white; }
+        .label { font-size: 12px; margin-top: 6px; font-weight: bold; }
 
-        .redeem-container { background: white; border-radius: 25px; padding: 20px; margin-top: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); text-align: center; }
-        .redeem-grid { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-prize { flex: 1; padding: 15px 5px; border-radius: 15px; border: none; font-weight: bold; font-size: 13px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        
-        .state-locked { background: #f5f5f5; color: #bbb; cursor: not-allowed; }
-        .state-ready { color: white; animation: pulse 1.5s infinite; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        #btn-6.state-ready { background: #66bb6a; }
-        #btn-9.state-ready { background: #42a5f5; }
-        #btn-12.state-ready { background: #ffa726; }
-        .state-done { background: #e8f5e9; color: #81c784; border: 1.5px dashed #81c784; cursor: default; }
+        .redeem-container { background: white; border-radius: 25px; padding: 20px; margin-top: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
+        .redeem-grid { display: flex; gap: 8px; margin-top: 15px; }
+        .btn-prize { flex: 1; padding: 12px 5px; border-radius: 12px; border: none; font-weight: bold; font-size: 13px; transition: 0.3s; }
+        .state-locked { background: #f5f5f5; color: #bbb; }
+        .state-ready { color: white; animation: pulse 1.5s infinite; background: var(--green); }
+        .state-done { background: #e8f5e9; color: #81c784; border: 1.5px dashed #81c784; }
 
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
 
-        .intro-box { background: white; padding: 22px; border-radius: 25px; line-height: 1.7; font-size: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
-        .map-img { width: 100%; border-radius: 20px; border: 5px solid white; box-shadow: 0 6px 18px rgba(0,0,0,0.12); margin: 20px 0; }
+        .map-img { width: 100%; border-radius: 20px; border: 5px solid white; box-shadow: 0 6px 18px rgba(0,0,0,0.1); margin-top: 15px; }
 
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
-        .modal-content { background: white; margin: 20% auto; padding: 30px 25px; border-radius: 30px; width: 85%; max-width: 340px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .code-input { width: 90%; padding: 15px; font-size: 28px; text-align: center; letter-spacing: 6px; border: 2.5px solid #eee; border-radius: 15px; margin: 20px 0; outline: none; }
-        .btn-main { background: var(--green); color: white; border: none; padding: 16px; border-radius: 50px; font-weight: bold; width: 100%; font-size: 16px; box-shadow: 0 4px 12px rgba(39,174,96,0.3); }
-        .btn-cancel { background: #f5f5f5; color: #888; border: none; padding: 12px; border-radius: 50px; width: 100%; margin-top: 15px; font-weight: bold; }
+        /* 彈窗 */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
+        .modal-content { background: white; margin: 25% auto; padding: 30px 20px; border-radius: 25px; width: 85%; max-width: 340px; text-align: center; }
+        .code-input { width: 80%; padding: 12px; font-size: 24px; text-align: center; letter-spacing: 5px; border: 2px solid #eee; border-radius: 10px; margin: 15px 0; outline: none; }
+        .btn-main { background: var(--green); color: white; border: none; padding: 14px; border-radius: 50px; width: 100%; font-weight: bold; margin-top: 10px; }
+        .btn-cancel { background: none; color: #888; border: none; margin-top: 15px; }
 
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); display: flex; border-top: 1px solid #eee; height: 75px; z-index: 1000; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #bdc3c7; font-size: 12px; transition: 0.3s; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; border-top: 1px solid #eee; height: 70px; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #bdc3c7; font-size: 11px; }
         .nav-item.active { color: var(--green); font-weight: bold; }
-        .nav-item span { font-size: 24px; margin-bottom: 2px; }
+        .nav-item span { font-size: 20px; }
     </style>
 </head>
 <body onclick="unlockAudio()">
@@ -69,36 +63,32 @@
 
     <div class="header">
         <h2>🌿 綠色繽紛嘉年華 2026</h2>
-        <div class="slogan">集印花. 換好禮. 愛地球</div>
-        <div id="live-clock">載入時間中...</div>
+        <div id="live-clock">載入中...</div>
     </div>
 
     <div id="tab-stamps" class="tab-content active-tab">
         <div class="progress-section">
-            <div id="progText" style="font-weight: bold; color: var(--dark-green); font-size: 16px;">我的成就：0 / 12</div>
+            <div id="progText" style="font-weight: bold;">我的成就：0 / 12</div>
             <div class="bar-bg"><div class="bar-fill" id="pBar"></div></div>
         </div>
         <div class="grid" id="mainGrid"></div>
         <div class="redeem-container">
-            <div style="font-weight: bold; color: var(--dark-green); font-size: 16px;">🎁 獎勵領取處</div>
+            <div style="font-weight: bold;">🎁 獎勵領取處</div>
             <div class="redeem-grid">
-                <button id="btn-6" class="btn-prize state-locked" onclick="openRedeemModal(6)"><span>細獎</span><small id="text-6">6枚解鎖</small></button>
-                <button id="btn-9" class="btn-prize state-locked" onclick="openRedeemModal(9)"><span>中獎</span><small id="text-9">9枚解鎖</small></button>
-                <button id="btn-12" class="btn-prize state-locked" onclick="openRedeemModal(12)"><span>大獎</span><small id="text-12">12枚解鎖</small></button>
+                <button id="btn-6" class="btn-prize state-locked" onclick="openRedeemModal(6)">細獎</button>
+                <button id="btn-9" class="btn-prize state-locked" onclick="openRedeemModal(9)">中獎</button>
+                <button id="btn-12" class="btn-prize state-locked" onclick="openRedeemModal(12)">大獎</button>
             </div>
         </div>
     </div>
 
     <div id="tab-map" class="tab-content">
-        <div class="intro-box">
-            <h3 style="margin-top:0; color: var(--dark-green); border-bottom: 2px solid var(--bg); padding-bottom: 10px;">嘉年華簡介</h3>
-            <p><b>📅 日期：</b>2026年3月30日 (星期一)<br>
-               <b>⏰ 時間：</b>10:00 AM - 4:30 PM<br>
-               <b>📍 地點：</b>九龍灣 KBC 校舍</p>
-            <p>歡迎參與綠色繽紛嘉年華！讓我們共同營造更潔淨的校園環境，推動可持續未來！♻️🌍✨</p>
+        <div style="background: white; padding: 20px; border-radius: 20px; font-size: 14px;">
+            <p><b>📅 日期：</b>2026年4月21日 (星期二)</p>
+            <p><b>📍 地點：</b>九龍灣 KBC 校舍</p>
+            <p>掃描各攤位 QR Code，完成環保挑戰集齊印花！</p>
         </div>
-        <img src="KBC_Address.jpg" class="map-img" alt="會場地圖" onclick="window.open(this.src)">
-        <div style="text-align:center; font-size: 24px; letter-spacing: 8px; opacity: 0.7;">🌱 🔋 🎋 🌳 🐾 🌻</div>
+        <img src="KBC_Address.jpg" class="map-img" onclick="window.open(this.src)">
     </div>
 
     <div class="nav-bar">
@@ -108,45 +98,45 @@
 
     <div id="uiModal" class="modal">
         <div class="modal-content">
-            <div id="modalIcon" style="font-size: 60px; margin-bottom:15px;"></div>
-            <h3 id="modalTitle" style="margin: 0; color: var(--dark-green); font-size: 20px;"></h3>
-            <p id="modalDesc" style="font-size: 15px; color: #666; line-height:1.5; margin: 15px 0;"></p>
+            <div id="modalIcon" style="font-size: 50px;"></div>
+            <h3 id="modalTitle" style="margin: 10px 0;"></h3>
+            <p id="modalDesc" style="font-size: 14px; color: #666;"></p>
             <div id="verifyArea" style="display:none;">
-                <input type="number" id="vCodeInput" class="code-input" placeholder="----" inputmode="numeric">
+                <input type="number" id="vCodeInput" class="code-input" placeholder="----">
                 <button class="btn-main" id="confirmBtn">確認蓋印</button>
             </div>
             <div id="redeemArea" style="display:none;">
-                <p style="color: var(--green); font-weight: bold;">請向工作人員出示此畫面兌換</p>
-                <button class="btn-main" id="redeemConfirmBtn">確認已領取</button>
+                <button class="btn-main" id="redeemConfirmBtn">確認已領取獎項</button>
             </div>
             <button class="btn-cancel" onclick="closeModal()">返回</button>
         </div>
     </div>
 
 <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbySGCPsBNDjXo7iH2PCMkOlppRqOVcsrNF-AIyXbatOD2lhfhPMKvuXjUbuQO09ETst/exec";
-    const EVENT_DATE = "2026-03-30"; 
+    // --- 基礎配置 ---
+    const API_URL = "https://script.google.com/macros/s/AKfycbzV0X-io-neaRgabzCXCFlryRPwEUjoZShhvPfpi_Fv0npI807m2VcyLZyqNNEE5j1f/exec"; // 請更換為你的 URL
+    const EVENT_DATE = "2026-03-20";
     const SALT = 1111;
     const STALLS = [
-        { id: 'QR1', icon: '♻️', name: '分類回收', info: '正確分類塑膠、紙類及金屬。' },
-        { id: 'QR2', icon: '☀️', name: '再生能源', info: '探索太陽能清潔電力。' },
-        { id: 'QR3', icon: '🚲', name: '低碳交通', info: '推廣單車與步行減碳。' },
-        { id: 'QR4', icon: '🌲', name: '森林保護', info: '了解樹木吸收二氧化碳的作用。' },
-        { id: 'QR5', icon: '💧', name: '節約水種', info: '日常節水的小竅門。' },
-        { id: 'QR6', icon: '🔋', name: '電池回收', info: '廢舊電池必須專門回收。' },
-        { id: 'QR7', icon: '🥦', name: '低碳飲食', info: '多吃蔬果，愛護地球。' },
-        { id: 'QR8', icon: '💡', name: '節能減排', info: '隨手關燈，使用 LED。' },
-        { id: 'QR9', icon: '🌊', name: '守護海洋', info: '拒絕即棄餐具，守護海洋生物。' },
-        { id: 'QR10', icon: '🐝', name: '生物多樣', info: '認識校園內的小昆蟲。' },
-        { id: 'QR11', icon: '👕', name: '舊衣重用', info: '捐贈舊衣，賦予新生命。' },
-        { id: 'QR12', icon: '🌬️', name: '空氣清新', info: '種植植物淨化空氣。' }
+        { id: 'QR1', icon: '♻️', name: '分類回收' }, { id: 'QR2', icon: '☀️', name: '再生能源' },
+        { id: 'QR3', icon: '🚲', name: '低碳交通' }, { id: 'QR4', icon: '🌲', name: '森林保護' },
+        { id: 'QR5', icon: '💧', name: '節約水種' }, { id: 'QR6', icon: '🔋', name: '電池回收' },
+        { id: 'QR7', icon: '🥦', name: '低碳飲食' }, { id: 'QR8', icon: '💡', name: '節能減排' },
+        { id: 'QR9', icon: '🌊', name: '守護海洋' }, { id: 'QR10', icon: '🐝', name: '生物多樣' },
+        { id: 'QR11', icon: '👕', name: '舊衣重用' }, { id: 'QR12', icon: '🌬️', name: '空氣清新' }
     ];
+
+    // --- 用戶 ID 生成與存儲 ---
+    let userId = localStorage.getItem('vtc_user_id');
+    if (!userId) {
+        userId = 'U' + Date.now() + 'R' + Math.floor(Math.random()*1000);
+        localStorage.setItem('vtc_user_id', userId);
+    }
 
     let myStamps = JSON.parse(localStorage.getItem('vtc_stamps_2026')) || [];
     let redeemedHistory = JSON.parse(localStorage.getItem('vtc_redeemed_history')) || [];
     let audioUnlocked = false;
 
-    // 解鎖音頻權限（不發聲）
     function unlockAudio() {
         if (audioUnlocked) return;
         const s1 = document.getElementById('stampAudio');
@@ -160,20 +150,12 @@
 
     function init() {
         setInterval(() => {
-            const now = new Date();
-            document.getElementById('live-clock').innerText = now.toLocaleString('zh-HK', { hour12: false });
+            document.getElementById('live-clock').innerText = new Date().toLocaleString();
         }, 1000);
 
-        const today = new Date().toISOString().split('T')[0];
-        if (today !== EVENT_DATE) {
-            document.body.innerHTML = `<div style="text-align:center; padding:100px 20px;"><h2>🌿 嘉年華測試</h2><p>今日：${today}<br>活動日期：${EVENT_DATE}</p></div>`;
-            return;
-        }
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const qid = urlParams.get('id');
+        // 自動檢測 URL 參數 (掃碼後)
+        const qid = new URLSearchParams(window.location.search).get('id');
         if (qid && STALLS.some(s => s.id === qid)) {
-            // 注意：這裡打開彈窗時是完全安靜的
             if (myStamps.includes(qid)) { showTooltip(qid); } 
             else { openVerifyModal(qid); }
             window.history.replaceState({}, '', window.location.pathname);
@@ -182,8 +164,6 @@
     }
 
     function render() {
-        myStamps = [...new Set(myStamps)];
-        localStorage.setItem('vtc_stamps_2026', JSON.stringify(myStamps));
         const grid = document.getElementById('mainGrid');
         grid.innerHTML = '';
         STALLS.forEach(s => {
@@ -194,106 +174,94 @@
                     <div class="label">${s.name}</div>
                 </div>`;
         });
+
         const count = myStamps.length;
         document.getElementById('progText').innerText = `我的成就：${count} / 12`;
         document.getElementById('pBar').style.width = (count / 12 * 100) + '%';
+
         [6, 9, 12].forEach(lv => {
             const btn = document.getElementById(`btn-${lv}`);
-            const txt = document.getElementById(`text-${lv}`);
-            if (redeemedHistory.includes(lv)) { btn.className = "btn-prize state-done"; btn.disabled = true; txt.innerText = "已領取 ✓"; } 
-            else if (count >= lv) { btn.className = "btn-prize state-ready"; btn.disabled = false; txt.innerText = "立即領取"; } 
-            else { btn.className = "btn-prize state-locked"; btn.disabled = true; txt.innerText = `${lv}枚解鎖`; }
+            if (redeemedHistory.includes(lv)) { btn.className = "btn-prize state-done"; btn.innerText = "已領取"; } 
+            else if (count >= lv) { btn.className = "btn-prize state-ready"; btn.innerText = "領取"; }
         });
     }
 
-    function showTooltip(id) {
-        const stall = STALLS.find(s => s.id === id);
-        const isDone = myStamps.includes(id);
-        document.getElementById('modalIcon').innerText = stall.icon;
-        document.getElementById('modalTitle').innerText = stall.name;
-        document.getElementById('modalDesc').innerText = stall.info + (isDone ? "\n\n✅ 您已完成挑戰！" : "\n\n📍 請掃描攤位 QR Code。");
-        document.getElementById('verifyArea').style.display = 'none';
-        document.getElementById('redeemArea').style.display = 'none';
-        document.getElementById('uiModal').style.display = 'block';
+    // 數據發送函數 (Image Beacon 方式最穩定)
+    function sendToSheet(action, val) {
+        const url = `${API_URL}?action=${action}&${action==='log'?'id':'lv'}=${val}&uid=${userId}`;
+        new Image().src = url;
     }
 
     function openVerifyModal(id) {
         const stall = STALLS.find(s => s.id === id);
         document.getElementById('modalIcon').innerText = "🔑";
         document.getElementById('modalTitle').innerText = stall.name;
-        document.getElementById('modalDesc').innerText = "請輸入工作人員提供的 4 位驗證碼。";
+        document.getElementById('modalDesc').innerText = "請輸入工作人員提供的 4 位密碼";
         document.getElementById('verifyArea').style.display = 'block';
         document.getElementById('redeemArea').style.display = 'none';
         document.getElementById('uiModal').style.display = 'block';
         
-        // 此處按下按鈕後才會判斷發聲
         document.getElementById('confirmBtn').onclick = () => {
             const input = document.getElementById('vCodeInput').value;
             if (validate(input)) {
                 if (!myStamps.includes(id)) {
                     myStamps.push(id);
                     localStorage.setItem('vtc_stamps_2026', JSON.stringify(myStamps));
-                    fetch(`${API_URL}?action=log&id=${id}`).catch(() => {});
+                    sendToSheet('log', id);
                 }
-                // 只有密碼正確，才發出聲音
-                triggerEffect('stamp'); 
-                closeModal(); 
-                render();
-            } else { 
-                alert("驗證碼錯誤。"); // 錯誤不發聲
-            }
+                triggerEffect('stamp'); closeModal(); render();
+            } else { alert("密碼錯誤"); }
         };
     }
 
     function openRedeemModal(lv) {
-        const prizes = { 6: '細獎', 9: '中獎', 12: '大獎' };
+        if (myStamps.length < lv || redeemedHistory.includes(lv)) return;
         document.getElementById('modalIcon').innerText = "🎁";
-        document.getElementById('modalTitle').innerText = "領取獎勵：" + prizes[lv];
-        document.getElementById('modalDesc').innerText = `恭喜！您已收集足夠印花兌換獎項。`;
+        document.getElementById('modalTitle').innerText = "領取獎勵";
+        document.getElementById('modalDesc').innerText = "請向工作人員確認領取";
         document.getElementById('verifyArea').style.display = 'none';
         document.getElementById('redeemArea').style.display = 'block';
         document.getElementById('uiModal').style.display = 'block';
         
         document.getElementById('redeemConfirmBtn').onclick = () => {
-            if (!redeemedHistory.includes(lv)) {
-                redeemedHistory.push(lv);
-                localStorage.setItem('vtc_redeemed_history', JSON.stringify(redeemedHistory));
-                fetch(`${API_URL}?action=redeem&lv=${lv}`).catch(() => {});
-            }
-            // 領獎確認後才發聲
-            triggerEffect('gift'); 
-            closeModal(); 
-            render();
+            redeemedHistory.push(lv);
+            localStorage.setItem('vtc_redeemed_history', JSON.stringify(redeemedHistory));
+            sendToSheet('redeem', lv);
+            triggerEffect('gift'); closeModal(); render();
         };
     }
 
     function validate(code) {
         const now = new Date();
-        const times = [new Date(now.getTime() - 60000), now, new Date(now.getTime() + 60000)];
-        let ok = false;
-        times.forEach(t => {
-            let val = parseInt(t.getHours().toString().padStart(2, '0') + t.getMinutes().toString().padStart(2, '0'));
-            if (code === (val + SALT).toString()) ok = true;
-        });
-        return ok;
+        const h = now.getHours().toString().padStart(2,'0');
+        const m = now.getMinutes().toString().padStart(2,'0');
+        return code === (parseInt(h + m) + SALT).toString();
+    }
+
+    function triggerEffect(type) {
+        const sound = document.getElementById(type === 'stamp' ? 'stampAudio' : 'giftAudio');
+        sound.currentTime = 0; sound.play().catch(()=>{});
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    }
+
+    function showTooltip(id) {
+        const s = STALLS.find(x => x.id === id);
+        document.getElementById('modalIcon').innerText = s.icon;
+        document.getElementById('modalTitle').innerText = s.name;
+        document.getElementById('modalDesc').innerText = myStamps.includes(id) ? "✅ 已完成挑戰" : "📍 尚未完成";
+        document.getElementById('verifyArea').style.display = 'none';
+        document.getElementById('redeemArea').style.display = 'none';
+        document.getElementById('uiModal').style.display = 'block';
     }
 
     function switchTab(t) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab'));
         document.getElementById('tab-' + t).classList.add('active-tab');
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById('nav-' + t).classList.add('active');
         unlockAudio();
     }
 
-    function triggerEffect(type) {
-        const soundId = (type === 'stamp') ? 'stampAudio' : 'giftAudio';
-        const sound = document.getElementById(soundId);
-        sound.currentTime = 0;
-        sound.play().catch(() => {});
-        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-    }
-    
     function closeModal() {
         document.getElementById('uiModal').style.display = 'none';
         document.getElementById('vCodeInput').value = '';
