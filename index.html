@@ -17,27 +17,13 @@
         
         body { 
             background: linear-gradient(180deg, #f4fbf7 0%, #dff0e6 100%); 
-            margin: 0; 
-            padding-bottom: 100px; 
-            min-height: 100vh;
-            overflow-x: hidden;
-            color: #2c3e50;
+            margin: 0; padding-bottom: 100px; min-height: 100vh; overflow-x: hidden; color: #2c3e50;
         }
 
-        /* 動態背景粒子 */
-        .bg-dots {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: -1;
-        }
-        .dot {
-            position: absolute; background: var(--green); border-radius: 50%; opacity: 0.15;
-            animation: float 15s infinite linear;
-        }
-        @keyframes float {
-            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
-            50% { opacity: 0.2; }
-            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
-        }
+        /* 背景粒子 */
+        .bg-dots { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+        .dot { position: absolute; background: var(--green); border-radius: 50%; opacity: 0.15; animation: float 15s infinite linear; }
+        @keyframes float { 0% { transform: translateY(100vh) scale(0.5); opacity: 0; } 50% { opacity: 0.2; } 100% { transform: translateY(-10vh) scale(1.2); opacity: 0; } }
 
         /* 標題區 */
         .header { 
@@ -50,93 +36,60 @@
         .header .slogan { font-size: 15px; margin: 10px 0; opacity: 0.9; font-weight: 300; letter-spacing: 2px; }
         #live-clock { font-size: 13px; background: rgba(255,255,255,0.15); display: inline-block; padding: 4px 12px; border-radius: 20px; margin-top: 5px; backdrop-filter: blur(5px); }
 
-        /* 內容卡片 */
         .glass-card {
             background: var(--glass); border-radius: 25px; border: 1px solid rgba(255,255,255,0.5);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.05); backdrop-filter: blur(10px);
-            padding: 20px; margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.05); backdrop-filter: blur(10px); padding: 20px; margin-bottom: 20px;
         }
 
         /* 進度條 */
         .bar-bg { background: #eee; height: 16px; border-radius: 8px; overflow: hidden; margin-top: 12px; position: relative; }
-        .bar-fill { 
-            background: linear-gradient(90deg, #58d68d, #27ae60, #1b5e20); 
-            height: 100%; width: 0%; transition: 1.5s cubic-bezier(0.22, 1, 0.36, 1);
-            position: relative;
-        }
-        .bar-fill::after {
-            content: ""; position: absolute; top: 0; left: 0; width: 30px; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: shine 2s infinite;
-        }
+        .bar-fill { background: linear-gradient(90deg, #58d68d, #27ae60, #1b5e20); height: 100%; width: 0%; transition: 1.5s cubic-bezier(0.22, 1, 0.36, 1); position: relative; }
+        .bar-fill::after { content: ""; position: absolute; top: 0; left: 0; width: 30px; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shine 2s infinite; }
         @keyframes shine { 0% { left: -30px; } 100% { left: 100%; } }
 
         /* 印章網格 */
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .stamp-box { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .stamp-box { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.3s; }
         .stamp { 
             width: 85px; height: 85px; border: 2px dashed #bdc3c7; border-radius: 24px; 
             background: white; display: flex; align-items: center; justify-content: center; 
-            font-size: 36px; position: relative; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 36px; position: relative; transition: 0.4s;
         }
-        .stamp.active { 
-            border: 3px solid var(--gold); background: #fffde7; transform: scale(1.05) rotate(5deg); 
-            box-shadow: 0 10px 20px rgba(241,196,15,0.2); 
-        }
-        .stamp.active::after { 
-            content: '✓'; position: absolute; bottom: -8px; right: -8px; background: var(--green); 
-            color: white; border-radius: 50%; width: 28px; height: 28px; font-size: 14px; 
-            display: flex; align-items: center; justify-content: center; border: 3px solid white;
-        }
+        .stamp.active { border: 3px solid var(--gold); background: #fffde7; transform: scale(1.05) rotate(5deg); }
+        .stamp.active::after { content: '✓'; position: absolute; bottom: -8px; right: -8px; background: var(--green); color: white; border-radius: 50%; width: 28px; height: 28px; font-size: 14px; display: flex; align-items: center; justify-content: center; border: 3px solid white; }
 
         /* 獎勵按鈕 */
-        .btn-prize { 
-            width: 100%; padding: 18px; border-radius: 20px; border: none; font-weight: bold; 
-            display: flex; justify-content: space-between; align-items: center; transition: 0.3s;
-            margin-bottom: 10px; position: relative; overflow: hidden;
-        }
-        .state-ready { 
-            background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%); color: white;
-            box-shadow: 0 6px 15px rgba(243,156,18,0.4); animation: pulse 2s infinite;
-        }
+        .btn-prize { width: 100%; padding: 18px; border-radius: 20px; border: none; font-weight: bold; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; margin-bottom: 10px; }
+        .state-ready { background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%); color: white; box-shadow: 0 6px 15px rgba(243,156,18,0.4); animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
         .state-done { background: #e8f5e9; color: #2ecc71; border: 1.5px dashed #2ecc71; }
         .state-locked { background: #f8f9fa; color: #aaa; border: 1px solid #eee; }
 
         /* 底部導航 */
-        .nav-bar { 
-            position: fixed; bottom: 0; width: 100%; background: rgba(255,255,255,0.9); 
-            backdrop-filter: blur(15px); display: flex; height: 85px; 
-            border-top: 1px solid rgba(0,0,0,0.05); z-index: 1000;
-        }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: rgba(255,255,255,0.9); backdrop-filter: blur(15px); display: flex; height: 85px; border-top: 1px solid rgba(0,0,0,0.05); z-index: 1000; }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #95a5a6; transition: 0.3s; cursor: pointer; }
         .nav-item.active { color: var(--green); font-weight: bold; transform: translateY(-3px); }
-        .nav-item span { font-size: 26px; margin-bottom: 2px; }
-        .nav-item div { font-size: 12px; }
+        .nav-item span { font-size: 26px; }
+        .nav-item div { font-size: 12px; margin-top: 2px; }
 
         /* 彈窗 */
-        .modal { 
-            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; 
-            background: rgba(10, 30, 10, 0.7); backdrop-filter: blur(10px); 
-        }
-        .modal-content { 
-            background: white; margin: 20% auto; padding: 40px 25px; border-radius: 35px; 
-            width: 88%; max-width: 360px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-        }
-        .code-input { width: 100%; padding: 15px; font-size: 32px; text-align: center; letter-spacing: 8px; border: 2px solid #eee; border-radius: 15px; margin: 20px 0; outline: none; }
-        .btn-main { background: var(--green); color: white; border: none; padding: 16px; border-radius: 50px; font-weight: bold; width: 100%; font-size: 17px; }
-        .btn-cancel { background: none; color: #999; border: none; margin-top: 20px; text-decoration: underline; }
-
-        /* 地圖頁專屬樣式 */
-        .intro-box { border-left: 4px solid var(--green); padding-left: 15px; margin-bottom: 20px; line-height: 1.6; }
-        .eco-icons { display: flex; justify-content: space-around; font-size: 30px; margin-top: 25px; opacity: 0.8; }
-        .eco-icons span { animation: bounce 3s infinite; }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(10, 30, 10, 0.7); backdrop-filter: blur(10px); }
+        .modal-content { background: white; margin: 15% auto; padding: 35px 25px; border-radius: 35px; width: 90%; max-width: 360px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
-        .tab-content { display: none; padding: 15px; max-width: 500px; margin: auto; animation: fadeIn 0.5s; }
+        .eco-tip-box { background: #f0f9f4; border-radius: 15px; padding: 12px; margin: 15px 0; border-left: 4px solid var(--green); text-align: left; font-size: 14px; color: #444; }
+        .code-input { width: 100%; padding: 15px; font-size: 28px; text-align: center; letter-spacing: 5px; border: 2px solid #eee; border-radius: 15px; margin: 15px 0; outline: none; }
+        .btn-main { background: var(--green); color: white; border: none; padding: 16px; border-radius: 50px; font-weight: bold; width: 100%; font-size: 17px; }
+        .btn-cancel { background: none; color: #999; border: none; margin-top: 15px; text-decoration: underline; font-size: 14px; }
+
+        /* 地圖頁細項 */
+        .map-info p { margin: 8px 0; font-size: 15px; color: #444; }
+        .map-info b { color: var(--dark-green); margin-right: 5px; }
+        .eco-icons { display: flex; justify-content: space-around; font-size: 28px; margin-top: 20px; }
+        .eco-icons span { animation: bounce 3s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+        .tab-content { display: none; padding: 15px; max-width: 500px; margin: auto; animation: fadeIn 0.4s; }
         .active-tab { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
@@ -154,7 +107,7 @@
         <div id="live-clock">載入中...</div>
     </div>
 
-    <div id="tab-stamps" class="tab-content active-tab" style="padding-top: 20px;">
+    <div id="tab-stamps" class="tab-content active-tab">
         <div class="glass-card">
             <div id="progText" style="font-size: 18px; font-weight: 800; color: var(--dark-green);">我的印花進度：0 / 12</div>
             <div class="bar-bg"><div class="bar-fill" id="pBar"></div></div>
@@ -162,7 +115,7 @@
 
         <div class="grid" id="mainGrid"></div>
 
-        <div class="glass-card" style="margin-top: 25px; background: rgba(255,255,255,0.6);">
+        <div class="glass-card" style="margin-top: 25px;">
             <div style="font-weight: 800; color: var(--dark-green); margin-bottom: 15px; display: flex; align-items: center;">
                 <span style="font-size: 20px; margin-right: 8px;">🎁</span> 獎勵領取處
             </div>
@@ -180,22 +133,24 @@
         </div>
     </div>
 
-    <div id="tab-map" class="tab-content" style="padding-top: 20px;">
+    <div id="tab-map" class="tab-content">
         <div class="glass-card">
-            <h3 style="color: var(--dark-green); margin-top:0;">📍 活動指南</h3>
-            <div class="intro-box">
-                <b>活動簡介：</b><br>
-                歡迎參與綠色繽紛嘉年華！讓我們共同營造更潔淨的校園環境，推動可持續未來！
+            <h3 style="color: var(--dark-green); margin-top:0;">📍 活動資訊</h3>
+            <div class="map-info">
+                <p><b>日期：</b> 2026年3月30日 (測試) / 4月21日 (正式)</p>
+                <p><b>時間：</b> 10:00 AM - 4:30 PM</p>
+                <p><b>地點：</b> 香港專業教育學院 (IVE) 九龍灣校舍</p>
+                <p style="margin-top:15px; line-height:1.6; background:#f9f9f9; padding:12px; border-radius:10px;">
+                    <b>活動簡介：</b><br>
+                    歡迎參與綠色繽紛嘉年華！讓我們共同營造更潔淨的校園環境，推動可持續未來！
+                </p>
             </div>
-            <p style="font-size: 14px; color: #666; margin-bottom: 10px;">點擊地圖可放大查看攤位分佈：</p>
-            <img src="KBC_Address.jpg" style="width:100%; border-radius:15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer;" onclick="window.open(this.src)">
+            <img src="KBC_Address.jpg" style="width:100%; border-radius:15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-top:15px;" onclick="window.open(this.src)">
             
             <div class="eco-icons">
-                <span style="animation-delay: 0s;">🍃</span>
-                <span style="animation-delay: 0.5s;">🌍</span>
-                <span style="animation-delay: 1s;">♻️</span>
-                <span style="animation-delay: 1.5s;">💧</span>
-                <span style="animation-delay: 2s;">☀️</span>
+                <span style="animation-delay: 0s;">🍃</span><span style="animation-delay: 0.4s;">🌍</span>
+                <span style="animation-delay: 0.8s;">♻️</span><span style="animation-delay: 1.2s;">💧</span>
+                <span style="animation-delay: 1.6s;">☀️</span>
             </div>
         </div>
     </div>
@@ -211,31 +166,44 @@
 
     <div id="uiModal" class="modal">
         <div class="modal-content">
-            <div id="modalIcon" style="font-size: 70px; margin-bottom: 10px;"></div>
-            <h3 id="modalTitle" style="color: var(--dark-green);"></h3>
-            <p id="modalDesc" style="color: #666;"></p>
+            <div id="modalIcon" style="font-size: 75px; margin-bottom: 5px;"></div>
+            <h3 id="modalTitle" style="color: var(--dark-green); margin: 10px 0;"></h3>
+            
+            <div id="ecoTip" class="eco-tip-box"></div>
+
+            <p id="modalDesc" style="color: #666; font-size: 14px;"></p>
+            
             <div id="verifyArea" style="display:none;">
-                <input type="number" id="vCodeInput" class="code-input" placeholder="密碼" inputmode="numeric">
+                <input type="number" id="vCodeInput" class="code-input" placeholder="工作人員密碼" inputmode="numeric">
                 <button class="btn-main" id="confirmBtn">確認蓋印 🌱</button>
             </div>
+            
             <div id="redeemArea" style="display:none;">
-                <button class="btn-main" id="redeemConfirmBtn" style="background: var(--gold); color: #744b00;">確認已領取獎品 ✨</button>
+                <button class="btn-main" id="redeemConfirmBtn" style="background: var(--gold); color: #744b00;">確認領取禮品 ✨</button>
             </div>
+            
             <button class="btn-cancel" onclick="closeModal()">返回</button>
         </div>
     </div>
 
 <script>
-    // --- 請在此處替換你的 Apps Script URL ---
     const API_URL = "https://script.google.com/macros/s/AKfycbySGCPsBNDjXo7iH2PCMkOlppRqOVcsrNF-AIyXbatOD2lhfhPMKvuXjUbuQO09ETst/exec"; 
     const SALT = 1111;
+    
+    // 攤位數據：包含專屬 Tip
     const STALLS = [
-        { id: 'QR1', icon: '♻️', name: '分類回收' }, { id: 'QR2', icon: '☀️', name: '再生能源' },
-        { id: 'QR3', icon: '🚲', name: '低碳交通' }, { id: 'QR4', icon: '🌲', name: '森林保護' },
-        { id: 'QR5', icon: '💧', name: '節約水種' }, { id: 'QR6', icon: '🔋', name: '電池回收' },
-        { id: 'QR7', icon: '🥦', name: '低碳飲食' }, { id: 'QR8', icon: '💡', name: '節能減排' },
-        { id: 'QR9', icon: '🌊', name: '守護海洋' }, { id: 'QR10', icon: '🐝', name: '生物多樣' },
-        { id: 'QR11', icon: '👕', name: '舊衣重用' }, { id: 'QR12', icon: '🌬️', name: '空氣清新' }
+        { id: 'QR1', icon: '♻️', name: '分類回收', tip: '回收 1 噸廢紙可挽救 17 棵大樹！請確保回收物乾淨無油污。' },
+        { id: 'QR2', icon: '☀️', name: '再生能源', tip: '太陽能是地球最充足的能源。使用太陽能可大幅減少碳排放。' },
+        { id: 'QR3', icon: '🚲', name: '低碳交通', tip: '多搭乘公共交通或騎單車，每公里可減少約 150g 的碳足跡。' },
+        { id: 'QR4', icon: '🌲', name: '森林保護', tip: '森林是地球的肺。珍惜用低，守護我們的綠色屏障。' },
+        { id: 'QR5', icon: '💧', name: '節約水種', tip: '縮短淋浴時間 1 分鐘，平均可節省 10 公升食水。' },
+        { id: 'QR6', icon: '🔋', name: '電池回收', tip: '一顆鈕扣電池能污染 60 萬升水，請務必將廢電池放回回收點。' },
+        { id: 'QR7', icon: '🥦', name: '低碳飲食', tip: '每週一日素食，一年可減少排放約 320 公斤二氧化碳。' },
+        { id: 'QR8', icon: '💡', name: '節能減排', tip: '隨手關燈、更換 LED 燈泡可節省高達 75% 的電量消耗。' },
+        { id: 'QR9', icon: '🌊', name: '守護海洋', tip: '減少使用即棄塑膠，防止海洋生物誤食塑膠垃圾。' },
+        { id: 'QR10', icon: '🐝', name: '生物多樣', tip: '保護蜜蜂就是保護人類糧食，支持有機耕種有利生態平衡。' },
+        { id: 'QR11', icon: '👕', name: '舊衣重用', tip: '生產一件棉質 T-shirt 需消耗 2700 升水。物盡其用，減少浪費。' },
+        { id: 'QR12', icon: '🌬️', name: '空氣清新', tip: '室內多擺放植物如虎尾蘭，能有效過濾有害氣體並產生氧氣。' }
     ];
 
     let userId = localStorage.getItem('vtc_user_id') || ('U' + Date.now() + 'R' + Math.floor(Math.random()*1000));
@@ -288,7 +256,7 @@
             grid.innerHTML += `
                 <div class="stamp-box" onclick="showTooltip('${s.id}')">
                     <div class="stamp ${isDone ? 'active' : ''}">${isDone ? s.icon : ''}</div>
-                    <div class="label">${s.name}</div>
+                    <div class="label" style="font-size:12px; margin-top:8px;">${s.name}</div>
                 </div>`;
         });
 
@@ -321,9 +289,10 @@
 
     function openVerifyModal(id) {
         const stall = STALLS.find(s => s.id === id);
-        document.getElementById('modalIcon').innerText = "🌱";
+        document.getElementById('modalIcon').innerText = stall.icon; // 使用相關 QR Code 圖示
         document.getElementById('modalTitle').innerText = stall.name;
-        document.getElementById('modalDesc').innerText = "請輸入工作人員提供的密碼以獲取印花";
+        document.getElementById('ecoTip').innerHTML = `<b>💡 環保小知識：</b><br>${stall.tip}`;
+        document.getElementById('modalDesc').innerText = "請輸入工作人員提供的密碼以完成蓋印。";
         document.getElementById('verifyArea').style.display = 'block';
         document.getElementById('redeemArea').style.display = 'none';
         document.getElementById('uiModal').style.display = 'block';
@@ -338,15 +307,16 @@
                     triggerEffect('stamp');
                 }
                 closeModal(); render();
-            } else { alert("密碼錯誤！"); }
+            } else { alert("密碼不正確！"); }
         };
     }
 
     function openRedeemModal(lv) {
         if (myStamps.length < lv || redeemedHistory.includes(lv)) return;
-        document.getElementById('modalIcon').innerText = "🌟";
-        document.getElementById('modalTitle').innerText = "成就達成！";
-        document.getElementById('modalDesc').innerText = "請向禮品換領處工作人員出示此畫面領取獎品。";
+        document.getElementById('modalIcon').innerText = "✨";
+        document.getElementById('modalTitle').innerText = "領取獎勵";
+        document.getElementById('ecoTip').innerHTML = `<b>🌟 綠色成就：</b><br>您已為地球減少了相當數量的碳足跡！感謝您的參與。`;
+        document.getElementById('modalDesc').innerText = "請將此畫面示予禮品換領處。";
         document.getElementById('verifyArea').style.display = 'none';
         document.getElementById('redeemArea').style.display = 'block';
         document.getElementById('uiModal').style.display = 'block';
@@ -370,17 +340,15 @@
     function triggerEffect(type) {
         const sound = document.getElementById(type === 'stamp' ? 'stampAudio' : 'giftAudio');
         sound.currentTime = 0; sound.play().catch(()=>{});
-        confetti({ 
-            particleCount: 150, spread: 80, origin: { y: 0.6 },
-            colors: ['#2ecc71', '#f1c40f', '#ffffff', '#1b5e20']
-        });
+        confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#2ecc71', '#f1c40f', '#ffffff'] });
     }
 
     function showTooltip(id) {
         const s = STALLS.find(x => x.id === id);
-        document.getElementById('modalIcon').innerText = "✅";
+        document.getElementById('modalIcon').innerText = s.icon;
         document.getElementById('modalTitle').innerText = s.name;
-        document.getElementById('modalDesc').innerText = "您已成功收集此印花，繼續挑戰其他攤位吧！";
+        document.getElementById('ecoTip').innerHTML = `<b>💡 環保小知識：</b><br>${s.tip}`;
+        document.getElementById('modalDesc').innerText = "✅ 您已成功收集此印花！";
         document.getElementById('verifyArea').style.display = 'none';
         document.getElementById('redeemArea').style.display = 'none';
         document.getElementById('uiModal').style.display = 'block';
