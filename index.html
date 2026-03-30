@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>綠色繽紛嘉年華 2026</title>
+    <title>綠色繽紛嘉年華 測試版</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root { --green: #27ae60; --dark-green: #1b5e20; --gold: #f1c40f; --bg: #f4fbf7; }
@@ -40,7 +40,7 @@
 <body>
     <audio id="stampSound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-reward-952.mp3"></audio>
     <div id="app-container">
-        <div class="header"><h2>🌿 綠色繽紛嘉年華</h2><div style="font-size: 12px; opacity: 0.8;">4月21日 活動限定</div></div>
+        <div class="header"><h2>🌿 綠色繽紛嘉年華 (測試)</h2><div style="font-size: 12px; opacity: 0.8;">今日測試日期：2026-03-30</div></div>
         <div id="tab-stamps" class="tab-content active-tab">
             <div class="progress-section"><div id="progText" style="font-weight: bold;">已收集：0 / 12</div><div class="bar-bg"><div class="bar-fill" id="pBar"></div></div></div>
             <div class="grid" id="mainGrid"></div>
@@ -58,6 +58,7 @@
     <div id="detailModal" class="modal"><div class="modal-content"><div id="modalIcon" style="font-size: 40px;"></div><h3 id="modalTitle"></h3><p id="modalDesc" style="font-size: 12px; color: #777;"></p><button class="btn-verify" id="actionBtn">輸入驗證碼</button><p style="font-size: 11px; color: #aaa; margin-top: 10px;" onclick="closeModal()">返回</p></div></div>
 
 <script>
+    // === 測試日期設為今天 ===
     const EVENT_DATE = "2026-03-30"; 
     const SALT = 1111;
     const STALLS = [
@@ -75,7 +76,7 @@
     function init() {
         const today = new Date().toISOString().split('T')[0];
         if (today !== EVENT_DATE) {
-            document.body.innerHTML = <div style="text-align:center; padding:50px; font-family:sans-serif;"><h2>🌿 綠色繽紛嘉年華 2026</h2><p>本系統僅於 <b>${EVENT_DATE}</b> 開放。</p></div>;
+            document.body.innerHTML = `<div style="text-align:center; padding:50px; font-family:sans-serif;"><h2>🌿 綠色繽紛嘉年華 測試版</h2><p>系統目前日期為 ${today}，測試設定日期為 ${EVENT_DATE}。</p><p>請確保兩者一致方可進入測試。</p></div>`;
             return;
         }
         const urlParams = new URLSearchParams(window.location.search);
@@ -92,17 +93,17 @@
         grid.innerHTML = '';
         STALLS.forEach(s => {
             const isDone = myStamps.includes(s.id);
-            grid.innerHTML += <div class="stamp-box" onclick="showDetail('${s.id}')"><div class="stamp ${isDone ? 'active' : ''}">${isDone ? s.icon : ''}</div><div class="label">${s.name}</div></div>;
+            grid.innerHTML += `<div class="stamp-box" onclick="showDetail('${s.id}')"><div class="stamp ${isDone ? 'active' : ''}">${isDone ? s.icon : ''}</div><div class="label">${s.name}</div></div>`;
         });
         const count = myStamps.length;
-        document.getElementById('progText').innerText = 已收集：${count} / 12;
+        document.getElementById('progText').innerText = `已收集：${count} / 12`;
         document.getElementById('pBar').style.width = (count / 12 * 100) + '%';
         [6, 9, 12].forEach(lv => {
-            const btn = document.getElementById(btn-${lv});
-            const txt = document.getElementById(text-${lv});
+            const btn = document.getElementById(`btn-${lv}`);
+            const txt = document.getElementById(`text-${lv}`);
             if (redeemedHistory.includes(lv)) { btn.className = "btn-prize state-done"; btn.disabled = true; txt.innerText = "已領取"; }
             else if (count >= lv) { btn.className = "btn-prize state-ready"; btn.disabled = false; txt.innerText = "立即領取"; }
-            else { btn.className = "btn-prize state-locked"; btn.disabled = true; txt.innerText = ${lv}枚解鎖; }
+            else { btn.className = "btn-prize state-locked"; btn.disabled = true; txt.innerText = `${lv}枚解鎖`; }
         });
     }
 
@@ -110,15 +111,15 @@
         const stall = STALLS.find(s => s.id === id);
         document.getElementById('modalIcon').innerText = stall.icon;
         document.getElementById('modalTitle').innerText = stall.name;
-        document.getElementById('modalDesc').innerText = "請向工作人員出示本頁以獲取 4 位驗證碼。";
+        document.getElementById('modalDesc').innerText = "請輸入工作人員驗證碼以獲取印章。";
         const btn = document.getElementById('actionBtn');
-        if (myStamps.includes(id)) { btn.innerText = "已蓋印"; btn.disabled = true; btn.style.background = "#ccc"; }
+        if (myStamps.includes(id)) { btn.innerText = "已完成"; btn.disabled = true; btn.style.background = "#ccc"; }
         else { btn.innerText = "輸入驗證碼"; btn.disabled = false; btn.style.background = "var(--green)"; btn.onclick = () => verifyCode(id); }
         document.getElementById('detailModal').style.display = 'block';
     }
 
     function verifyCode(id) {
-        const input = prompt("請輸入工作人員提供的驗證碼：");
+        const input = prompt("驗證碼計算方式：目前時間 HHMM + 1111\n例如現在 14:07，請輸入 2518：");
         if (!input) return;
         const now = new Date();
         const times = [new Date(now.getTime() - 60000), now, new Date(now.getTime() + 60000)];
@@ -133,16 +134,14 @@
             triggerConfetti();
             document.getElementById('stampSound').play();
             closeModal(); render();
-            fetch("YOUR_GAS_WEBAPP_URL?action=log&id=" + id); // 發送數據到後台
         } else { alert("驗證碼錯誤。"); }
     }
 
     function doRedeem(lv) {
-        if (confirm(確定領取獎勵？)) {
+        if (confirm(`確定領取獎勵？`)) {
             redeemedHistory.push(lv);
             localStorage.setItem('vtc_redeemed_history', JSON.stringify(redeemedHistory));
             triggerConfetti(); render();
-            fetch("YOUR_GAS_WEBAPP_URL?action=redeem&lv=" + lv); // 發送領獎數據
         }
     }
 
