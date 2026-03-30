@@ -10,7 +10,7 @@
         * { box-sizing: border-box; font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; }
         body { background: var(--bg); margin: 0; padding-bottom: 80px; -webkit-tap-highlight-color: transparent; color: #333; }
         
-        /* 交互優化：滑鼠手指圖示 */
+        /* 手指滑鼠游標 */
         .stamp-box, .nav-item, .btn-prize.state-ready, .btn-main, .btn-cancel, .map-img { cursor: pointer; }
         
         .header { background: linear-gradient(135deg, var(--dark-green), var(--green)); color: white; padding: 25px 15px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
@@ -146,7 +146,7 @@
     let redeemedHistory = JSON.parse(localStorage.getItem('vtc_redeemed_history')) || [];
     let audioUnlocked = false;
 
-    // 解鎖音效權限 (雙音頻解鎖)
+    // 解鎖音頻權限（不發聲）
     function unlockAudio() {
         if (audioUnlocked) return;
         const s1 = document.getElementById('stampAudio');
@@ -155,7 +155,6 @@
             s1.pause(); s1.currentTime = 0;
             s2.pause(); s2.currentTime = 0;
             audioUnlocked = true;
-            console.log("Audio Engine Ready");
         }).catch(() => {});
     }
 
@@ -174,6 +173,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const qid = urlParams.get('id');
         if (qid && STALLS.some(s => s.id === qid)) {
+            // 注意：這裡打開彈窗時是完全安靜的
             if (myStamps.includes(qid)) { showTooltip(qid); } 
             else { openVerifyModal(qid); }
             window.history.replaceState({}, '', window.location.pathname);
@@ -225,6 +225,8 @@
         document.getElementById('verifyArea').style.display = 'block';
         document.getElementById('redeemArea').style.display = 'none';
         document.getElementById('uiModal').style.display = 'block';
+        
+        // 此處按下按鈕後才會判斷發聲
         document.getElementById('confirmBtn').onclick = () => {
             const input = document.getElementById('vCodeInput').value;
             if (validate(input)) {
@@ -233,8 +235,13 @@
                     localStorage.setItem('vtc_stamps_2026', JSON.stringify(myStamps));
                     fetch(`${API_URL}?action=log&id=${id}`).catch(() => {});
                 }
-                triggerEffect('stamp'); closeModal(); render();
-            } else { alert("驗證碼錯誤。"); }
+                // 只有密碼正確，才發出聲音
+                triggerEffect('stamp'); 
+                closeModal(); 
+                render();
+            } else { 
+                alert("驗證碼錯誤。"); // 錯誤不發聲
+            }
         };
     }
 
@@ -246,13 +253,17 @@
         document.getElementById('verifyArea').style.display = 'none';
         document.getElementById('redeemArea').style.display = 'block';
         document.getElementById('uiModal').style.display = 'block';
+        
         document.getElementById('redeemConfirmBtn').onclick = () => {
             if (!redeemedHistory.includes(lv)) {
                 redeemedHistory.push(lv);
                 localStorage.setItem('vtc_redeemed_history', JSON.stringify(redeemedHistory));
                 fetch(`${API_URL}?action=redeem&lv=${lv}`).catch(() => {});
             }
-            triggerEffect('gift'); closeModal(); render();
+            // 領獎確認後才發聲
+            triggerEffect('gift'); 
+            closeModal(); 
+            render();
         };
     }
 
@@ -275,14 +286,11 @@
         unlockAudio();
     }
 
-    // 觸發音效與特效
     function triggerEffect(type) {
         const soundId = (type === 'stamp') ? 'stampAudio' : 'giftAudio';
         const sound = document.getElementById(soundId);
         sound.currentTime = 0;
         sound.play().catch(() => {});
-        
-        // 只有領獎或蓋印成功才放彩帶
         confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
     }
     
