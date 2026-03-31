@@ -5,93 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>綠色繽紛嘉年華 2026</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    
     <style>
         :root { 
-            --green: #2ecc71; 
-            --dark-green: #1b5e20; 
-            --gold: #f1c40f; 
-            --soft-green: #e8f5e9;
-            --glass: rgba(255, 255, 255, 0.85);
+            /* 全域顏色定義，方便一鍵換膚 */
+            --green: #2ecc71;      /* 主色調：環保綠 */
+            --dark-green: #1b5e20; /* 文字與標題：深森林綠 */
+            --gold: #f1c40f;       /* 獎勵與高亮：金黃色 */
+            --soft-green: #e8f5e9; /* 背景：淺草綠 */
+            --glass: rgba(255, 255, 255, 0.85); /* 玻璃擬態背景 */
         }
-        * { box-sizing: border-box; font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; }
+        
+        * { box-sizing: border-box; font-family: "Microsoft JhengHei", sans-serif; }
         
         body { 
             background: linear-gradient(180deg, #f4fbf7 0%, #dff0e6 100%); 
             margin: 0; padding-bottom: 100px; min-height: 100vh; overflow-x: hidden; color: #2c3e50;
         }
 
-        /* 背景粒子 */
-        .bg-dots { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+        /* 鼠標優化 */
+        .stamp-box, .nav-item, .btn-prize.state-ready, .btn-main, .btn-cancel, .map-img { cursor: pointer; }
+        
+        /* [背景動畫]：漂浮的小點點，營造繽紛氛圍 */
         .dot { position: absolute; background: var(--green); border-radius: 50%; opacity: 0.15; animation: float 15s infinite linear; }
-        @keyframes float { 0% { transform: translateY(100vh) scale(0.5); opacity: 0; } 50% { opacity: 0.2; } 100% { transform: translateY(-10vh) scale(1.2); opacity: 0; } }
+        @keyframes float { 0% { transform: translateY(100vh) scale(0.5); opacity: 0; } 100% { transform: translateY(-10vh) scale(1.2); opacity: 0; } }
 
-        /* 標題區 */
-        .header { 
-            background: linear-gradient(135deg, #1b5e20 0%, #2ecc71 100%); 
-            color: white; padding: 35px 20px; text-align: center; 
-            border-radius: 0 0 40px 40px; box-shadow: 0 8px 25px rgba(27,94,32,0.2);
-            position: relative; overflow: hidden;
-        }
-        .header h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 1.5px; }
-        .header .slogan { font-size: 15px; margin: 10px 0; opacity: 0.9; font-weight: 300; letter-spacing: 2px; }
-        #live-clock { font-size: 13px; background: rgba(255,255,255,0.15); display: inline-block; padding: 4px 12px; border-radius: 20px; margin-top: 5px; backdrop-filter: blur(5px); }
-
-        .glass-card {
-            background: var(--glass); border-radius: 25px; border: 1px solid rgba(255,255,255,0.5);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.05); backdrop-filter: blur(10px); padding: 20px; margin-bottom: 20px;
-        }
-
-        /* 進度條 */
-        .bar-bg { background: #eee; height: 16px; border-radius: 8px; overflow: hidden; margin-top: 12px; position: relative; }
-        .bar-fill { background: linear-gradient(90deg, #58d68d, #27ae60, #1b5e20); height: 100%; width: 0%; transition: 1.5s cubic-bezier(0.22, 1, 0.36, 1); position: relative; }
+        /* [進度條動畫]：使用 shine 動畫增加動態質感 */
+        .bar-fill { position: relative; transition: 1.5s cubic-bezier(0.22, 1, 0.36, 1); }
         .bar-fill::after { content: ""; position: absolute; top: 0; left: 0; width: 30px; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shine 2s infinite; }
         @keyframes shine { 0% { left: -30px; } 100% { left: 100%; } }
 
-        /* 印章網格 */
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .stamp-box { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.3s; }
-        .stamp { 
-            width: 85px; height: 85px; border: 2px dashed #bdc3c7; border-radius: 24px; 
-            background: white; display: flex; align-items: center; justify-content: center; 
-            font-size: 36px; position: relative; transition: 0.4s;
-        }
+        /* [印章樣式]：未達成為虛線圓圈，達成後變為金色實線並旋轉 */
+        .stamp { width: 85px; height: 85px; border: 2px dashed #bdc3c7; border-radius: 24px; transition: 0.4s; }
         .stamp.active { border: 3px solid var(--gold); background: #fffde7; transform: scale(1.05) rotate(5deg); }
-        .stamp.active::after { content: '✓'; position: absolute; bottom: -8px; right: -8px; background: var(--green); color: white; border-radius: 50%; width: 28px; height: 28px; font-size: 14px; display: flex; align-items: center; justify-content: center; border: 3px solid white; }
 
-        /* 獎勵按鈕 */
-        .btn-prize { width: 100%; padding: 18px; border-radius: 20px; border: none; font-weight: bold; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; margin-bottom: 10px; }
-        .state-ready { background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%); color: white; box-shadow: 0 6px 15px rgba(243,156,18,0.4); animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
-        .state-done { background: #e8f5e9; color: #2ecc71; border: 1.5px dashed #2ecc71; }
-        .state-locked { background: #f8f9fa; color: #aaa; border: 1px solid #eee; }
-
-        /* 底部導航 */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: rgba(255,255,255,0.9); backdrop-filter: blur(15px); display: flex; height: 85px; border-top: 1px solid rgba(0,0,0,0.05); z-index: 1000; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #95a5a6; transition: 0.3s; cursor: pointer; }
-        .nav-item.active { color: var(--green); font-weight: bold; transform: translateY(-3px); }
-        .nav-item span { font-size: 26px; }
-        .nav-item div { font-size: 12px; margin-top: 2px; }
-
-        /* 彈窗 */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(10, 30, 10, 0.7); backdrop-filter: blur(10px); }
-        .modal-content { background: white; margin: 15% auto; padding: 35px 25px; border-radius: 35px; width: 90%; max-width: 360px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        /* [彈窗樣式]：使用高斯模糊 (backdrop-filter) 提升質感 */
+        .modal { backdrop-filter: blur(10px); }
+        .modal-content { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        
-        .eco-tip-box { background: #f0f9f4; border-radius: 15px; padding: 12px; margin: 15px 0; border-left: 4px solid var(--green); text-align: left; font-size: 14px; color: #444; }
-        .code-input { width: 100%; padding: 15px; font-size: 28px; text-align: center; letter-spacing: 5px; border: 2px solid #eee; border-radius: 15px; margin: 15px 0; outline: none; }
-        .btn-main { background: var(--green); color: white; border: none; padding: 16px; border-radius: 50px; font-weight: bold; width: 100%; font-size: 17px; }
-        .btn-cancel { background: none; color: #999; border: none; margin-top: 15px; text-decoration: underline; font-size: 14px; }
-
-        /* 地圖頁細項 */
-        .map-info p { margin: 8px 0; font-size: 15px; color: #444; }
-        .map-info b { color: var(--dark-green); margin-right: 5px; }
-        .eco-icons { display: flex; justify-content: space-around; font-size: 28px; margin-top: 20px; }
-        .eco-icons span { animation: bounce 3s infinite; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-
-        .tab-content { display: none; padding: 15px; max-width: 500px; margin: auto; animation: fadeIn 0.4s; }
-        .active-tab { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body onclick="unlockAudio()">
@@ -116,61 +67,50 @@
         <div class="grid" id="mainGrid"></div>
 
         <div class="glass-card" style="margin-top: 25px;">
-            <div style="font-weight: 800; color: var(--dark-green); margin-bottom: 15px; display: flex; align-items: center;">
-                <span style="font-size: 20px; margin-right: 8px;">🎁</span> 獎勵領取處
-            </div>
+            <div style="font-weight: 800; color: var(--dark-green); margin-bottom: 15px;">🎁 獎勵領取處</div>
             <div class="redeem-grid">
-                <button id="btn-6" class="btn-prize state-locked" onclick="openRedeemModal(6)">
-                    <span>細獎 (6枚)</span><small id="status-6">鎖定中</small>
-                </button>
-                <button id="btn-9" class="btn-prize state-locked" onclick="openRedeemModal(9)">
-                    <span>中獎 (9枚)</span><small id="status-9">鎖定中</small>
-                </button>
-                <button id="btn-12" class="btn-prize state-locked" onclick="openRedeemModal(12)">
-                    <span>大獎 (12枚)</span><small id="status-12">鎖定中</small>
-                </button>
+                <button id="btn-6" class="btn-prize state-locked" onclick="openRedeemModal(6)"><span>細獎 (6個印花)</span><small id="status-6">鎖定中</small></button>
+                <button id="btn-9" class="btn-prize state-locked" onclick="openRedeemModal(9)"><span>中獎 (9個印花)</span><small id="status-9">鎖定中</small></button>
+                <button id="btn-12" class="btn-prize state-locked" onclick="openRedeemModal(12)"><span>大獎 (12個印花)</span><small id="status-12">鎖定中</small></button>
             </div>
         </div>
     </div>
 
     <div id="tab-map" class="tab-content">
         <div class="glass-card">
-            <h3 style="color: var(--dark-green); margin-top:0;">📍 活動資訊</h3>
+            <h3 style="color: var(--dark-green);">📍 活動資訊</h3>
             <div class="map-info">
                 <p><b>日期：</b> 2026年3月30日 (測試) / 4月21日 (正式)</p>
-                <p><b>時間：</b> 10:00 AM - 4:30 PM</p>
-                <p><b>地點：</b> 香港專業教育學院 (IVE) 九龍灣校舍</p>
-                <p style="margin-top:15px; line-height:1.6; background:#f9f9f9; padding:12px; border-radius:10px;">
-                    <b>活動簡介：</b><br>
-                    歡迎參與綠色繽紛嘉年華！讓我們共同營造更潔淨的校園環境，推動可持續未來！
-                </p>
+                <p><b>時間：</b> 11:30am to 2:30pm</p>
+                <p><b>地點：</b> 職業訓練局 九龍灣大樓</p>
+		    	<p><b>地點：</b> 歡迎參與綠色繽紛嘉年華暨環保大使計劃閉幕禮！讓我們共同營造更環保更潔淨的校園環境，推動可持續未來！</p>
+                /*
+				<div style="margin-top:15px; background:#f0f7f2; padding:15px; border-radius:15px; border: 1px solid #d4ede0;">
+                    <b>簡介：</b><br>
+                    歡迎參與綠色繽紛嘉年華暨環保大使計劃閉幕禮！讓我們共同營造更環保更潔淨的校園環境，推動可持續未來！
+                </div>
+                */
             </div>
-            <img src="KBC_Address.jpg" style="width:100%; border-radius:15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-top:15px;" onclick="window.open(this.src)">
-            
+            <img src="KBC_Address.jpg" style="width:100%; border-radius:15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top:15px;" onclick="window.open(this.src)">
+            //<img src="KBC_Address.jpg" style="width:100%; border-radius:15px; margin-top:15px;" onclick="window.open(this.src)">
+
             <div class="eco-icons">
-                <span style="animation-delay: 0s;">🍃</span><span style="animation-delay: 0.4s;">🌍</span>
-                <span style="animation-delay: 0.8s;">♻️</span><span style="animation-delay: 1.2s;">💧</span>
-                <span style="animation-delay: 1.6s;">☀️</span>
+                <span>🍃</span><span>🌍</span><span>♻️</span><span>💧</span><span>☀️</span>
             </div>
-        </div>
+    	
+    	</div>
     </div>
 
     <div class="nav-bar">
-        <div id="nav-stamps" class="nav-item active" onclick="switchTab('stamps')">
-            <span>🎫</span><div>我的印花</div>
-        </div>
-        <div id="nav-map" class="nav-item" onclick="switchTab('map')">
-            <span>🗺️</span><div>活動地圖</div>
-        </div>
+        <div id="nav-stamps" class="nav-item active" onclick="switchTab('stamps')"><span>🎫</span><div>我的印花</div></div>
+        <div id="nav-map" class="nav-item" onclick="switchTab('map')"><span>🗺️</span><div>活動地圖</div></div>
     </div>
 
     <div id="uiModal" class="modal">
         <div class="modal-content">
-            <div id="modalIcon" style="font-size: 75px; margin-bottom: 5px;"></div>
+            <div id="modalIcon" style="font-size: 75px;"></div>
             <h3 id="modalTitle" style="color: var(--dark-green); margin: 10px 0;"></h3>
-            
             <div id="ecoTip" class="eco-tip-box"></div>
-
             <p id="modalDesc" style="color: #666; font-size: 14px;"></p>
             
             <div id="verifyArea" style="display:none;">
@@ -187,70 +127,77 @@
     </div>
 
 <script>
+    /* ==========================================
+       模組 4：核心數據配置 (Data Configuration)
+       ========================================== */
     const API_URL = "https://script.google.com/macros/s/AKfycbySGCPsBNDjXo7iH2PCMkOlppRqOVcsrNF-AIyXbatOD2lhfhPMKvuXjUbuQO09ETst/exec"; 
-    const SALT = 1111;
-    
-    // 攤位數據：包含專屬 Tip
+    const SALT = 0000; // 密碼加密偏移量
+    //const SALT = 1111; // 密碼加密偏移量
+
+    // 攤位配置：若要增加攤位，只需在此 Array 增加 Object
     const STALLS = [
-        { id: 'QR1', icon: '♻️', name: '分類回收', tip: '回收 1 噸廢紙可挽救 17 棵大樹！請確保回收物乾淨無油污。' },
-        { id: 'QR2', icon: '☀️', name: '再生能源', tip: '太陽能是地球最充足的能源。使用太陽能可大幅減少碳排放。' },
-        { id: 'QR3', icon: '🚲', name: '低碳交通', tip: '多搭乘公共交通或騎單車，每公里可減少約 150g 的碳足跡。' },
-        { id: 'QR4', icon: '🌲', name: '森林保護', tip: '森林是地球的肺。珍惜用低，守護我們的綠色屏障。' },
-        { id: 'QR5', icon: '💧', name: '節約水種', tip: '縮短淋浴時間 1 分鐘，平均可節省 10 公升食水。' },
-        { id: 'QR6', icon: '🔋', name: '電池回收', tip: '一顆鈕扣電池能污染 60 萬升水，請務必將廢電池放回回收點。' },
-        { id: 'QR7', icon: '🥦', name: '低碳飲食', tip: '每週一日素食，一年可減少排放約 320 公斤二氧化碳。' },
-        { id: 'QR8', icon: '💡', name: '節能減排', tip: '隨手關燈、更換 LED 燈泡可節省高達 75% 的電量消耗。' },
+        { id: 'QR1', icon: '♻️', name: '分類回收', tip: '回收 1 噸廢紙可挽救 17 棵大樹！請確保回收物乾淨。' },
+        { id: 'QR2', icon: '☀️', name: '再生能源', tip: '太陽能是地球最充足的能源，能大幅減少碳排放。' },
+        { id: 'QR3', icon: '🚲', name: '低碳交通', tip: '多搭乘公共交通或騎單車，每公里減少約 150g 碳排放。' },
+        { id: 'QR4', icon: '🌲', name: '森林保護', tip: '森林是地球的肺，守護它們就是守護我們的氧氣。' },
+        { id: 'QR5', icon: '💧', name: '節約水種', tip: '淋浴少 1 分鐘，平均可節省約 10 公升食水。' },
+        { id: 'QR6', icon: '🔋', name: '電池回收', tip: '重金屬會污染土壤，請務必將廢棄電池送往回收點。' },
+        { id: 'QR7', icon: '🥦', name: '低碳飲食', tip: '少吃肉多吃菜，每餐可減少約 1.5 公斤的二氧化碳排放。' },
+        { id: 'QR8', icon: '💡', name: '節能減排', tip: '隨手關燈、更換 LED 燈泡可節省高達 75% 的電力消耗。' },
         { id: 'QR9', icon: '🌊', name: '守護海洋', tip: '減少使用即棄塑膠，防止海洋生物誤食塑膠垃圾。' },
-        { id: 'QR10', icon: '🐝', name: '生物多樣', tip: '保護蜜蜂就是保護人類糧食，支持有機耕種有利生態平衡。' },
-        { id: 'QR11', icon: '👕', name: '舊衣重用', tip: '生產一件棉質 T-shirt 需消耗 2700 升水。物盡其用，減少浪費。' },
-        { id: 'QR12', icon: '🌬️', name: '空氣清新', tip: '室內多擺放植物如虎尾蘭，能有效過濾有害氣體並產生氧氣。' }
+        { id: 'QR10', icon: '🛠️', name: '升級再造', tip: 'Upcycling 能將廢物轉化成更有價值的物品，延續物料壽命。' },
+        { id: 'QR11', icon: '🐝', name: '生物多樣', tip: '保護蜜蜂就是保護人類的糧食來源。' },
+        { id: 'QR12', icon: '🌬️', name: '空氣清新', tip: '多擺放室內植物如虎尾蘭，能過濾有害氣體並產生氧氣。' }
     ];
 
-    let userId = localStorage.getItem('vtc_user_id') || ('U' + Date.now() + 'R' + Math.floor(Math.random()*1000));
-    localStorage.setItem('vtc_user_id', userId);
+    /* ==========================================
+       模組 5：程序控制器 (Controller Module)
+       ========================================== */
 
-    let myStamps = JSON.parse(localStorage.getItem('vtc_stamps_2026')) || [];
-    let redeemedHistory = JSON.parse(localStorage.getItem('vtc_redeemed_history')) || [];
+    // [狀態變量]
+    let userId = localStorage.getItem('vtc_user_id') || ('U' + Date.now() + 'R' + Math.floor(Math.random()*1000));
+    localStorage.setItem('vtc_user_id', userId); // 確保每個用戶有唯一 ID
+
+    let myStamps = JSON.parse(localStorage.getItem('vtc_stamps_2026')) || []; // 讀取本地印花紀錄
+    let redeemedHistory = JSON.parse(localStorage.getItem('vtc_redeemed_history')) || []; // 讀取獎勵領取紀錄
     let audioUnlocked = false;
 
-    function createDots() {
-        const bg = document.getElementById('bgDots');
-        for(let i=0; i<15; i++) {
-            let dot = document.createElement('div');
-            dot.className = 'dot';
-            dot.style.left = Math.random() * 100 + 'vw';
-            dot.style.width = dot.style.height = Math.random() * 15 + 5 + 'px';
-            dot.style.animationDelay = Math.random() * 10 + 's';
-            dot.style.animationDuration = Math.random() * 10 + 10 + 's';
-            bg.appendChild(dot);
-        }
-    }
-
+    /*
+    // 解鎖音效權限 (雙音頻解鎖)
     function unlockAudio() {
         if (audioUnlocked) return;
         const s1 = document.getElementById('stampAudio');
         const s2 = document.getElementById('giftAudio');
-        s1.play().then(() => { s1.pause(); s1.currentTime = 0; }).catch(()=>{});
-        s2.play().then(() => { s2.pause(); s2.currentTime = 0; }).catch(()=>{});
-        audioUnlocked = true;
+        Promise.all([s1.play(), s2.play()]).then(() => {
+            s1.pause(); s1.currentTime = 0;
+            s2.pause(); s2.currentTime = 0;
+            audioUnlocked = true;
+            console.log("Audio Engine Ready");
+        }).catch(() => {});
     }
-
+    */
+    
+    // [初始化函數] - Run every time QR code is scanned
     function init() {
-        createDots();
-        setInterval(() => {
-            document.getElementById('live-clock').innerText = new Date().toLocaleString('zh-HK');
-        }, 1000);
+        createDots(); // 生成背景動畫
+        // 啟動實時時鐘
+        setInterval(() => { document.getElementById('live-clock').innerText = new Date().toLocaleString('zh-HK'); }, 1000);
+        
+        // 自動掃碼邏輯：從 URL 獲取 ?id=QR1 參數
         const qid = new URLSearchParams(window.location.search).get('id');
         if (qid && STALLS.some(s => s.id === qid)) {
             myStamps.includes(qid) ? showTooltip(qid) : openVerifyModal(qid);
-            window.history.replaceState({}, '', window.location.pathname);
+            //window.history.replaceState({}, '', window.location.pathname); // 清除 URL 參數，避免重刷新重複彈窗
         }
-        render();
+        render(); // 繪製畫面
     }
 
+    // [畫面渲染器]：將數據轉換成 HTML 顯示
     function render() {
         const grid = document.getElementById('mainGrid');
         grid.innerHTML = '';
+        
+        // 循環生成 12 個攤位格
         STALLS.forEach(s => {
             const isDone = myStamps.includes(s.id);
             grid.innerHTML += `
@@ -260,23 +207,50 @@
                 </div>`;
         });
 
+        // 更新上方進度條
         const count = myStamps.length;
+        if(count > 12)
+        	count = 12;
         document.getElementById('progText').innerText = `我的印花進度：${count} / 12`;
         document.getElementById('pBar').style.width = (count / 12 * 100) + '%';
 
+        // 更新獎勵按鈕狀態 (6, 9, 12 個印花時)
         [6, 9, 12].forEach(lv => {
             const btn = document.getElementById(`btn-${lv}`);
             const status = document.getElementById(`status-${lv}`);
             if (redeemedHistory.includes(lv)) {
-                btn.className = "btn-prize state-done"; status.innerText = "已領取獎品 ✓";
+                btn.className = "btn-prize state-done"; status.innerText = "已領取 ✓";
             } else if (count >= lv) {
-                btn.className = "btn-prize state-ready"; status.innerText = "已解鎖，點擊領取";
+                btn.className = "btn-prize state-ready"; status.innerText = "點擊領取";
             } else {
-                btn.className = "btn-prize state-locked"; status.innerText = `還差 ${lv - count} 個`;
+                btn.className = "btn-prize state-locked"; status.innerText = `差 ${lv - count} 個解鎖`;
             }
         });
     }
+    
+    function showTooltip(id) {
+        const stall = STALLS.find(s => s.id === id);
+        const isDone = myStamps.includes(id);
+        document.getElementById('modalIcon').innerText = stall.icon;
+        document.getElementById('modalTitle').innerText = stall.name;
+        document.getElementById('modalDesc').innerText = stall.info + (isDone ? "\n\n✅ 您已完成挑戰！" : "\n\n📍 請掃描攤位 QR Code。");
+        document.getElementById('verifyArea').style.display = 'none';
+        document.getElementById('redeemArea').style.display = 'none';
+        document.getElementById('uiModal').style.display = 'block';
+    }
+    
+    
 
+    // [安全驗證邏輯]：動態密碼演算法
+    function validate(code) {
+        const now = new Date();
+        const h = now.getHours().toString().padStart(2,'0'); // 小時 (24h)
+        const m = now.getMinutes().toString().padStart(2,'0'); // 分鐘
+        // 密碼 = (HHMM) + 1111。 範例：10:30 密碼為 1030 + 1111 = 2141
+        return code === (parseInt(h + m) + SALT).toString();
+    }
+
+    // [數據對接模組]：將領取數據傳送到 Google Sheets
     function sendToSheet(action, val) {
         let finalVal = val;
         if (action === 'redeem') {
@@ -284,89 +258,30 @@
             finalVal = map[val];
         }
         const url = `${API_URL}?action=${action}&${action==='log'?'id':'lv'}=${encodeURIComponent(finalVal)}&uid=${userId}`;
+        // 使用圖片請求發送數據，避免跨網域 (CORS) 問題
         new Image().src = url;
     }
 
-    function openVerifyModal(id) {
-        const stall = STALLS.find(s => s.id === id);
-        document.getElementById('modalIcon').innerText = stall.icon; // 使用相關 QR Code 圖示
-        document.getElementById('modalTitle').innerText = stall.name;
-        document.getElementById('ecoTip').innerHTML = `<b>💡 環保小知識：</b><br>${stall.tip}`;
-        document.getElementById('modalDesc').innerText = "請輸入工作人員提供的密碼以完成蓋印。";
-        document.getElementById('verifyArea').style.display = 'block';
-        document.getElementById('redeemArea').style.display = 'none';
-        document.getElementById('uiModal').style.display = 'block';
-        
-        document.getElementById('confirmBtn').onclick = () => {
-            const input = document.getElementById('vCodeInput').value;
-            if (validate(input)) {
-                if (!myStamps.includes(id)) {
-                    myStamps.push(id);
-                    localStorage.setItem('vtc_stamps_2026', JSON.stringify(myStamps));
-                    sendToSheet('log', id);
-                    triggerEffect('stamp');
-                }
-                closeModal(); render();
-            } else { alert("密碼不正確！"); }
-        };
-    }
-
-    function openRedeemModal(lv) {
-        if (myStamps.length < lv || redeemedHistory.includes(lv)) return;
-        document.getElementById('modalIcon').innerText = "✨";
-        document.getElementById('modalTitle').innerText = "領取獎勵";
-        document.getElementById('ecoTip').innerHTML = `<b>🌟 綠色成就：</b><br>您已為地球減少了相當數量的碳足跡！感謝您的參與。`;
-        document.getElementById('modalDesc').innerText = "請將此畫面示予禮品換領處。";
-        document.getElementById('verifyArea').style.display = 'none';
-        document.getElementById('redeemArea').style.display = 'block';
-        document.getElementById('uiModal').style.display = 'block';
-        
-        document.getElementById('redeemConfirmBtn').onclick = () => {
-            redeemedHistory.push(lv);
-            localStorage.setItem('vtc_redeemed_history', JSON.stringify(redeemedHistory));
-            sendToSheet('redeem', lv);
-            triggerEffect('gift');
-            closeModal(); render();
-        };
-    }
-
-    function validate(code) {
-        const now = new Date();
-        const h = now.getHours().toString().padStart(2,'0');
-        const m = now.getMinutes().toString().padStart(2,'0');
-        return code === (parseInt(h + m) + SALT).toString();
-    }
-
+    // [交互反饋]：播放音效與五彩碎紙
     function triggerEffect(type) {
         const sound = document.getElementById(type === 'stamp' ? 'stampAudio' : 'giftAudio');
         sound.currentTime = 0; sound.play().catch(()=>{});
         confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#2ecc71', '#f1c40f', '#ffffff'] });
     }
 
-    function showTooltip(id) {
-        const s = STALLS.find(x => x.id === id);
-        document.getElementById('modalIcon').innerText = s.icon;
-        document.getElementById('modalTitle').innerText = s.name;
-        document.getElementById('ecoTip').innerHTML = `<b>💡 環保小知識：</b><br>${s.tip}`;
-        document.getElementById('modalDesc').innerText = "✅ 您已成功收集此印花！";
-        document.getElementById('verifyArea').style.display = 'none';
-        document.getElementById('redeemArea').style.display = 'none';
-        document.getElementById('uiModal').style.display = 'block';
-    }
-
+    // [導航控制]：切換 Tab
     function switchTab(t) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab'));
         document.getElementById('tab-' + t).classList.add('active-tab');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById('nav-' + t).classList.add('active');
-        unlockAudio();
+        unlockAudio(); // 瀏覽器安全性要求：用戶點擊後才可播放音頻
     }
 
-    function closeModal() {
-        document.getElementById('uiModal').style.display = 'none';
-        document.getElementById('vCodeInput').value = '';
-    }
-
+    // [視窗管理]
+    function closeModal() { document.getElementById('uiModal').style.display = 'none'; }
+    
+    // 初始化啟動
     init();
 </script>
 </body>
