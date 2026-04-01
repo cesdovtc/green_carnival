@@ -374,7 +374,10 @@
     // ==========================================
     
     // Google Apps Script 的後台 API 網址，負責將用戶的蓋印和領獎數據傳回 Google Sheet 試算表
-    const API_URL = "https://script.google.com/macros/s/AKfycbztJOpwadOqZmgbVMZawxW7RvoaihSDERjWT3A7CtVOp1b7CA2j4ydAluv4udBWbUCk/exec"; 
+    //const API_URL = "https://script.google.com/macros/s/AKfycbztJOpwadOqZmgbVMZawxW7RvoaihSDERjWT3A7CtVOp1b7CA2j4ydAluv4udBWbUCk/exec"; 
+    const API_URL = "https://script.google.com/macros/s/AKfycbwhlFCOQkSlELkFcFZVD6fQU_GEpnmuaaXRg8rALlsW4gvXeSWSTcUsc612IosrFEns/exec"; 
+
+    
     
     // 密碼鹽值 (可更改此數字來調整動態密碼的偏移量，保持不變以相容 Edward 原有設定)
     const SALT = 0; 
@@ -390,7 +393,7 @@
         { id: 'QR6', icon: '🔋', name: '電池回收', tip: '廢電池請送往回收點，防止土壤污染。' },
         { id: 'QR7', icon: '🥦', name: '低碳飲食', tip: '少吃肉多吃菜，每餐減排 1.5kg 二氧化碳。' },
         { id: 'QR8', icon: '💡', name: '節能減排', tip: '更換 LED 燈泡可省電 75%。' },
-        { id: 'QR wave', icon: '🌊', name: '守護海洋', tip: '減少使用即棄塑膠，保護海洋生物。' },
+        { id: 'QR9', icon: '🌊', name: '守護海洋', tip: '減少使用即棄塑膠，保護海洋生物。' },
         { id: 'QR10', icon: '🛠️', name: '升級再造', tip: '升級再造能延續廢棄物料的壽命。' },
         { id: 'QR11', icon: '🐝', name: '生物多樣', tip: '保護蜜蜂就是保護人類糧食來源。' },
         { id: 'QR12', icon: '🌬️', name: '空氣清新', tip: '虎尾蘭能有效過濾室內有害氣體。' }
