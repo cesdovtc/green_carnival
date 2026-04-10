@@ -492,14 +492,14 @@
         replyArea.innerText = "⏳ 思考中...";
         setTimeout(() => {
             if (question.includes('印花')) {
-                replyArea.innerText = "去攤位完成挑戰，向工作人員攞密碼輸入就可以蓋印！";
+                replyArea.innerText = "去攤位參觀和完成活動，向工作人員攞密碼輸入就可以蓋印！";
             } else if (question.includes('禮品')) {
                 replyArea.innerText = "集齊 3、5 或 8 個印花，就可去大堂換領獎品！";
             } else if (question.includes('貼士')) {
                 const tips = [
-                    "自備水樽，每日可以減少棄置一個即棄膠樽！",
-                    "離開房間時熄燈熄冷氣，減少碳排放！",
-                    "試吓多選擇步行，是最健康的環保方式！"
+                    "🧂 自備水樽，每日可以減少棄置一個即棄膠樽！",
+                    "💡 離開房間時熄燈熄冷氣，減少碳排放！",
+                    "🚶 試吓多選擇步行，是最健康的環保方式！"
                 ];
                 replyArea.innerText = "環保小貼士：" + tips[Math.floor(Math.random() * tips.length)];
             }
