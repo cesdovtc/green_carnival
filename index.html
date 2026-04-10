@@ -15,8 +15,8 @@
             /* 定義主題顏色變數，方便日後統一修改風格 */
             --green: #2ecc71;         /* 主綠色：按鈕、進度條、高亮 */
             --dark-green: #1b5e20;    /* 深綠色：標題、重要文字、深色背景 */
-            --gold: #d0c40f;          /* 金色：獎勵、高亮狀態、特殊按鈕 */
-            //--gold: #f1c40f;          /* 金色：獎勵、高亮狀態、特殊按鈕 */
+            //--gold: #d0c40f;          /* 金色：獎勵、高亮狀態、特殊按鈕 */
+            --gold: #f1c40f;          /* 金色：獎勵、高亮狀態、特殊按鈕 */
             --soft-green: #e8f5e9;    /* 淺綠色：已完成狀態的背景、輕量背景 */
             --glass: rgba(255, 255, 255, 0.85); /* 玻璃擬態基礎背景色 */
             --chat-bg: #eafaf1;       /* 對話框氣泡的輕柔綠色背景 */
@@ -376,6 +376,7 @@
     // Google Apps Script 的後台 API 網址，負責將用戶的蓋印和領獎數據傳回 Google Sheet 試算表
     //const API_URL = "https://script.google.com/macros/s/AKfycbztJOpwadOqZmgbVMZawxW7RvoaihSDERjWT3A7CtVOp1b7CA2j4ydAluv4udBWbUCk/exec"; 
     const API_URL = "https://script.google.com/macros/s/AKfycbwhlFCOQkSlELkFcFZVD6fQU_GEpnmuaaXRg8rALlsW4gvXeSWSTcUsc612IosrFEns/exec"; 
+ 
     
 
     
@@ -467,6 +468,15 @@
         const grid = document.getElementById('mainGrid');
         grid.innerHTML = ''; // 清空現有網格
         
+		const titles = [
+		    { min: 0, text: "環保萌新 🌱" },
+		    { min: 4, text: "低碳達人 🚲" },
+		    { min: 8, text: "綠色先鋒 🌳" },
+		    { min: 12, text: "地球守護者 🌍" }
+		];
+		const myTitle = titles.reverse().find(t => count >= t.min).text;
+
+        
         // 渲染 12 個攤位印花
         STALLS.forEach(s => {
             const isDone = myStamps.includes(s.id); // 檢查該攤位是否已完成
@@ -479,8 +489,9 @@
         
         // 更新進度條與文字
         const count = Math.min(myStamps.length, 12);
-        document.getElementById('progText').innerText = `我的印花進度：${count} / 12`;
-        document.getElementById('pBar').style.width = (count / 12 * 100) + '%';
+        //document.getElementById('progText').innerText = `我的印花進度：${count} / 12`;
+		document.getElementById('progText').innerHTML = `我的進度：${count} / 12 <br><span style="font-size:12px; color:var(--gold)">成就：${myTitle}</span>`;
+		document.getElementById('pBar').style.width = (count / 12 * 100) + '%';
 
         // 更新 3 個領獎按鈕的狀態 (6, 9, 12個印花)
         [6, 9, 12].forEach(lv => {
@@ -584,8 +595,18 @@
 
     // 將數據發送到 Google Sheet（不卡住瀏覽器 UI 的隱形 GET 請求）
     function sendToSheet(action, val) {
+        //const url = `${API_URL}?action=${action}&${action==='log'?'id':'lv'}=${encodeURIComponent(val)}&uid=${userId}`;
+        //new Image().src = url; // 透過 new Image 送出請求，完美繞過跨域 CORS 阻擋
+        
+        
         const url = `${API_URL}?action=${action}&${action==='log'?'id':'lv'}=${encodeURIComponent(val)}&uid=${userId}`;
-        new Image().src = url; // 透過 new Image 送出請求，完美繞過跨域 CORS 阻擋
+	    const img = new Image();
+	    img.onload = () => console.log("同步成功");
+	    img.onerror = () => {
+	        // 如果發送失敗，可以在 UI 顯示一個小小的「待同步」圖示
+	        console.warn("網絡不穩，稍後自動重試");
+	    };
+	    img.src = url;	    
     }
 
     // 觸發音效與 Canvas Confetti 撒紙屑特效
