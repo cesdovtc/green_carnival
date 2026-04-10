@@ -296,7 +296,7 @@
         { id: 'QR2', icon: '☀️', name: '再生能源', tip: '太陽能是地球最充足的能源。' },
         { id: 'QR3', icon: '🚲', name: '低碳交通', tip: '多搭乘公共交通每公里減少 150g 碳排放。' },
         { id: 'QR4', icon: '🌲', name: '森林保護', tip: '森林是地球的肺，守護氧氣來源。' },
-        { id: 'QR5', icon: '💧', name: '節約用水', tip: '淋浴少 1 分鐘，可節省 10 公升水。' },
+        { id: 'QR5', icon: '💧', name: '節約水種', tip: '淋浴少 1 分鐘，可節省 10 公升水。' },
         { id: 'QR6', icon: '🔋', name: '電池回收', tip: '廢電池請送往回收點，防止土壤污染。' },
         { id: 'QR7', icon: '🥦', name: '低碳飲食', tip: '少吃肉多吃菜，每餐減排 1.5kg 二氧化碳。' },
         { id: 'QR8', icon: '💡', name: '節能減排', tip: '更換 LED 燈泡可省電 75%。' },
@@ -304,10 +304,11 @@
         { id: 'QR10', icon: '🛠️', name: '升級再造', tip: '升級再造能延續廢棄物料的壽命。' },
         { id: 'QR11', icon: '🐝', name: '生物多樣', tip: '保護蜜蜂就是保護人類糧食來源。' },
         { id: 'QR12', icon: '🌬️', name: '空氣清新', tip: '虎尾蘭能有效過濾室內有害氣體。' },
+        // 新增加的 8 個印花
         { id: 'QR13', icon: '🌍', name: '全球氣候', tip: '減緩全球升溫，需將溫升控制在 1.5度內。' },
         { id: 'QR14', icon: '🧺', name: '無塑購物', tip: '自備環保袋，每年可減少數百個塑膠袋。' },
         { id: 'QR15', icon: '🔌', name: '待機功耗', tip: '拔掉不使用的插頭，可減少約 10% 家庭電費。' },
-        { id: 'QR16', icon: '🍲', name: '珍惜糧食', tip: '全球有 1/3 食物被浪費，這佔碳排放的 8%。' },
+        { id: 'QR16', icon: '🍲', name: '珍惜食糧', tip: '全球有 1/3 食物被浪費，這佔碳排放的 8%。' },
         { id: 'QR17', icon: '📜', name: '無紙生活', tip: '使用電子賬單，每年可減少大量紙張浪費。' },
         { id: 'QR18', icon: '👕', name: '綠色時尚', tip: '買一件二手衣可減少約 2kg 的紡織廢料。' },
         { id: 'QR19', icon: '🧴', name: '環保洗滌', tip: '使用天然洗潔精，減少對水源的化學污染。' },
@@ -334,7 +335,7 @@
 
     function createLeaves() {
         const bg = document.getElementById('bgDots');
-        const leafEmojis = ['🍃', '🍁', '☘️', '🍂, '🌱', '🌸', '🌿', '🌼'];
+        const leafEmojis = ['🍃', '🍂', '🍁', '🌱'];
         for(let i=0; i<8; i++) {
             const leaf = document.createElement('div');
             leaf.className = 'leaf';
@@ -358,16 +359,6 @@
     function render() {
         const grid = document.getElementById('mainGrid');
         grid.innerHTML = ''; 
-
-        const myTitle = ' '; 
-
-        // 在 render() 函數內加入
-        const titles = [
-            { min: 0, text: "環保萌新 🌱" },
-            { min: 6, text: "低碳達人 🚲" },
-            { min: 9, text: "綠色先鋒 🌳" },
-            { min: 15, text: "地球守護者 🌍" }
-        ];
         
         STALLS.forEach(s => {
             const isDone = myStamps.includes(s.id); 
@@ -380,12 +371,7 @@
         
         // [修改] 進度計算基準變為 20
         const count = Math.min(myStamps.length, 20);
-
-        myTitle = titles.reverse().find(t => count >= t.min).text;
-        //document.getElementById('progText').innerHTML = `我的進度：${count} / 12 <br><span style="font-size:12px; color:var(--gold)">成就：${myTitle}</span>`;
-
         document.getElementById('progText').innerText = `我的印花進度：${count} / 20`;
-        
         document.getElementById('pBar').style.width = (count / 20 * 100) + '%';
 
         // [修改] 獎勵門檻調整為 3, 5, 8
@@ -511,7 +497,7 @@
                 replyArea.innerText = "集齊 3、5 或 8 個印花，就可去大堂換領獎品！";
             } else if (question.includes('貼士')) {
                 const tips = [
-                    "🧂 自備水樽，每日可以減少棄置一個即棄膠樽！",
+                    "🧂自備水樽，每日可以減少棄置一個即棄膠樽！",
                     "💡 離開房間時熄燈熄冷氣，減少碳排放！",
                     "🚶 試吓多選擇步行，是最健康的環保方式！"
                 ];
