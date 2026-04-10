@@ -382,9 +382,9 @@
         const count = Math.min(myStamps.length, 20);
 
         myTitle = titles.reverse().find(t => count >= t.min).text;
-        document.getElementById('progText').innerHTML = `我的進度：${count} / 12 <br><span style="font-size:12px; color:var(--gold)">成就：${myTitle}</span>`;
+        //document.getElementById('progText').innerHTML = `我的進度：${count} / 12 <br><span style="font-size:12px; color:var(--gold)">成就：${myTitle}</span>`;
 
-        //document.getElementById('progText').innerText = `我的印花進度：${count} / 20`;
+        document.getElementById('progText').innerText = `我的印花進度：${count} / 20`;
         
         document.getElementById('pBar').style.width = (count / 20 * 100) + '%';
 
