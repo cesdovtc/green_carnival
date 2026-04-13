@@ -224,7 +224,7 @@
         <div class="grid" id="mainGrid"></div>
         
         <div class="glass-card" style="margin-top: 25px;">
-            <div style="font-weight: 800; color: var(--dark-green); margin-bottom: 18px;">🎁 獎勵領取處</div>
+            <div style="font-weight: 800; color: var(--dark-green); margin-bottom: 16px;">🎁 獎勵領取處</div>
             <div id="redeemButtons">
                 <button id="btn-3" class="btn-prize state-locked" onclick="openRedeemModal(3)"><span>細獎 (3個印花)</span><small id="status-3">鎖定中</small></button>
                 <button id="btn-5" class="btn-prize state-locked" onclick="openRedeemModal(5)"><span>中獎 (5個印花)</span><small id="status-5">鎖定中</small></button>
@@ -506,7 +506,7 @@ function validate(code) {
                 replyArea.innerText = "集齊 3、5 或 8 個印花，就可去大堂換領獎品！";
             } else if (question.includes('貼士')) {
                 const tips = [
-                    "🧂自備水樽，每日可以減少棄置一個即棄膠樽！",
+                    "🧂 自備水樽，每日可以減少棄置一個即棄膠樽！",
                     "💡 離開房間時熄燈熄冷氣，減少碳排放！",
                     "🚶 試吓多選擇步行，是最健康的環保方式！"
                 ];
