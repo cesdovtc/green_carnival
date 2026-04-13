@@ -224,7 +224,7 @@
         <div class="grid" id="mainGrid"></div>
         
         <div class="glass-card" style="margin-top: 25px;">
-            <div style="font-weight: 800; color: var(--dark-green); margin-bottom: 15px;">🎁 獎勵領取處</div>
+            <div style="font-weight: 800; color: var(--dark-green); margin-bottom: 18px;">🎁 獎勵領取處</div>
             <div id="redeemButtons">
                 <button id="btn-3" class="btn-prize state-locked" onclick="openRedeemModal(3)"><span>細獎 (3個印花)</span><small id="status-3">鎖定中</small></button>
                 <button id="btn-5" class="btn-prize state-locked" onclick="openRedeemModal(5)"><span>中獎 (5個印花)</span><small id="status-5">鎖定中</small></button>
@@ -277,10 +277,10 @@
             <p id="modalDesc" style="color: #666; font-size: 14px;"></p>
             <div id="verifyArea" style="display:none;">
                 <input type="number" id="vCodeInput" class="code-input" placeholder="工作人員密碼">
-                <button class="btn-main" id="confirmBtn">確認蓋印 🤗🥳</button>
+                <button class="btn-main" id="confirmBtn">確認蓋印 🤗</button>
             </div>
             <div id="redeemArea" style="display:none;">
-                <button class="btn-main" id="redeemConfirmBtn" style="background: var(--gold); color: white;">確認領取禮品 🎁</button>
+                <button class="btn-main" id="redeemConfirmBtn" style="background: var(--gold); color: white;">確認領取禮品 🥳</button>
             </div>
             <button class="btn-cancel" onclick="closeModal()">返回</button>
         </div>
@@ -289,6 +289,7 @@
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbwhlFCOQkSlELkFcFZVD6fQU_GEpnmuaaXRg8rALlsW4gvXeSWSTcUsc612IosrFEns/exec"; 
     const SALT = 0; 
+    //const SALT = 1111; 
 
     // [新增] 擴展至 20 個環保攤位
     const STALLS = [
@@ -450,12 +451,20 @@
         };
     }
 
-    function validate(code) {
+function validate(code) {
         const now = new Date();
-        const h = now.getHours().toString().padStart(2,'0');
-        const m = now.getMinutes().toString().padStart(2,'0');
-        return code === (parseInt(h + m) + SALT).toString();
-    }
+        const validCodes = [];
+
+        // 檢查當前時間、前 3 分鐘及後 3 分鐘 (共 7 個可能的時間點)
+        for (let i = -3; i <= 3; i++) {
+            const checkTime = new Date(now.getTime() + i * 60000);
+            const h = checkTime.getHours().toString().padStart(2, '0');
+            const m = checkTime.getMinutes().toString().padStart(2, '0');
+            
+            // 計算該時間點對應的正確密碼
+            const expectedCode = (parseInt(h + m) + SALT).toString();
+            validCodes.push(expectedCode);
+        }
 
     function sendToSheet(action, val) {
         const url = `${API_URL}?action=${action}&${action==='log'?'id':'lv'}=${encodeURIComponent(val)}&uid=${userId}`;
