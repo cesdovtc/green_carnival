@@ -122,24 +122,46 @@
         /* ==========================================
            CSS 模組 4：印花網格與互動按鈕
            ========================================== */
-        /* 3欄網格佈局，用於顯示 16 個印花攤位 */
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
+        /* 4欄網格佈局，最大化利用螢幕寬度 */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 12px; 
+            margin-top: 20px; 
+        }
         .stamp-box { text-align: center; cursor: pointer; }
         
-        /* 單個印花的未收集與已收集狀態 */
+        /* 單個印花：改為寬度 100% 並配合 aspect-ratio 確保圓形 */
         .stamp { 
-            width: 75px; height: 75px; 
+            width: 100%; 
+            max-width: 80px; /* 限制最大尺寸，防止在大螢幕變太誇張 */
+            aspect-ratio: 1 / 1; 
             border: 2px dashed #bdc3c7; border-radius: 20px; 
             display: flex; align-items: center; justify-content: center; 
-            font-size: 32px; background: white; margin: auto; 
+            font-size: 34px; background: white; margin: auto; 
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Q彈的放大動畫 */
         }
+        
         /* 當印花被激活/收集時的樣式 */
         .stamp.active { 
             border: 3px solid var(--gold); 
             background: #fffde7; 
-            transform: rotate(5deg) scale(1.05); /* 微微旋轉並放大，像真的蓋章 */
+            transform: rotate(5deg) scale(1.1); /* 微微旋轉並放大 */
             box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
+        }
+
+        /* 攤位名稱：優化文字大小與對齊 */
+        .stall-name {
+            font-size: 11px;
+            font-weight: bold;
+            margin-top: 8px;
+            color: #34495e;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* 限制顯示兩行 */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 32px; /* 固定高度防止排版跳動 */
+            line-height: 1.2;
         }
 
         /* 領獎按鈕的通用與不同狀態樣式 */
@@ -480,7 +502,7 @@
             grid.innerHTML += `
                 <div class="stamp-box" onclick="showTooltip('${s.id}')">
                     <div class="stamp ${isDone ? 'active' : ''}">${isDone ? s.icon : ''}</div>
-                    <div style="font-size:12px; margin-top:5px; color: #5d6d7e; white-space:nowrap;">${s.name}</div>
+                    <div class="stall-name">${s.name}</div>
                 </div>`;
         });
         
