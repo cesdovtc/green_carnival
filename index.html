@@ -339,7 +339,7 @@
         <div class="chat-body">
             <div class="bot-bubble" id="botReply">你好呀！我是你的綠色助手。今天有甚麼我可以幫到你？</div>
             <button class="chat-option" onclick="askBot('我點樣可以集齊印花？')">👉 我點樣可以集齊印花？</button>
-            <button class="chat-option" onclick="askBot('禮品換領處喺邊度？')">👉 禮品換領處喺邊度？</button>
+            <button class="chat-option" onclick="askBot('獎勵換領處喺邊度？')">👉 獎勵換領處喺邊度？</button>
             <button class="chat-option" onclick="askBot('有咩環保小貼士？')">👉 有咩環保小貼士？</button>
         </div>
     </div>
@@ -362,7 +362,7 @@
             </div>
             
             <div id="redeemArea" style="display:none;">
-                <button class="btn-main" id="redeemConfirmBtn" style="background: var(--gold); color: white;">確認領取禮品 🥳</button>
+                <button class="btn-main" id="redeemConfirmBtn" style="background: var(--gold); color: white;">確認領取獎勵 🥳</button>
             </div>
             
             <button class="btn-cancel" onclick="closeModal()">返回</button>
@@ -480,7 +480,7 @@
             grid.innerHTML += `
                 <div class="stamp-box" onclick="showTooltip('${s.id}')">
                     <div class="stamp ${isDone ? 'active' : ''}">${isDone ? s.icon : ''}</div>
-                    <div style="font-size:9px; margin-top:5px; color: #5d6d7e; white-space:nowrap;">${s.name}</div>
+                    <div style="font-size:12px; margin-top:5px; color: #5d6d7e; white-space:nowrap;">${s.name}</div>
                 </div>`;
         });
         
@@ -560,8 +560,8 @@
         
         document.getElementById('modalIcon').innerText = "🎁";
         document.getElementById('modalTitle').innerText = "領取嘉年華獎勵";
-        document.getElementById('ecoTip').innerText = "太棒了！感謝你為地球出一分力，快去換領你的綠色禮品吧！";
-        document.getElementById('modalDesc').innerText = "請點擊下方確認領取，確認後請示予禮品換領處人員。。";
+        document.getElementById('ecoTip').innerText = "太棒了！感謝你為地球出一分力，快去換領你的綠色獎勵吧！";
+        document.getElementById('modalDesc').innerText = "請點擊下方確認領取，確認後請示予獎勵換領處人員。。";
         
         document.getElementById('verifyArea').style.display = 'none';
         document.getElementById('redeemArea').style.display = 'block';
@@ -643,13 +643,13 @@
         setTimeout(() => {
             if (question.includes('印花')) {
                 replyArea.innerText = "去攤位參觀和完成活動，向工作人員攞密碼輸入就可以蓋印！";
-            } else if (question.includes('禮品')) {
-                replyArea.innerText = "禮品換領處設喺大堂，只要你集齊 2個、5個 或 8個 印花，就可以去換領豐富嘅綠色禮品！";
+            } else if (question.includes('獎勵')) {
+                replyArea.innerText = "獎勵換領處設喺大堂，只要你集齊 2個、5個 或 8個 印花，就可以去換領豐富嘅綠色獎勵！";
             } else if (question.includes('貼士')) {
                 const tips = [
-                    "🧂 自備水樽，每日可以減少棄置一個即棄膠樽！",
-                    "💡 離開房間時熄燈熄冷氣，減少碳排放！",
-                    "🚶 試吓多選擇步行，是最健康的環保方式！"
+                    "自備水樽，每日可以減少棄置一個即棄膠樽！🧂",
+                    "離開房間時熄燈熄冷氣，減少碳排放！💡",
+                    "試吓多選擇步行，是最健康的環保方式！🚶"
                 ];
                 replyArea.innerText = "環保小貼士：" + tips[Math.floor(Math.random() * tips.length)];
             }
