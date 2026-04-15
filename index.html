@@ -228,7 +228,7 @@
         .modal-content { 
             background: white; width: 88%; max-width: 400px; margin: 20% auto; 
             padding: 30px 25px; border-radius: 25px; text-align: center; 
-            //box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
             animation: popIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* 彈跳進場效果 */
         }
         @keyframes popIn {
@@ -241,7 +241,7 @@
         .eco-tip-box { background: #f0f9f4; padding: 15px; border-radius: 15px; text-align: left; margin: 15px 0; border-left: 4px solid var(--green); font-size: 15px; }
         .code-input { width: 100%; padding: 15px; font-size: 22px; text-align: center; margin: 15px 0; border: 1px solid #ddd; border-radius: 12px; }
 
-        //.code-input:focus { border-color: var(--green); }
+        .code-input:focus { border-color: var(--green); }
         .btn-main { background: var(--green); color: white; border: none; padding: 16px; border-radius: 15px; width: 100%; font-size: 18px; cursor: pointer; font-weight: bold; }
         .btn-cancel { background: none; border: none; color: #999; margin-top: 15px; text-decoration: underline; cursor: pointer; }
 
@@ -348,18 +348,9 @@
                 <span style="margin-right: 8px;">🎁</span> 獎勵換領處
             </div>
             <div id="redeemButtons">
-                <button id="btn-2" class="btn-prize state-locked" onclick="openRedeemModal(G2)">
-                    <span>細獎 (2個印花)</span>
-                    <small id="status-2">未達成</small>
-                </button>
-                <button id="btn-5" class="btn-prize state-locked" onclick="openRedeemModal(G5)">
-                    <span>中獎 (5個印花)</span>
-                    <small id="status-5">未達成</small>
-                </button>
-                <button id="btn-8" class="btn-prize state-locked" onclick="openRedeemModal(G8)">
-                    <span>大獎 (8個印花)</span>
-                    <small id="status-8">未達成</small>
-                </button>
+                <button id="btn-2" class="btn-prize state-locked" onclick="openRedeemModal(2)"><span>細獎 (2個印花)</span><small id="status-2">鎖定中</small></button>
+                <button id="btn-5" class="btn-prize state-locked" onclick="openRedeemModal(5)"><span>中獎 (5個印花)</span><small id="status-5">鎖定中</small></button>
+                <button id="btn-8" class="btn-prize state-locked" onclick="openRedeemModal(8)"><span>大獎 (8個印花)</span><small id="status-8">鎖定中</small></button>
             </div>
         </div>
     </div>
