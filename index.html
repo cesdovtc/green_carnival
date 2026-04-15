@@ -164,21 +164,37 @@
             line-height: 1.2;
         }
 
-        /* 領獎按鈕的通用與不同狀態樣式 */
+        /* 重點優化：調大領獎按鈕 */
         .btn-prize { 
-            width: 100%; padding: 15px; border-radius: 15px; border: none; 
-            margin-bottom: 12px; font-weight: bold; display: flex; 
-            justify-content: space-between; align-items: center;
+            width: 100%; 
+            padding: 20px 18px; /* 加大內邊距 */
+            border-radius: 18px; 
+            border: none; 
+            margin-bottom: 15px; 
+            font-weight: 800; 
+            font-size: 18px;    /* 加大字體 */
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
             transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .btn-prize small {
+            font-size: 13px;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 4px 10px;
+            border-radius: 10px;
         }
         .state-locked { background: #eaeded; color: #95a5a6; } /* 未達標：灰色 */
         .state-ready { 
             background: linear-gradient(135deg, var(--gold) 0%, #f39c12 100%); 
             color: white; 
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4);
+            //cursor: pointer;
+            //box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4);
             animation: pulse 2s infinite; /* 可領取時帶有呼吸燈效果，吸引點擊 */
         } 
+        .state-ready small { background: rgba(255, 255, 255, 0.3); color: white; }
         .state-done { background: #e8f5e9; color: var(--green); border: 1px dashed var(--green); } /* 已領取：淺綠色 */
 
         /* 呼吸燈動畫 */
@@ -206,9 +222,9 @@
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 1000; }
         /* 彈出視窗的內容區塊 */
         .modal-content { 
-            background: white; width: 85%; max-width: 400px; margin: 20% auto; 
-            padding: 25px; border-radius: 25px; text-align: center; 
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            background: white; width: 88%; max-width: 400px; margin: 20% auto; 
+            padding: 30px 25px; border-radius: 25px; text-align: center; 
+            //box-shadow: 0 15px 30px rgba(0,0,0,0.2);
             animation: popIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* 彈跳進場效果 */
         }
         @keyframes popIn {
@@ -217,10 +233,12 @@
         }
         
         /* 彈出視窗內的文字與按鈕元件 */
-        .eco-tip-box { background: #f0f9f4; padding: 15px; border-radius: 15px; text-align: left; margin: 15px 0; border-left: 4px solid var(--green); }
-        .code-input { width: 100%; padding: 12px; font-size: 20px; text-align: center; margin: 15px 0; border: 1px solid #ddd; border-radius: 10px; outline: none; }
-        .code-input:focus { border-color: var(--green); }
-        .btn-main { background: var(--green); color: white; border: none; padding: 12px 30px; border-radius: 25px; width: 100%; font-size: 16px; cursor: pointer; font-weight: bold; }
+        .modal-content h3 { font-size: 22px; color: var(--dark-green); margin-bottom: 15px; }
+        .eco-tip-box { background: #f0f9f4; padding: 15px; border-radius: 15px; text-align: left; margin: 15px 0; border-left: 4px solid var(--green); font-size: 15px; }
+        .code-input { width: 100%; padding: 15px; font-size: 22px; text-align: center; margin: 15px 0; border: 1px solid #ddd; border-radius: 12px; }
+
+        //.code-input:focus { border-color: var(--green); }
+        .btn-main { background: var(--green); color: white; border: none; padding: 16px; border-radius: 15px; width: 100%; font-size: 18px; cursor: pointer; font-weight: bold; }
         .btn-cancel { background: none; border: none; color: #999; margin-top: 15px; text-decoration: underline; cursor: pointer; }
 
         /* ==========================================
@@ -307,8 +325,11 @@
     <audio id="giftAudio" preload="auto"><source src="gift_award.mp3" type="audio/mpeg"></audio>
 
     <div class="header">
-        <h2>🌿 可持續發展嘉年華暨​</h2>
-        <h2> VTC學生環保大使計劃嘉許禮</h2>
+        //<h2>🌿 可持續發展嘉年華暨​</h2>
+        //<h2> VTC學生環保大使計劃嘉許禮</h2>
+        <h2 style="margin: 5px 0;">🌿 可持續發展嘉年華</h2>
+        <div style="font-size: 14px; opacity: 0.9;">VTC學生環保大使計劃嘉許禮</div>
+
         <div style="font-size: 16px; opacity: 0.9; letter-spacing: 1px;">愛地球 . 為未來</div>
         <div id="live-clock" style="font-size: 12px; margin-top: 8px; opacity: 0.7;">載入中...</div>
     </div>
@@ -322,11 +343,22 @@
         <div class="grid" id="mainGrid"></div>
         
         <div class="glass-card" style="margin-top: 25px;">
-            <div style="font-weight: 800; color: var(--dark-green); margin-bottom: 15px;">🎁 獎勵領取處</div>
+            <div style="font-weight: 900; color: var(--dark-green); margin-bottom: 20px; font-size: 20px; display: flex; align-items: center;">
+                <span style="margin-right: 8px;">🎁</span> 獎勵換領處
+            </div>
             <div id="redeemButtons">
-                <button id="btn-2" class="btn-prize state-locked" onclick="openRedeemModal(2)"><span>細獎 (2個印花)</span><small id="status-2">鎖定中</small></button>
-                <button id="btn-5" class="btn-prize state-locked" onclick="openRedeemModal(5)"><span>中獎 (5個印花)</span><small id="status-5">鎖定中</small></button>
-                <button id="btn-8" class="btn-prize state-locked" onclick="openRedeemModal(8)"><span>大獎 (8個印花)</span><small id="status-8">鎖定中</small></button>
+                <button id="btn-2" class="btn-prize state-locked" onclick="openRedeemModal(2)">
+                    <span>🥉 細獎 (2個印花)</span>
+                    <small id="status-2">未達成</small>
+                </button>
+                <button id="btn-5" class="btn-prize state-locked" onclick="openRedeemModal(5)">
+                    <span>🥈 中獎 (5個印花)</span>
+                    <small id="status-5">未達成</small>
+                </button>
+                <button id="btn-8" class="btn-prize state-locked" onclick="openRedeemModal(8)">
+                    <span>🥇 大獎 (8個印花)</span>
+                    <small id="status-8">未達成</small>
+                </button>
             </div>
         </div>
     </div>
