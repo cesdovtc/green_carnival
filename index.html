@@ -122,8 +122,8 @@
         /* ==========================================
            CSS 模組 4：印花網格與互動按鈕
            ========================================== */
-        /* 3欄網格佈局，用於顯示 12 個印花攤位 */
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
+        /* 4欄網格佈局，用於顯示 12 個印花攤位 */
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
         .stamp-box { text-align: center; cursor: pointer; }
         
         /* 單個印花的未收集與已收集狀態 */
@@ -285,22 +285,22 @@
     <audio id="giftAudio" preload="auto"><source src="gift_award.mp3" type="audio/mpeg"></audio>
 
     <div class="header">
-        <h2>🌿 可持續發展嘉年華暨 2026</h2>
-        <h2>🌿 VTC 學生環保大使計劃嘉許禮 2026</h2>
-        <div style="font-size: 14px; opacity: 0.9; letter-spacing: 1px;"> 愛地球 . 為未來 </div>
+        <h2>🌿 可持續發展嘉年華暨​</h2>
+        <h2> VTC學生環保大使計劃嘉許禮</h2>
+        <div style="font-size: 16px; opacity: 0.9; letter-spacing: 1px;">愛地球 . 為未來</div>
         <div id="live-clock" style="font-size: 12px; margin-top: 8px; opacity: 0.7;">載入中...</div>
     </div>
 
     <div id="tab-stamps" class="tab-content active-tab">
         <div class="glass-card">
-            <div id="progText" style="font-size: 16px; font-weight: 800; color: var(--dark-green);">我的印花進度：0 / 16</div>
+            <div id="progText" style="font-size: 18px; font-weight: 800; color: var(--dark-green);">我的印花進度：0 / 16</div>
             <div class="bar-bg"><div class="bar-fill" id="pBar"></div></div>
         </div>
         
         <div class="grid" id="mainGrid"></div>
         
         <div class="glass-card" style="margin-top: 25px;">
-            <div style="font-weight: 800; color: var(--dark-green); margin-bottom: 15px;">🎁 獎勵換領處</div>
+            <div style="font-weight: 800; color: var(--dark-green); margin-bottom: 15px;">🎁 獎勵領取處</div>
             <div id="redeemButtons">
                 <button id="btn-2" class="btn-prize state-locked" onclick="openRedeemModal(2)"><span>細獎 (2個印花)</span><small id="status-2">鎖定中</small></button>
                 <button id="btn-5" class="btn-prize state-locked" onclick="openRedeemModal(5)"><span>中獎 (5個印花)</span><small id="status-5">鎖定中</small></button>
@@ -315,7 +315,7 @@
             <p style="font-size: 14px; margin: 6px 0;"><b>日期：</b> 2026年4月21日 (星期二)</p>
             <p style="font-size: 14px; margin: 6px 0;"><b>時間：</b> 11:30am - 2:30pm</p>
             <p style="font-size: 14px; margin: 6px 0;"><b>地點：</b> 職業訓練局 九龍灣大樓</p>
-            <p style="font-size: 14px; color: #7f8c8d; line-height: 1.4;">歡迎大家參與可持續發展嘉年華暨 VTC學生環保大使計劃嘉許禮!</p>
+            <p style="font-size: 14px; color: #7f8c8d; line-height: 1.4;">歡迎大家參與可持續發展嘉年華 暨​VTC學生環保大使計劃嘉許禮！</p>
             
             <img src="KBC_Address.jpg" style="width:100%; border-radius:15px; margin-top:10px; cursor: pointer;" onclick="window.open(this.src)">
             
@@ -337,9 +337,9 @@
             <span style="cursor:pointer;" onclick="toggleChat()">✕</span>
         </div>
         <div class="chat-body">
-            <div class="bot-bubble" id="botReply">你好呀！我是你的綠色小助手。今天有甚麼我可以幫到你？</div>
+            <div class="bot-bubble" id="botReply">你好呀！我是你的綠色助手。今天有甚麼我可以幫到你？</div>
             <button class="chat-option" onclick="askBot('我點樣可以集齊印花？')">👉 我點樣可以集齊印花？</button>
-            <button class="chat-option" onclick="askBot('獎勵換領處喺邊度？')">👉 獎勵換領處喺邊度？</button>
+            <button class="chat-option" onclick="askBot('禮品換領處喺邊度？')">👉 禮品換領處喺邊度？</button>
             <button class="chat-option" onclick="askBot('有咩環保小貼士？')">👉 有咩環保小貼士？</button>
         </div>
     </div>
@@ -362,7 +362,7 @@
             </div>
             
             <div id="redeemArea" style="display:none;">
-                <button class="btn-main" id="redeemConfirmBtn" style="background: var(--gold); color: white;">確認領取獎勵 🥳</button>
+                <button class="btn-main" id="redeemConfirmBtn" style="background: var(--gold); color: white;">確認領取禮品 🥳</button>
             </div>
             
             <button class="btn-cancel" onclick="closeModal()">返回</button>
