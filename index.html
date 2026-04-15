@@ -226,9 +226,9 @@
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 1000; }
         /* 彈出視窗的內容區塊 */
         .modal-content { 
-            background: white; width: 85%; max-width: 400px; margin: 20% auto; 
-            padding: 25px; border-radius: 25px; text-align: center; 
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            background: white; width: 88%; max-width: 400px; margin: 20% auto; 
+            padding: 30px 25px; border-radius: 25px; text-align: center; 
+            //box-shadow: 0 15px 30px rgba(0,0,0,0.2);
             animation: popIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* 彈跳進場效果 */
         }
         @keyframes popIn {
@@ -342,7 +342,7 @@
         <div class="grid" id="mainGrid"></div>
         
         <div class="glass-card" style="margin-top: 25px;">
-            <div style="font-weight: 800; color: var(--dark-green); margin-bottom: 15px;">🎁 獎勵領取處</div>
+            <div style="font-weight: 900; color: var(--dark-green); margin-bottom: 20px; font-size: 20px; display: flex; align-items: center;">
             <div id="redeemButtons">
                 <button id="btn-2" class="btn-prize state-locked" onclick="openRedeemModal(2)"><span>細獎 (2個印花)</span><small id="status-2">鎖定中</small></button>
                 <button id="btn-5" class="btn-prize state-locked" onclick="openRedeemModal(5)"><span>中獎 (5個印花)</span><small id="status-5">鎖定中</small></button>
@@ -433,10 +433,10 @@
    
     const STALLS = [
         { id: 'QR1', icon: '💰', name: '低碳智慧收費系統', tip: '使用電子支付，減少紙幣製造產生的碳足跡。' },
-        { id: 'QR2', icon: '🚇', name: '綠智通勤樞紐', tip: '多搭巴士地鐵，每公里可減少約 150g 碳排放。' },
+        { id: 'QR2', icon: '🚉', name: '綠智通勤樞紐', tip: '多搭巴士地鐵，每公里可減少約 150g 碳排放。' },
         { id: 'QR3', icon: '👕', name: '衣物回收你要知', tip: '回收舊衣能節省大量水資源，讓資源循環再生。' },
-        { id: 'QR4', icon: '💡', name: '環保斷線危機', tip: '拔掉待機電器插頭，每年可節省約 10% 電力。' },
-        { id: 'QR5', icon: '🧭', name: '智惜讀錶', tip: '實時監察用電量，有助識別不必要的能源消耗。' },
+        { id: 'QR4', icon: '🔌', name: '環保斷線危機', tip: '拔掉待機電器插頭，每年可節省約 10% 電力。' },
+        { id: 'QR5', icon: '🎚️', name: '智惜讀錶', tip: '實時監察用電量，有助識別不必要的能源消耗。' },
         { id: 'QR6', icon: '🗑️', name: 'A6 回收垃圾桶', tip: '正確分類回收，能大幅減輕堆填區的負荷。' },
         { id: 'QR7', icon: '♻️', name: '垃圾終結者：分類反擊', tip: '回收前請先妥善處理，能提升回收再造的成功率。' },
         { id: 'QR8', icon: '🎓', name: '綠色教育角', tip: '學習環保知識，是守護地球的第一步。' },
