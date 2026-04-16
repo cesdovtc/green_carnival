@@ -336,13 +336,18 @@
     </div>
 
     <div id="tab-stamps" class="tab-content active-tab">
+
+        <div class="glass-card">
+            <img src="KBC_Address.jpg" style="width:100%; border-radius:15px; margin-top:10px; cursor: pointer;" onclick="window.open(this.src)">
+        </div>
+
+        <div class="grid" id="mainGrid"></div>
+        
         <div class="glass-card">
             <div id="progText" style="font-size: 18px; font-weight: 800; color: var(--dark-green);">我的印花進度：0 / 16</div>
             <div class="bar-bg"><div class="bar-fill" id="pBar"></div></div>
         </div>
-        
-        <div class="grid" id="mainGrid"></div>
-        
+
         <div class="glass-card" style="margin-top: 25px;">
             <div style="font-weight: 900; color: var(--dark-green); margin-bottom: 20px; font-size: 20px; display: flex; align-items: center;">
                 <span style="margin-right: 8px;">🎁</span> 獎勵換領處
@@ -607,7 +612,7 @@
         document.getElementById('modalIcon').innerText = "🎁";
         document.getElementById('modalTitle').innerText = "領取嘉年華獎勵";
         document.getElementById('ecoTip').innerText = "太棒了！感謝你為地球出一分力，快去換領你的綠色獎勵吧！";
-        document.getElementById('modalDesc').innerText = "請點擊下方確認領取，確認後請示予獎勵換領處人員。。";
+        document.getElementById('modalDesc').innerText = "確認換領前，請將此畫面示予獎勵換領處人員核實。";
         
         document.getElementById('verifyArea').style.display = 'none';
         document.getElementById('redeemArea').style.display = 'block';
