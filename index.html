@@ -55,6 +55,10 @@
             transform: translateZ(0);
             animation: logoFloat 3s ease-in-out infinite;
         }
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0) translateZ(0); }
+            50% { transform: translateY(-5px) translateZ(0); }
+        }
 
         /* 優化後的時鐘，防止抖動*/
         #live-clock {
@@ -65,26 +69,6 @@
             display: inline-block;
             min-height: 1.2em;
             letter-spacing: 0.5px;
-        }
-
-        /* 應用的 Logo 容器：開啟硬體加速 */
-
-        /* 優化後的動畫，防止抖動 */
-        .logo-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            
-            /* 防止抖動的關鍵 */
-            will-change: transform;
-            transform: translateZ(0);
-            /*animation: logoFloat 3s ease-in-out infinite;*/
-        }
-
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0) translateZ(0); }
-            50% { transform: translateY(-5px) translateZ(0); }
         }
 
         /* 漂浮綠點與葉子 */
@@ -643,7 +627,8 @@
                 closeModal(); 
                 render(); // 更新進度畫面
             } else { 
-                alert("密碼錯誤！請向工作人員索取正確密碼。"); 
+                //alert("密碼錯誤！請向工作人員索取正確密碼。"); 
+                failMsg();
             }
         };
     }
@@ -698,6 +683,18 @@
         const h = now.getHours().toString().padStart(2,'0');
         const m = now.getMinutes().toString().padStart(2,'0');
         return code === (parseInt(h + m) + SALT).toString();
+    }
+
+
+    function failMsg() {
+        Swal.fire({
+            icon: 'error',
+            title: '密碼錯誤',
+            text: '請向工作人員索取正確密碼。',
+            confirmButtonColor: '#2ecc71', // 使用你的 --green
+            background: 'rgba(255, 255, 255, 0.95)',
+            backdrop: `rgba(46, 204, 113, 0.1)` // 淡淡的綠色遮罩
+        });
     }
 
     // 將數據發送到 Google Sheet（不卡住瀏覽器 UI 的隱形 GET 請求）
