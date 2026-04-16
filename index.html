@@ -116,7 +116,7 @@
             background: linear-gradient(90deg, var(--green), #58d68d); /* 漸變綠色進度條 */
             height: 100%; 
             width: 0%; 
-            transition: width 1s cubic-bezier(0.1, 1, 0.1, 1); /* 讓進度條跑起來有緩衝感 */
+            /*transition: width 1s cubic-bezier(0.1, 1, 0.1, 1);*/ /* 讓進度條跑起來有緩衝感 */
         }
         
         /* ==========================================
@@ -337,13 +337,13 @@
 
     <div id="tab-stamps" class="tab-content active-tab">
 
-        <div class="glass-card">
-            <img src="cesdo_yc_logo.jpg" style="width:100%; border-radius:15px; margin-top:10px; cursor: pointer;" onclick="window.open(this.src)">
+        <div class="glass-card" style="margin-top: 25px;">
+            <img src="cesdo_yc_logo.png" style="width:100%; border-radius:15px; margin-top:10px; cursor: pointer;" onclick="window.open(this.src)">
         </div>
 
         <div class="grid" id="mainGrid"></div>
         
-        <div class="glass-card">
+        <div class="glass-card" style="margin-top: 25px;">
             <div id="progText" style="font-size: 18px; font-weight: 800; color: var(--dark-green);">我的印花進度：0 / 16</div>
             <div class="bar-bg"><div class="bar-fill" id="pBar"></div></div>
         </div>
@@ -443,7 +443,7 @@
     const STALLS = [
         { id: 'QR1', icon: '💰', name: '攤位1: 低碳智慧收費系統', tip: '使用電子支付，減少紙幣製造產生的碳足跡。' },
         { id: 'QR2', icon: '🚉', name: '攤位2: 綠智通勤樞紐', tip: '多搭巴士地鐵，每公里可減少約 150g 碳排放。' },
-        { id: 'QR3', icon: '👕', name: '攤位3: 衣物回收你要知', tip: '回收舊衣能節省大量水資源，讓資源循環再生。' },
+        { id: 'QR3', icon: '👕', name: '攤位3: 衣物回收 你要知', tip: '回收舊衣能節省大量水資源，讓資源循環再生。' },
         { id: 'QR4', icon: '🔌', name: '攤位4: 環保斷線危機', tip: '拔掉待機電器插頭，每年可節省約 10% 電力。' },
         { id: 'QR5', icon: '🎚️', name: '攤位5: 智惜讀錶', tip: '實時監察用電量，有助識別不必要的能源消耗。' },
         { id: 'QR6', icon: '🗑️', name: '攤位6: A6 回收垃圾桶', tip: '正確分類回收，能大幅減輕堆填區的負荷。' },
