@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>可持續發展嘉年華 2026</title>
     
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>    
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>     
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
 
     
     <style>
@@ -605,8 +605,9 @@
     // ==========================================
     
     // 點擊未收集印花，打開驗證密碼的視窗
-    function openVerifyModal(id) {
-                
+    function openVerifyModal(id) {        
+        if (myStamps.length > id) return; 
+
         const s = STALLS.find(x => x.id === id);
         document.getElementById('modalIcon').innerText = s.icon;
         document.getElementById('modalTitle').innerText = s.name;
@@ -630,16 +631,7 @@
                 closeModal(); 
                 render(); // 更新進度畫面
             } else { 
-                //alert("密碼錯誤！請向工作人員索取正確密碼。"); 
-                Swal.fire({
-                    icon: 'error',
-                    title: '密碼錯誤',
-                    text: '請向工作人員索取正確密碼。',
-                    confirmButtonColor: '#2ecc71', // 使用你的 --green
-                    background: 'rgba(255, 255, 255, 0.95)',
-                    backdrop: `rgba(46, 204, 113, 0.1)` // 淡淡的綠色遮罩
-                });
-                
+                alert("密碼錯誤！請向工作人員索取正確密碼。");             
             }
         };
     }
