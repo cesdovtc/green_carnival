@@ -54,7 +54,7 @@
             background: var(--green); 
             border-radius: 50%; 
             opacity: 0.15; 
-            animation: float 15s infinite linear; /* 無限循環向上漂浮 */
+            animation: float 10s infinite linear; /* 無限循環向上漂浮 */
             pointer-events: none; /* 確保點點不會阻擋底下的點擊事件 */
         }
         @keyframes float { 
@@ -283,8 +283,8 @@
         .modal-content h3 { font-size: 22px; color: var(--dark-green); margin-bottom: 15px; }
         .eco-tip-box { background: #f0f9f4; padding: 15px; border-radius: 15px; text-align: left; margin: 15px 0; border-left: 4px solid var(--green); font-size: 15px; }
         .code-input { width: 100%; padding: 15px; font-size: 22px; text-align: center; margin: 15px 0; border: 1px solid #ddd; border-radius: 12px; }
+        .code-input:focus { border-color: var(--green); } 
 
-        .code-input:focus { border-color: var(--green); }
         .btn-main { background: var(--green); color: white; border: none; padding: 16px; border-radius: 15px; width: 100%; font-size: 18px; cursor: pointer; font-weight: bold; }
         .btn-cancel { background: none; border: none; color: #999; margin-top: 15px; text-decoration: underline; cursor: pointer; }
 
@@ -354,10 +354,12 @@
             border: 1px solid #eafaf1; transition: 0.3s;
         }
         /* 讓 Icon 有獨立的緩慢心跳動畫，增加生命感 */
+        /*
         .eco-icon-item span { font-size: 24px; animation: heartbeat 2s infinite ease-in-out; display: inline-block; }
         .eco-icon-item div { font-size: 11px; color: #7f8c8d; margin-top: 4px; }
         .eco-icon-item:hover { background: var(--soft-green); transform: translateY(-3px); }
-
+        */
+       
         @keyframes heartbeat {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.15); }
