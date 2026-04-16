@@ -131,7 +131,19 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); /* 輕柔的大範圍陰影 */
             transition: transform 0.3s ease; /* 預留卡片懸浮動畫 */
         }
+        
+        .glass-card:hover {
+            transform: translateY(-3px); /* 滑鼠懸停時微升，增加互動感 */
+        }
 
+        /* 進度條背景與填充動畫 */
+        .bar-bg { background: #e0e0e0; height: 14px; border-radius: 7px; overflow: hidden; margin-top: 10px; }
+        .bar-fill { 
+            background: linear-gradient(90deg, var(--green), #58d68d); /* 漸變綠色進度條 */
+            height: 100%; 
+            width: 0%; 
+            /*transition: width 1s cubic-bezier(0.1, 1, 0.1, 1);*/ /* 讓進度條跑起來有緩衝感 */
+        }
         
         /* ==========================================
            CSS 模組 4：印花網格與互動按鈕
@@ -290,8 +302,22 @@
 
         /* 對話內容區 */
         .chat-body { padding: 15px; max-height: 250px; overflow-y: auto; }
-        .bot-bubble { background: var(--chat-bg); padding: 10px 14px; border-radius: 15px 15px 15px 0; margin-bottom: 10px; font-size: 14px; border: 1px solid rgba(46, 204, 113, 0.2); }
-        .chat-option { display: block; width: 100%; background: white; border: 1px solid var(--green); color: var(--dark-green); padding: 8px 12px; border-radius: 10px; margin-bottom: 6px; font-size: 13px; text-align: left; }
+        /* 機器人氣泡 */
+        .bot-bubble {
+            background: var(--chat-bg); padding: 10px 14px;
+            border-radius: 15px 15px 15px 0; margin-bottom: 10px;
+            font-size: 14px; align-self: flex-start;
+            border: 1px solid rgba(46, 204, 113, 0.2);
+        }
+        /* 用戶快捷選項按鈕 */
+        .chat-option {
+            display: block; width: 100%; background: white;
+            border: 1px solid var(--green); color: var(--dark-green);
+            padding: 8px 12px; border-radius: 10px; margin-bottom: 6px;
+            font-size: 13px; text-align: left; cursor: pointer;
+            transition: 0.2s;
+        }
+        .chat-option:hover { background: var(--chat-bg); }
 
         /* 地圖下方的趣味環保 Icon 網格 */
         .eco-icon-grid {
@@ -300,8 +326,18 @@
         }
         .eco-icon-item {
             background: white; padding: 10px 5px; border-radius: 12px;
-            border: 1px solid #eafaf1; text-align: center; transition: 0.3s;
+            border: 1px solid #eafaf1; transition: 0.3s;
         }
+        /* 讓 Icon 有獨立的緩慢心跳動畫，增加生命感 */
+        
+        .eco-icon-item span { font-size: 24px; animation: heartbeat 2s infinite ease-in-out; display: inline-block; }
+        .eco-icon-item div { font-size: 11px; color: #7f8c8d; margin-top: 4px; }
+        /*.eco-icon-item:hover { background: var(--soft-green); transform: translateY(-3px); }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }*/
     </style>
 </head>
 <body>
