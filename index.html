@@ -606,6 +606,7 @@
     
     // 點擊未收集印花，打開驗證密碼的視窗
     function openVerifyModal(id) {
+                
         const s = STALLS.find(x => x.id === id);
         document.getElementById('modalIcon').innerText = s.icon;
         document.getElementById('modalTitle').innerText = s.name;
@@ -666,22 +667,57 @@
         
         document.getElementById('modalIcon').innerText = "🎁";
         document.getElementById('modalTitle').innerText = "領取嘉年華獎勵";
-        document.getElementById('ecoTip').innerText = "太棒了！感謝你為地球出一分力，快去換領你的綠色獎勵吧！";
-        document.getElementById('modalDesc').innerText = "確認換領前，請將此畫面示予獎勵換領處人員核實。";
+        document.getElementById('ecoTip').innerText =  `<b>💡 太棒了！感謝你為地球出一分力! </b><br>"快去換領你的綠色獎勵吧！"`;
+        document.getElementById('modalDesc').innerText = "請輸入工作人員提供的密碼以換領獎勵。";
         
-        document.getElementById('verifyArea').style.display = 'none';
-        document.getElementById('redeemArea').style.display = 'block';
+        document.getElementById('verifyArea').style.display = 'block';
+        document.getElementById('redeemArea').style.display = 'none';
         document.getElementById('uiModal').style.display = 'block';
         
+        // 綁定確認蓋印按鈕的點擊事件
         document.getElementById('redeemConfirmBtn').onclick = () => {
-            redeemedHistory.push(lv);
-            localStorage.setItem('vtc_redeemed_history', JSON.stringify(redeemedHistory));
-            sendToSheet('redeem', lv);
-            triggerEffect('gift'); // 大獎特效
-            closeModal(); 
-            render();
+            const val = document.getElementById('vCodeInput').value;
+            if (validate(val)) {
+                redeemedHistory.push(lv);
+                localStorage.setItem('vtc_redeemed_history', JSON.stringify(redeemedHistory));
+                sendToSheet('redeem', lv);
+                triggerEffect('gift'); // 大獎特效    
+                closeModal(); 
+                render(); // 更新進度畫面
+            } else { 
+                alert("密碼錯誤！請向工作人員索取正確密碼。");                
+            }            
         };
     }
+
+    const s = STALLS.find(x => x.id === id);
+        document.getElementById('modalIcon').innerText = s.icon;
+        document.getElementById('modalTitle').innerText = s.name;
+        document.getElementById('ecoTip').innerHTML = `<b>💡 環保小知識：</b><br>${s.tip}`;
+        document.getElementById('modalDesc').innerText = "請輸入工作人員提供的密碼以獲取印花。";
+        
+        document.getElementById('verifyArea').style.display = 'block';
+        document.getElementById('redeemArea').style.display = 'none';
+        document.getElementById('uiModal').style.display = 'block';
+        
+        // 綁定確認蓋印按鈕的點擊事件
+        document.getElementById('confirmBtn').onclick = () => {
+            const val = document.getElementById('vCodeInput').value;
+            if (validate(val)) {
+                if (!myStamps.includes(id)) {
+                    myStamps.push(id);
+                    localStorage.setItem('vtc_stamps_2026', JSON.stringify(myStamps));
+                    sendToSheet('log', id); // 非同步發送日誌至後台
+                    triggerEffect('stamp'); // 觸發特效與音效
+                }
+                closeModal(); 
+                render(); // 更新進度畫面
+            } else { 
+                alert("密碼錯誤！請向工作人員索取正確密碼。");                
+            }
+        };
+
+    
 
     // ==========================================
     // JS 模組 6：核心工具函數 (時間驗證、API、特效)
