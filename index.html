@@ -47,7 +47,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden; /* 再次確保內部的葉子旋轉時不產生捲軸 */
-            z-index: -1;      /* 關鍵：讓它處於所有內容的最底層 */
+            /*z-index: -1;*/      /* 關鍵：讓它處於所有內容的最底層 */
             pointer-events: none; /* 確保滑鼠點擊可以穿透它，點到後面的按鈕 */
         }
 
@@ -82,18 +82,7 @@
         }
 
         /* 應用的 Logo 容器：開啟硬體加速 */
-/*
-        .logo-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            /* 讓文字也包在裡面享受穩定特效 */
-            will-change: transform;
-            transform: translateZ(0); 
-        }
-*/
+
         /* 優化後的動畫，防止抖動 */
         .logo-container {
             display: flex;
