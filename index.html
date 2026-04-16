@@ -677,7 +677,7 @@
             const val = document.getElementById('vCodeInput').value;
             
             // Special password for redemption
-            if (val === "503") {
+            if (val === 503) {
                 redeemedHistory.push(lv);
                 localStorage.setItem('vtc_redeemed_history', JSON.stringify(redeemedHistory));
                 sendToSheet('redeem', lv);
