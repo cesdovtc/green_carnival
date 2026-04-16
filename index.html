@@ -49,6 +49,11 @@
             text-align: center;
             border-radius: 0 0 30px 30px; /* 底部大圓角設計，增加柔和感 */
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* 輕微陰影使區塊浮現 */
+
+            /* 防止抖動的關鍵 */
+            will-change: transform;
+            transform: translateZ(0);
+            animation: logoFloat 3s ease-in-out infinite;
         }
 
         /* 優化後的時鐘，防止抖動*/
@@ -74,7 +79,7 @@
             /* 防止抖動的關鍵 */
             will-change: transform;
             transform: translateZ(0);
-            animation: logoFloat 3s ease-in-out infinite;
+            /*animation: logoFloat 3s ease-in-out infinite;*/
         }
 
         @keyframes logoFloat {
@@ -153,7 +158,7 @@
             background: linear-gradient(90deg, var(--green), #58d68d); /* 漸變綠色進度條 */
             height: 100%; 
             width: 0%; 
-            /*transition: width 1s cubic-bezier(0.1, 1, 0.1, 1);*/ /* 讓進度條跑起來有緩衝感 */
+            transition: width 1s cubic-bezier(0.1, 1, 0.1, 1); /* 讓進度條跑起來有緩衝感 */
         }
         
         /* ==========================================
@@ -359,12 +364,10 @@
     <audio id="giftAudio" preload="auto"><source src="gift_award.mp3" type="audio/mpeg"></audio>
 
     <div class="header">
-        <div class="logo-container">
             <h2 style="margin: 5px 0;">可持續發展嘉年華暨</h2>
             <h2 style="margin: 5px 0;"> VTC學生環保大使計劃嘉許禮</h2>
             <div style="font-size: 16px; opacity: 0.9; letter-spacing: 1px;">🌿 愛地球 . 為未來 🌿</div>
             <div id="live-clock">載入中...</div>
-        </div>
     </div>
 
     <div id="tab-stamps" class="tab-content active-tab">
