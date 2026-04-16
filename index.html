@@ -694,17 +694,45 @@
     
     // 動態密碼驗證邏輯：Edward 原始的「當前小時 + 分鐘 + SALT」算法
     function validate(code, stallId) {
-            
-        const now = new Date();
-        const h = now.getHours().toString().padStart(2,'0');
-        const m = now.getMinutes().toString().padStart(2,'0');
-
-        // 提取攤位 ID 的數字部分（例如 'QR15' 會變成 15）
-        const stallNum = parseInt(stallId.replace('QR', '')) || 0;
-
-        const correctCode = (parseInt(h + m) + stallNum + SALT).toString();
         
-        return code === correctCode;
+        // 優先檢查萬能密碼
+        if (code === "503") return true;
+
+        const now = new Date();
+        const currentM = now.getMinutes(); 
+        const stallNum = parseInt(stallId.replace('QR', '')) || 0;
+        
+        // 2. 攤位專屬前綴 (1-16 號)
+        let prefix = "";
+        if (stallNum === 1) prefix = "12";
+        else if (stallNum === 2) prefix = "23";
+        else if (stallNum === 3) prefix = "34";
+        else if (stallNum === 4) prefix = "45";
+        else if (stallNum === 5) prefix = "56";
+        else if (stallNum === 6) prefix = "67";
+        else if (stallNum === 7) prefix = "78";
+        else if (stallNum === 8) prefix = "89";
+        else if (stallNum === 9) prefix = "90";
+        else if (stallNum === 10) prefix = "00";
+        else if (stallNum === 11) prefix = "11";
+        else if (stallNum === 12) prefix = "22";
+        else if (stallNum === 13) prefix = "33";
+        else if (stallNum === 14) prefix = "44";
+        else if (stallNum === 15) prefix = "55";
+        else if (stallNum === 16) prefix = "66";
+        else prefix = "99"; // 備用
+
+        // 3. 基本格式檢查
+        if (code.length !== 4 || !code.startsWith(prefix)) return false;
+
+        // 4. 分鐘誤差檢查 (±3 分鐘)
+        const inputM = parseInt(code.substring(2));
+        const diff = Math.abs(inputM - currentM);
+        
+        // 跨小時處理 (例如：現在 01 分，輸入 59 分)
+        const isNearEdge = diff >= 57; 
+
+        return diff <= 3 || isNearEdge;
     }
 
     // 將數據發送到 Google Sheet（不卡住瀏覽器 UI 的隱形 GET 請求）
