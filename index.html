@@ -456,11 +456,7 @@
     // Google Apps Script 的後台 API 網址，負責將用戶的蓋印和領獎數據傳回 Google Sheet 試算表
     //const API_URL = "https://script.google.com/macros/s/AKfycbztJOpwadOqZmgbVMZawxW7RvoaihSDERjWT3A7CtVOp1b7CA2j4ydAluv4udBWbUCk/exec"; 
     const API_URL = "https://script.google.com/macros/s/AKfycbwhlFCOQkSlELkFcFZVD6fQU_GEpnmuaaXRg8rALlsW4gvXeSWSTcUsc612IosrFEns/exec"; 
- 
-    
 
-    
-    
     // 密碼鹽值 (可更改此數字來調整動態密碼的偏移量，保持不變以相容 Edward 原有設定)
     const SALT = 0; 
     //const SALT = 1111; 
@@ -609,7 +605,6 @@
     
     // 點擊未收集印花，打開驗證密碼的視窗
     function openVerifyModal(id) {        
-        if (myStamps.length > id) return; 
 
         const s = STALLS.find(x => x.id === id);
         document.getElementById('modalIcon').innerText = s.icon;
@@ -627,7 +622,7 @@
         // 綁定確認蓋印按鈕的點擊事件
         document.getElementById('confirmBtn').onclick = () => {
             const val = document.getElementById('vCodeInput').value;
-            if (validate(val)) {
+            if (validate(val, id)) {
                 if (!myStamps.includes(id)) {
                     myStamps.push(id);
                     localStorage.setItem('vtc_stamps_2026', JSON.stringify(myStamps));
@@ -698,11 +693,18 @@
     // ==========================================
     
     // 動態密碼驗證邏輯：Edward 原始的「當前小時 + 分鐘 + SALT」算法
-    function validate(code) {
+    function validate(code, stallId) {
+            
         const now = new Date();
         const h = now.getHours().toString().padStart(2,'0');
         const m = now.getMinutes().toString().padStart(2,'0');
-        return code === (parseInt(h + m) + SALT).toString();
+
+        // 提取攤位 ID 的數字部分（例如 'QR15' 會變成 15）
+        const stallNum = parseInt(stallId.replace('QR', '')) || 0;
+
+        const correctCode = (parseInt(h + m) + stallNum + SALT).toString();
+        
+        return code === correctCode;
     }
 
     // 將數據發送到 Google Sheet（不卡住瀏覽器 UI 的隱形 GET 請求）
