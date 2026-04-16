@@ -70,13 +70,6 @@
             justify-content: center;
             align-items: center;
             gap: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 12px 25px;
-            border-radius: 50px;
-            width: fit-content;
-            margin: 0 auto 20px auto;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
             
             /* 防止抖動的關鍵 */
             will-change: transform;
@@ -779,6 +772,8 @@
         createLeaves(); // 啟動樹葉落葉動畫
         
         // 檢查 URL 有無帶入掃描 QR Code 的參數（例如 ?id=QR1）
+        /* https://cesdovtc.github.io/green_carnival/index.html?id=QR1 */
+        
         const qid = new URLSearchParams(window.location.search).get('id');
         if (qid && STALLS.some(s => s.id === qid)) {
             setTimeout(() => { 
