@@ -22,6 +22,18 @@
             --glass: rgba(255, 255, 255, 0.85); /* 玻璃擬態基礎背景色 */
             --chat-bg: #eafaf1;       /* 對話框氣泡的輕柔綠色背景 */
         }
+
+        /* new-add 核心修正：鎖定 HTML 和 BODY 的寬度，禁止水平溢出 */
+        html, body { 
+            width: 100%;
+            overflow-x: hidden;      /* 絕對禁止左右捲動 */
+            position: relative;
+            margin: 0;
+            padding: 0;
+            -webkit-overflow-scrolling: touch; /* 讓 iOS 捲動更流暢 */
+            touch-action: pan-y;     /* 關鍵：只允許垂直滑動，禁止水平手勢拖拽 */
+        }
+
         
         /* 讓所有元素的邊框計算包含在寬高內，並統一使用微軟正黑體 */
         * { box-sizing: border-box; font-family: "Microsoft JhengHei", sans-serif; }
@@ -29,16 +41,22 @@
         body { 
             /* 頁面整體背景使用細緻的漸變綠色，模擬大自然感 */
             background: linear-gradient(180deg, #f4fbf7 0%, #dff0e6 100%); 
-            margin: 0; 
             padding-bottom: 100px; /* 預留底部空間給固定導航列 */
             min-height: 100vh; 
-
-            /* 這裡合併新加入的屬性 */
-            overflow-x: hidden; /* 防止橫向滾動條出現 */
             color: #2c3e50;
         }
 
-
+        /* new-add 確保背景特效容器不會撐開寬度 */
+        #bgDots {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;       /* 特效超出此區域會被切掉 */
+            pointer-events: none;   /* 不干擾點擊 */
+            z-index: 0;
+        }
 
         /* ==========================================
            CSS 模組 2：防止抖動優化與動畫
@@ -77,7 +95,9 @@
         .dot, .leaf { 
             position: absolute; 
             pointer-events: none; 
-            backface-visibility: hidden; /* 防止旋轉時抖動 */
+            -webkit-backface-visibility: hidden; /* 防止旋轉時抖動 & 讓 iOS 動畫更穩定 */
+            transform-style: preserve-3d;        /* new-add 強制啟用 GPU 加速，防止閃爍 */
+            
             /* 確保即使設定 left: 0%，也會從 10% 開始 */
             margin-left: 10%; 
             width: auto; /* 確保寬度不影響 */
@@ -88,10 +108,11 @@
             opacity: 0.15; 
             animation: float 15s infinite linear;
         }
+        /* 修改動畫，確保 translateZ(0) 始終存在以穩定渲染 */
         @keyframes float { 
-            0% { transform: translateY(90vh) scale(0.5) translateZ(0); opacity: 0; } 
+            0% { transform: translateY(100vh) scale(0.5) translateZ(0); opacity: 0; } 
             50% { opacity: 0.2; }
-            100% { transform: translateY(10vh) scale(1.2) translateZ(0); opacity: 0; } 
+            100% { transform: translateY(-10vh) scale(1.2) translateZ(0); opacity: 0; } 
         }
         
         .leaf {
@@ -99,9 +120,10 @@
             opacity: 0.6;
             animation: fall linear infinite;
         }
+        /* 修改動畫，確保 translateZ(0) 始終存在以穩定渲染 */
         @keyframes fall {
-            0% { transform: translateY(-5vh) rotate(0deg) translateZ(0); }
-            100% { transform: translateY(95vh) rotate(360deg) translateZ(0); }
+            0% { transform: translateY(-10vh) rotate(0deg) translateZ(0); }
+            100% { transform: translateY(110vh) rotate(360deg) translateZ(0); }
         }
 
         /* ==========================================
