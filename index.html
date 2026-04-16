@@ -97,9 +97,6 @@
             pointer-events: none; 
             -webkit-backface-visibility: hidden; /* 防止旋轉時抖動 & 讓 iOS 動畫更穩定 */
             transform-style: preserve-3d;        /* new-add 強制啟用 GPU 加速，防止閃爍 */
-            
-            /* 確保即使設定 left: 0%，也會從 10% 開始 */
-            margin-left: 10%; 
             width: auto; /* 確保寬度不影響 */
         }
         .dot {
