@@ -581,12 +581,18 @@
 
     // 解除移動裝置對音訊自動播放的限制
     function unlockAudio() {
-        if (audioUnlocked) return;
-        const s1 = document.getElementById('stampAudio');
+        if (audioUnlocked) return;  // 確保這件事一輩子只做一次
+        
+	const s1 = document.getElementById('stampAudio');
         const s2 = document.getElementById('giftAudio');
-        s1.play().then(() => { s1.pause(); s1.currentTime = 0; }).catch(()=>{});
-        s2.play().then(() => { s2.pause(); s2.currentTime = 0; }).catch(()=>{});
-        audioUnlocked = true;
+        
+	s1.load();
+	s2.load();
+
+	//s1.play().then(() => { s1.pause(); s1.currentTime = 0; }).catch(()=>{});
+        //s2.play().then(() => { s2.pause(); s2.currentTime = 0; }).catch(()=>{});
+        
+	audioUnlocked = true;
     }
 
     // ==========================================
@@ -787,7 +793,7 @@
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById('nav-' + t).classList.add('active');
         
-        unlockAudio(); // 使用者主動交互，藉此解除自動播放限制
+        //unlockAudio(); // 使用者主動交互，藉此解除自動播放限制
     }
 
     // 關閉 Modal 彈窗
@@ -804,7 +810,7 @@
     function toggleChat() {
         const modal = document.getElementById('chatModal');
         modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
-        unlockAudio();
+        //unlockAudio();
     }
 
     // 模擬對話回覆
@@ -820,7 +826,7 @@
                 replyArea.innerText = "獎勵換領處設喺大堂，只要你集齊 2個、5個 或 8個 印花，就可以去換領豐富嘅綠色獎勵！";
             } else if (question.includes('貼士')) {
                 const tips = [
-                    "自備水樽，每日可以減少棄置一個即棄膠樽！🧂",
+                    "自備水樽，每日可以減少棄置一個即棄膠樽！🫙",
                     "離開房間時熄燈熄冷氣，減少碳排放！💡",
                     "試吓多選擇步行，是最健康的環保方式！🚶"
                 ];
@@ -847,10 +853,13 @@
         }
         
         render(); // 執行畫面初次繪製
+
+	unlockAudio(); // 使用者主動交互，藉此解除自動播放限制
     }
 
     // 當整個 DOM 下載完成後即刻啟動
     init();
+
 </script>
 </body>
 </html>
