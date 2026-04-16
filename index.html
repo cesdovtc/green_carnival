@@ -76,6 +76,49 @@
             100% { transform: translateY(100vh) rotate(360deg); }
         }
 
+
+        /* 防止渲染抖動 */
+
+        /* 優化後的時鐘 */
+        #live-clock {
+            font-size: 13px;
+            margin-top: 8px;
+            opacity: 0.8;
+            font-family: Consolas, Monaco, 'Courier New', monospace; /* 使用等寬字體 */
+            display: inline-block;
+            min-height: 1.2em;
+            letter-spacing: 0.5px;
+        }
+
+        /* 優化後的動畫，防止抖動 */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 12px 25px;
+            border-radius: 50px;
+            width: fit-content;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            
+            /* 防止抖動的關鍵 */
+            will-change: transform;
+            transform: translateZ(0);
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0) translateZ(0); }
+            50% { transform: translateY(-5px) translateZ(0); }
+        }
+
+
+
+
+
         /* ==========================================
            CSS 模組 3：頁籤切換與卡片佈局 (針對 Edward 的要求進行了重構與優化)
            ========================================== */
