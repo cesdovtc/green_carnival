@@ -9,163 +9,121 @@
     
     <style>
         /* ==========================================
-           CSS 模組 1：全局變數與基礎設定
+           CSS 模組 1：基礎設定與變數
            ========================================== */
         :root { 
-            /* 定義主題顏色變數，方便日後統一修改風格 */
-            --green: #2ecc71;         /* 主綠色：按鈕、進度條、高亮 */
-            --dark-green: #1b5e20;    /* 深綠色：標題、重要文字、深色背景 */
-            //--gold: #d0c40f;          /* 金色：獎勵、高亮狀態、特殊按鈕 */
-            --gold: #f1c40f;          /* 金色：獎勵、高亮狀態、特殊按鈕 */
-            --soft-green: #e8f5e9;    /* 淺綠色：已完成狀態的背景、輕量背景 */
-            --glass: rgba(255, 255, 255, 0.85); /* 玻璃擬態基礎背景色 */
-            --chat-bg: #eafaf1;       /* 對話框氣泡的輕柔綠色背景 */
+            --green: #2ecc71;
+            --dark-green: #1b5e20;
+            --gold: #f1c40f;
+            --soft-green: #e8f5e9;
+            --glass: rgba(255, 255, 255, 0.85);
+            --chat-bg: #eafaf1;
         }
         
-        /* 讓所有元素的邊框計算包含在寬高內，並統一使用微軟正黑體 */
         * { box-sizing: border-box; font-family: "Microsoft JhengHei", sans-serif; }
         
         body { 
-            /* 頁面整體背景使用細緻的漸變綠色，模擬大自然感 */
             background: linear-gradient(180deg, #f4fbf7 0%, #dff0e6 100%); 
             margin: 0; 
-            padding-bottom: 100px; /* 預留底部空間給固定導航列 */
+            padding-bottom: 100px;
             min-height: 100vh; 
-            overflow-x: hidden; /* 防止橫向滾動條出現 */
+            overflow-x: hidden;
             color: #2c3e50;
         }
 
         /* ==========================================
-           CSS 模組 2：頂部橫幅 (Header) 與背景動畫
+           CSS 模組 2：防止抖動優化與動畫
            ========================================== */
         .header {
-            /* 使用深綠到亮綠的漸變色，營造層次感 */
             background: linear-gradient(135deg, var(--dark-green) 0%, var(--green) 100%);
             color: white; 
             padding: 30px 20px; 
             text-align: center;
-            border-radius: 0 0 30px 30px; /* 底部大圓角設計，增加柔和感 */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* 輕微陰影使區塊浮現 */
-        }
-        
-        /* 漂浮綠點的動畫效果 */
-        .dot { 
-            position: absolute; 
-            background: var(--green); 
-            border-radius: 50%; 
-            opacity: 0.15; 
-            animation: float 10s infinite linear; /* 無限循環向上漂浮 */
-            pointer-events: none; /* 確保點點不會阻擋底下的點擊事件 */
-        }
-        @keyframes float { 
-            0% { transform: translateY(100vh) scale(0.5); opacity: 0; } 
-            50% { opacity: 0.2; }
-            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; } 
-        }
-        
-        /* [新增] 飄落綠葉的動畫特效 */
-        .leaf {
-            position: absolute;
-            font-size: 20px;
-            opacity: 0.6;
-            animation: fall linear infinite;
-            pointer-events: none;
-        }
-        @keyframes fall {
-            0% { transform: translateY(-10vh) rotate(0deg); }
-            100% { transform: translateY(100vh) rotate(360deg); }
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-
-        /* 防止渲染抖動 */
-
-        /* 優化後的時鐘 */
+        /* 優化後的時鐘：防止每秒跳動導致版面晃動 */
         #live-clock {
             font-size: 13px;
             margin-top: 8px;
-            opacity: 0.8;
-            font-family: Consolas, Monaco, 'Courier New', monospace; /* 使用等寬字體 */
+            opacity: 0.9;
+            /* 使用等寬字體是防止抖動的關鍵 */
+            font-family: Consolas, Monaco, 'Courier New', monospace; 
             display: inline-block;
             min-height: 1.2em;
             letter-spacing: 0.5px;
         }
 
-        /* 優化後的動畫，防止抖動 */
+        /* 應用的 Logo 容器：開啟硬體加速 */
         .logo-container {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 12px 25px;
-            border-radius: 50px;
-            width: fit-content;
-            margin: 0 auto 20px auto;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
-            
-            /* 防止抖動的關鍵 */
+            gap: 5px;
+            /* 讓文字也包在裡面享受穩定特效 */
             will-change: transform;
-            transform: translateZ(0);
-            animation: logoFloat 3s ease-in-out infinite;
+            transform: translateZ(0); 
         }
 
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0) translateZ(0); }
-            50% { transform: translateY(-5px) translateZ(0); }
+        /* 漂浮綠點與葉子 */
+        .dot, .leaf { 
+            position: absolute; 
+            pointer-events: none; 
+            backface-visibility: hidden; /* 防止旋轉時抖動 */
         }
-
-
-
-
+        .dot {
+            background: var(--green); 
+            border-radius: 50%; 
+            opacity: 0.15; 
+            animation: float 15s infinite linear;
+        }
+        @keyframes float { 
+            0% { transform: translateY(90vh) scale(0.5) translateZ(0); opacity: 0; } 
+            50% { opacity: 0.2; }
+            100% { transform: translateY(10vh) scale(1.2) translateZ(0); opacity: 0; } 
+        }
+        
+        .leaf {
+            font-size: 20px;
+            opacity: 0.6;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-5vh) rotate(0deg) translateZ(0); }
+            100% { transform: translateY(95vh) rotate(360deg) translateZ(0); }
+        }
 
         /* ==========================================
-           CSS 模組 3：頁籤切換與卡片佈局 (針對 Edward 的要求進行了重構與優化)
+           CSS 模組 3：卡片與排版
            ========================================== */
-        /* 隱藏非活動中的頁籤內容，並加入淡入動畫 */
         .tab-content { 
             display: none; 
             padding: 15px; 
             max-width: 600px; 
             margin: auto; 
-            animation: fadeIn 0.4s ease-out; /* 切換時有平滑淡入效果 */
+            animation: fadeIn 0.4s ease-out;
         }
         .active-tab { display: block; }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(10px) translateZ(0); }
+            to { opacity: 1; transform: translateY(0) translateZ(0); }
         }
 
-        /* 玻璃擬態卡片設計：大幅優化了陰影與邊框，讓它看起來像磨砂玻璃 */
         .glass-card { 
             background: var(--glass); 
-            border-radius: 24px; /* 更圓潤的邊角 */
+            border-radius: 24px; 
             padding: 22px; 
             margin-bottom: 22px; 
-            backdrop-filter: blur(15px); /* 高斯模糊，形成高級玻璃質感 */
-            border: 1px solid rgba(255, 255, 255, 0.6); /* 白色半透明邊框 */
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); /* 輕柔的大範圍陰影 */
-            transition: transform 0.3s ease; /* 預留卡片懸浮動畫 */
-        }
-        
-        .glass-card:hover {
-            transform: translateY(-3px); /* 滑鼠懸停時微升，增加互動感 */
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px); /* 兼容 iOS */
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
         }
 
-        /* 進度條背景與填充動畫 */
-        .bar-bg { background: #e0e0e0; height: 14px; border-radius: 7px; overflow: hidden; margin-top: 10px; }
-        .bar-fill { 
-            background: linear-gradient(90deg, var(--green), #58d68d); /* 漸變綠色進度條 */
-            height: 100%; 
-            width: 0%; 
-            /*transition: width 1s cubic-bezier(0.1, 1, 0.1, 1);*/ /* 讓進度條跑起來有緩衝感 */
-        }
-        
-        /* ==========================================
-           CSS 模組 4：印花網格與互動按鈕
-           ========================================== */
-        /* 4欄網格佈局，最大化利用螢幕寬度 */
         .grid { 
             display: grid; 
             grid-template-columns: repeat(4, 1fr); 
@@ -173,197 +131,67 @@
             margin-top: 20px; 
         }
         .stamp-box { text-align: center; cursor: pointer; }
-        
-        /* 單個印花：改為寬度 100% 並配合 aspect-ratio 確保圓形 */
         .stamp { 
             width: 100%; 
-            max-width: 80px; /* 限制最大尺寸，防止在大螢幕變太誇張 */
+            max-width: 80px; 
             aspect-ratio: 1 / 1; 
             border: 2px dashed #bdc3c7; border-radius: 20px; 
             display: flex; align-items: center; justify-content: center; 
             font-size: 34px; background: white; margin: auto; 
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Q彈的放大動畫 */
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        
-        /* 當印花被激活/收集時的樣式 */
         .stamp.active { 
             border: 3px solid var(--gold); 
             background: #fffde7; 
-            transform: rotate(5deg) scale(1.1); /* 微微旋轉並放大 */
+            transform: rotate(5deg) scale(1.1);
             box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
         }
 
-        /* 攤位名稱：優化文字大小與對齊 */
         .stall-name {
-            font-size: 13px;
-            font-weight: bold;
-            margin-top: 10px;
-            color: #34495e;
-            display: -webkit-box;
-            -webkit-line-clamp: 2; /* 限制顯示兩行 */
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            height: 32px; /* 固定高度防止排版跳動 */
-            line-height: 1.2;
+            font-size: 13px; font-weight: bold; margin-top: 10px; color: #34495e;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+            overflow: hidden; height: 32px; line-height: 1.2;
         }
 
-        /* 領獎按鈕的通用與不同狀態樣式 */
-
-        /*
+        /* 按鈕樣式 */
         .btn-prize { 
-            width: 100%; padding: 20px; border-radius: 18px; border: none; 
-            margin-bottom: 15px; font-weight: bold; display: flex; 
-            justify-content: space-between; align-items: center;
-            transition: 0.3s;
+            width: 100%; padding: 20px 18px; border-radius: 18px; border: none; 
+            margin-bottom: 15px; font-weight: 800; font-size: 18px; 
+            display: flex; justify-content: space-between; align-items: center;
+            transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         }
-        */
+        .state-locked { background: #eaeded; color: #95a5a6; }
+        .state-ready { background: linear-gradient(135deg, var(--gold) 0%, #f39c12 100%); color: white; cursor: pointer; animation: pulse 2s infinite; }
+        .state-done { background: #e8f5e9; color: var(--green); border: 1px dashed var(--green); }
 
-        /* 調大按鈕高度、字體，並增加左右邊距 */
-        .btn-prize { 
-            width: 100%; 
-            padding: 20px 18px; /* 增加上下 Padding 從 15px 到 20px */
-            border-radius: 18px; 
-            border: none; 
-            margin-bottom: 15px; /* 增加按鈕之間的間距 */
-            font-weight: 800; 
-            font-size: 18px;    /* 調大字體 */
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-        }
-
-        .state-locked { background: #eaeded; color: #95a5a6; } /* 未達標：灰色 */
-        .state-ready { 
-            background: linear-gradient(135deg, var(--gold) 0%, #f39c12 100%); 
-            color: white; 
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4);
-            animation: pulse 2s infinite; /* 可領取時帶有呼吸燈效果，吸引點擊 */
-        } 
-        .state-done { background: #e8f5e9; color: var(--green); border: 1px dashed var(--green); } /* 已領取：淺綠色 */
-
-        /* 呼吸燈動畫 */
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.6); }
             70% { box-shadow: 0 0 0 12px rgba(241, 196, 15, 0); }
             100% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0); }
         }
 
-        /* ==========================================
-           CSS 模組 5：底部導航列與彈出視窗 (Modal)
-           ========================================== */
-        /* 固定在底部的導航列 */
-        .nav-bar { 
-            position: fixed; bottom: 0; width: 100%; background: white; 
-            display: flex; height: 70px; border-top: 1px solid #eee; 
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-            z-index: 999; /* 確保在最上層 */
-        }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #bdc3c7; cursor: pointer; transition: 0.3s; }
+        /* 導航與彈窗 */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; height: 70px; border-top: 1px solid #eee; z-index: 999; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #bdc3c7; cursor: pointer; }
         .nav-item.active { color: var(--green); font-weight: bold; }
-        .nav-item span { font-size: 22px; margin-bottom: 2px; }
+        .nav-item span { font-size: 22px; }
 
-        /* 彈出視窗的全螢幕遮罩 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 1000; }
-        /* 彈出視窗的內容區塊 */
-        .modal-content { 
-            background: white; width: 88%; max-width: 400px; margin: 20% auto; 
-            padding: 30px 25px; border-radius: 25px; text-align: center; 
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-            animation: popIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* 彈跳進場效果 */
-        }
-        @keyframes popIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        
-        /* 彈出視窗內的文字與按鈕元件 */
-        .modal-content h3 { font-size: 22px; color: var(--dark-green); margin-bottom: 15px; }
-        .eco-tip-box { background: #f0f9f4; padding: 15px; border-radius: 15px; text-align: left; margin: 15px 0; border-left: 4px solid var(--green); font-size: 15px; }
-        .code-input { width: 100%; padding: 15px; font-size: 22px; text-align: center; margin: 15px 0; border: 1px solid #ddd; border-radius: 12px; }
-        .code-input:focus { border-color: var(--green); } 
+        .modal-content { background: white; width: 88%; max-width: 400px; margin: 20% auto; padding: 30px 25px; border-radius: 25px; text-align: center; animation: popIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .btn-main { background: var(--green); color: white; border: none; padding: 16px; border-radius: 15px; width: 100%; font-size: 18px; cursor: pointer; font-weight: bold; }
-        .btn-cancel { background: none; border: none; color: #999; margin-top: 15px; text-decoration: underline; cursor: pointer; }
-
-        /* ==========================================
-           [新增] CSS 模組 6：人機對話窗口與地圖趣味 Icon
-           ========================================== */
-        /* 右下角懸浮對話按鈕 */
-        .chat-btn {
-            position: fixed; bottom: 85px; right: 20px;
-            width: 55px; height: 55px;
-            background: linear-gradient(135deg, var(--green), #27ae60);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 26px; color: white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            cursor: pointer; z-index: 998;
-            transition: 0.3s;
-        }
-        .chat-btn:hover { transform: scale(1.1); }
-
-        /* 對話視窗容器 */
-        .chat-modal {
-            display: none; position: fixed; bottom: 150px; right: 20px;
-            width: 300px; max-width: 85vw; background: white;
-            border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            z-index: 1000; overflow: hidden;
-            animation: slideUp 0.3s ease-out;
-        }
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        /* 對話視窗 Header */
-        .chat-header {
-            background: var(--dark-green); color: white;
-            padding: 12px 15px; font-weight: bold;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
-        /* 對話內容區 */
+        /* 助手按鈕 */
+        .chat-btn { position: fixed; bottom: 85px; right: 20px; width: 55px; height: 55px; background: linear-gradient(135deg, var(--green), #27ae60); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; color: white; z-index: 998; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .chat-modal { display: none; position: fixed; bottom: 150px; right: 20px; width: 300px; max-width: 85vw; background: white; border-radius: 20px; z-index: 1000; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15); animation: slideUp 0.3s ease-out; }
+        .chat-header { background: var(--dark-green); color: white; padding: 12px 15px; font-weight: bold; display: flex; justify-content: space-between; }
         .chat-body { padding: 15px; max-height: 250px; overflow-y: auto; }
-        /* 機器人氣泡 */
-        .bot-bubble {
-            background: var(--chat-bg); padding: 10px 14px;
-            border-radius: 15px 15px 15px 0; margin-bottom: 10px;
-            font-size: 14px; align-self: flex-start;
-            border: 1px solid rgba(46, 204, 113, 0.2);
-        }
-        /* 用戶快捷選項按鈕 */
-        .chat-option {
-            display: block; width: 100%; background: white;
-            border: 1px solid var(--green); color: var(--dark-green);
-            padding: 8px 12px; border-radius: 10px; margin-bottom: 6px;
-            font-size: 13px; text-align: left; cursor: pointer;
-            transition: 0.2s;
-        }
-        .chat-option:hover { background: var(--chat-bg); }
+        .bot-bubble { background: var(--chat-bg); padding: 10px 14px; border-radius: 15px 15px 15px 0; margin-bottom: 10px; font-size: 14px; border: 1px solid rgba(46, 204, 113, 0.2); }
+        .chat-option { display: block; width: 100%; background: white; border: 1px solid var(--green); color: var(--dark-green); padding: 8px 12px; border-radius: 10px; margin-bottom: 6px; font-size: 13px; text-align: left; }
 
-        /* 地圖下方的趣味環保 Icon 網格 */
-        .eco-icon-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 10px; margin-top: 15px; text-align: center;
-        }
-        .eco-icon-item {
-            background: white; padding: 10px 5px; border-radius: 12px;
-            border: 1px solid #eafaf1; transition: 0.3s;
-        }
-        /* 讓 Icon 有獨立的緩慢心跳動畫，增加生命感 */
-        /*
-        .eco-icon-item span { font-size: 24px; animation: heartbeat 2s infinite ease-in-out; display: inline-block; }
-        .eco-icon-item div { font-size: 11px; color: #7f8c8d; margin-top: 4px; }
-        .eco-icon-item:hover { background: var(--soft-green); transform: translateY(-3px); }
-        */
-       
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-        }
+        .eco-icon-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
+        .eco-icon-item { background: white; padding: 10px 5px; border-radius: 12px; border: 1px solid #eafaf1; text-align: center; }
+        .eco-icon-item span { font-size: 24px; }
+        .eco-icon-item div { font-size: 11px; color: #7f8c8d; }
     </style>
 </head>
 <body>
@@ -374,26 +202,27 @@
     <audio id="giftAudio" preload="auto"><source src="gift_award.mp3" type="audio/mpeg"></audio>
 
     <div class="header">
-        <h2>🌿 可持續發展嘉年華暨​</h2>
-        <h2> VTC學生環保大使計劃嘉許禮</h2>
-        <div style="font-size: 16px; opacity: 0.9; letter-spacing: 1px;">愛地球 . 為未來</div>
-        <div id="live-clock" style="font-size: 12px; margin-top: 8px; opacity: 0.7;">載入中...</div>
+        <div class="logo-container">
+            <h2 style="margin: 5px 0;">🌿 可持續發展嘉年華暨</h2>
+            <h2 style="margin: 5px 0;"> VTC學生環保大使計劃嘉許禮</h2>
+            <div style="font-size: 16px; opacity: 0.9; letter-spacing: 1px;">愛地球 . 為未來</div>
+            <div id="live-clock">載入中...</div>
+        </div>
     </div>
 
     <div id="tab-stamps" class="tab-content active-tab">
-
-        <div class="glass-card" style="margin-top: 10px;">
-            <img src="cesdo_yc_logo.png" style="width:100%; border-radius:15px; margin-top:10px; cursor: pointer;">
+        <div class="glass-card" style="margin-top: 10px; text-align: center;">
+            <img src="cesdo_yc_logo.png" style="width:100%; border-radius:15px; cursor: pointer;">
         </div>
 
-        <div class="grid" style="margin-top: 25px;" id="mainGrid"></div>
+        <div class="grid" id="mainGrid"></div>
         
         <div class="glass-card" style="margin-top: 25px;">
             <div id="progText" style="font-size: 18px; font-weight: 800; color: var(--dark-green);">我的印花進度：0 / 16</div>
             <div class="bar-bg"><div class="bar-fill" id="pBar"></div></div>
         </div>
 
-        <div class="glass-card" style="margin-top: 25px;">
+        <div class="glass-card">
             <div style="font-weight: 900; color: var(--dark-green); margin-bottom: 20px; font-size: 20px; display: flex; align-items: center;">
                 <span style="margin-right: 8px;">🎁</span> 獎勵換領處
             </div>
@@ -406,21 +235,18 @@
     </div>
 
     <div id="tab-map" class="tab-content">
-        
         <div class="glass-card" style="margin-top: 10px;">
-            <img src="cesdo_yc_logo.png" style="width:100%; border-radius:15px; margin-top:10px; cursor: pointer;">
+            <img src="cesdo_yc_logo.png" style="width:100%; border-radius:15px; cursor: pointer;">
         </div>
 
-        <div class="glass-card" style="margin-top: 10px;">
+        <div class="glass-card">
             <h3 style="color: var(--dark-green); margin-top:0;">📍 活動資訊</h3>
-            <p style="font-size: 14px; margin: 6px 0;"><b>日期：</b> 2026年4月21日 (星期二)</p>
-            <p style="font-size: 14px; margin: 6px 0;"><b>時間：</b> 11:30am - 2:30pm</p>
-            <p style="font-size: 14px; margin: 6px 0;"><b>地點：</b> 職業訓練局 九龍灣大樓</p>
-            <p style="font-size: 14px; color: #7f8c8d; line-height: 1.4;">歡迎大家參與可持續發展嘉年華 暨​VTC學生環保大使計劃嘉許禮！</p>
+            <p style="font-size: 14px;"><b>日期：</b> 2026年4月21日</p>
+            <p style="font-size: 14px;"><b>時間：</b> 11:30am - 2:30pm</p>
+            <p style="font-size: 14px;"><b>地點：</b> 職業訓練局 九龍灣大樓</p>
+            <img src="KBC_Address.jpg" style="width:100%; border-radius:15px; margin-top:10px;">
             
-            <img src="KBC_Address.jpg" style="width:100%; border-radius:15px; margin-top:10px; cursor: pointer;">
-            
-            <h4 style="color: var(--dark-green); margin: 20px 0 10px 0; font-size: 15px;">🌱 我們的綠色願景</h4>
+            <h4 style="color: var(--dark-green); margin: 20px 0 10px 0;">🌱 我們的綠色願景</h4>
             <div class="eco-icon-grid">
                 <div class="eco-icon-item"><span>💡</span><div>節約能源</div></div>
                 <div class="eco-icon-item"><span>🚲</span><div>低碳出行</div></div>
@@ -431,14 +257,10 @@
     </div>
 
     <div class="chat-btn" onclick="toggleChat()">💬</div>
-    
     <div class="chat-modal" id="chatModal">
-        <div class="chat-header">
-            <span>🤖 綠色小助手</span>
-            <span style="cursor:pointer;" onclick="toggleChat()">✕</span>
-        </div>
+        <div class="chat-header"><span>🤖 綠色小助手</span><span style="cursor:pointer;" onclick="toggleChat()">✕</span></div>
         <div class="chat-body">
-            <div class="bot-bubble" id="botReply">你好呀！我是你的綠色助手。今天有甚麼我可以幫到你？</div>
+            <div class="bot-bubble" id="botReply">你好呀！我是你的綠色助手。今天有什麼我可以幫到你？</div>
             <button class="chat-option" onclick="askBot('我點樣可以集齊印花？')">👉 我點樣可以集齊印花？</button>
             <button class="chat-option" onclick="askBot('獎勵換領處喺邊度？')">👉 獎勵換領處喺邊度？</button>
             <button class="chat-option" onclick="askBot('有咩環保小貼士？')">👉 有咩環保小貼士？</button>
@@ -453,43 +275,24 @@
     <div id="uiModal" class="modal">
         <div class="modal-content">
             <div id="modalIcon" style="font-size: 60px;"></div>
-            <h3 id="modalTitle" style="margin: 10px 0; color: var(--dark-green);"></h3>
+            <h3 id="modalTitle"></h3>
             <div id="ecoTip" class="eco-tip-box"></div>
-            <p id="modalDesc" style="color: #666; font-size: 14px;"></p>
-            
+            <p id="modalDesc"></p>
             <div id="verifyArea" style="display:none;">
-                <input type="number" id="vCodeInput" class="code-input" placeholder="工作人員密碼">
-                <button class="btn-main" id="confirmBtn">確認蓋印 🤗</button>
+                <input type="number" id="vCodeInput" class="code-input" placeholder="工作人員密碼" style="width:100%; padding:15px; font-size:22px; text-align:center; margin:15px 0; border:1px solid #ddd; border-radius:12px;">
+                <button class="btn-main" id="confirmBtn" style="background:var(--green); color:white; border:none; padding:16px; border-radius:15px; width:100%; font-weight:bold;">確認蓋印 🤗</button>
             </div>
-            
             <div id="redeemArea" style="display:none;">
-                <button class="btn-main" id="redeemConfirmBtn" style="background: var(--gold); color: white;">確認領取獎勵 🥳</button>
+                <button class="btn-main" id="redeemConfirmBtn" style="background:var(--gold); color:white; border:none; padding:16px; border-radius:15px; width:100%; font-weight:bold;">確認領取獎勵 🥳</button>
             </div>
-            
-            <button class="btn-cancel" onclick="closeModal()">返回</button>
+            <button class="btn-cancel" onclick="closeModal()" style="background:none; border:none; color:#999; margin-top:15px; text-decoration:underline;">返回</button>
         </div>
     </div>
 
 <script>
-    // ==========================================
-    // JS 模組 1：系統常數與資料庫設定
-    // ==========================================
-    
-    // Google Apps Script 的後台 API 網址，負責將用戶的蓋印和領獎數據傳回 Google Sheet 試算表
-    //const API_URL = "https://script.google.com/macros/s/AKfycbztJOpwadOqZmgbVMZawxW7RvoaihSDERjWT3A7CtVOp1b7CA2j4ydAluv4udBWbUCk/exec"; 
     const API_URL = "https://script.google.com/macros/s/AKfycbwhlFCOQkSlELkFcFZVD6fQU_GEpnmuaaXRg8rALlsW4gvXeSWSTcUsc612IosrFEns/exec"; 
- 
-    
-
-    
-    
-    // 密碼鹽值 (可更改此數字來調整動態密碼的偏移量，保持不變以相容 Edward 原有設定)
     const SALT = 0; 
-    //const SALT = 1111; 
 
-    // 定義 16 個環保攤位的資料庫 (ID、圖標、名稱、環保小知識)
-    // 修改攤位名稱或知識內容
-   
     const STALLS = [
         { id: 'QR1', icon: '💰', name: '攤位1: 低碳智慧收費系統', tip: '使用電子支付，減少紙幣製造產生的碳足跡。' },
         { id: 'QR2', icon: '🚉', name: '攤位2: 綠智通勤樞紐', tip: '多搭巴士地鐵，每公里可減少約 150g 碳排放。' },
@@ -508,28 +311,21 @@
         { id: 'QR15', icon: '🤖', name: '攤位15: 迷你 WEEE Hero 組裝', tip: '認識電子廢物回收，人人都能成為環保英雄。' },
         { id: 'QR16', icon: '🚌', name: '攤位16: 喵巴士回收車', tip: '流動回收站深入社區，讓減廢變得更方便。' }
     ];
-    // ==========================================
-    // JS 模組 2：用戶狀態管理 (LocalStorage)
-    // ==========================================
-    
-    // 獲取或創建使用者的唯一隨機 ID (用來在 Google Sheet 追蹤是哪位使用者)
+
     let userId = localStorage.getItem('vtc_user_id') || ('U' + Date.now());
     localStorage.setItem('vtc_user_id', userId);
-    
-    // 從本地緩存讀取已收集的印花陣列
     let myStamps = JSON.parse(localStorage.getItem('vtc_stamps_2026')) || [];
-    
-    // 從本地緩存讀取已領取的獎勵記錄陣列（防止重複領獎）
     let redeemedHistory = JSON.parse(localStorage.getItem('vtc_redeemed_history')) || [];
-    
-    // 控制是否已經解鎖 iOS/Android 的音效播放限制（移動端必須經由點擊才能放音效）
     let audioUnlocked = false;
 
-    // ==========================================
-    // JS 模組 3：視覺效果與環境初始化 (新增綠色動畫)
-    // ==========================================
-    
-    // 產生背景漂浮綠點
+    // 定時更新時鐘
+    function updateClock() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('zh-HK', { hour12: false });
+        document.getElementById('live-clock').innerText = `📅 2026年4月21日 | 🕒 ${timeStr}`;
+    }
+    setInterval(updateClock, 1000);
+
     function createDots() {
         const bg = document.getElementById('bgDots');
         for(let i=0; i<15; i++) {
@@ -542,7 +338,6 @@
         }
     }
 
-    // [新增] 產生隨機飄落的樹葉，增加綠化氛圍
     function createLeaves() {
         const bg = document.getElementById('bgDots');
         const leafEmojis = ['🍃', '🍂', '🍁', '🌱','🌼', '☘️', '🌿', '🌸']; 
@@ -551,46 +346,27 @@
             leaf.className = 'leaf';
             leaf.innerText = leafEmojis[Math.floor(Math.random() * leafEmojis.length)];
             leaf.style.left = Math.random() * 100 + 'vw';
-            leaf.style.animationDuration = (Math.random() * 5 + 5) + 's'; // 隨機飄落速度
+            leaf.style.animationDuration = (Math.random() * 5 + 5) + 's';
             leaf.style.animationDelay = (Math.random() * 3) + 's';
             bg.appendChild(leaf);
         }
     }
 
-    // 解除移動裝置對音訊自動播放的限制
-    function unlockAudio() {
-        if (audioUnlocked) return;
-        const s1 = document.getElementById('stampAudio');
-        const s2 = document.getElementById('giftAudio');
-        s1.play().then(() => { s1.pause(); s1.currentTime = 0; }).catch(()=>{});
-        s2.play().then(() => { s2.pause(); s2.currentTime = 0; }).catch(()=>{});
-        audioUnlocked = true;
-    }
-
-    // ==========================================
-    // JS 模組 4：主畫面渲染邏輯 (網格與按鈕狀態)
-    // ==========================================
-    
     function render() {
         const grid = document.getElementById('mainGrid');
-        grid.innerHTML = ''; // 清空現有網格
-        
-        // 渲染攤位印花
+        grid.innerHTML = ''; 
         STALLS.forEach(s => {
-            const isDone = myStamps.includes(s.id); // 檢查該攤位是否已完成
+            const isDone = myStamps.includes(s.id);
             grid.innerHTML += `
                 <div class="stamp-box" onclick="showTooltip('${s.id}')">
                     <div class="stamp ${isDone ? 'active' : ''}">${isDone ? s.icon : ''}</div>
                     <div class="stall-name">${s.name}</div>
                 </div>`;
         });
-        
-        // 更新進度條與文字
         const count = Math.min(myStamps.length, 16);
         document.getElementById('progText').innerText = `我的印花進度：${count} / 16`;
         document.getElementById('pBar').style.width = (count / 16 * 100) + '%';
 
-        // 更新 3 個領獎按鈕的狀態 (2, 5, 8個印花)
         [2, 5, 8].forEach(lv => {
             const btn = document.getElementById(`btn-${lv}`);
             const status = document.getElementById(`status-${lv}`);
@@ -604,85 +380,58 @@
         });
     }
 
-    // ==========================================
-    // JS 模組 5：彈出視窗與業務邏輯 (驗證、領獎)
-    // ==========================================
-    
-    // 點擊未收集印花，打開驗證密碼的視窗
     function openVerifyModal(id) {
         const s = STALLS.find(x => x.id === id);
         document.getElementById('modalIcon').innerText = s.icon;
         document.getElementById('modalTitle').innerText = s.name;
         document.getElementById('ecoTip').innerHTML = `<b>💡 環保小知識：</b><br>${s.tip}`;
-        document.getElementById('modalDesc').innerText = "請輸入工作人員提供的密碼以獲取印花。";
-        
+        document.getElementById('modalDesc').innerText = "請輸入工作人員提供的密碼。";
         document.getElementById('verifyArea').style.display = 'block';
         document.getElementById('redeemArea').style.display = 'none';
         document.getElementById('uiModal').style.display = 'block';
-        
-        // 綁定確認蓋印按鈕的點擊事件
         document.getElementById('confirmBtn').onclick = () => {
             const val = document.getElementById('vCodeInput').value;
             if (validate(val)) {
                 if (!myStamps.includes(id)) {
                     myStamps.push(id);
                     localStorage.setItem('vtc_stamps_2026', JSON.stringify(myStamps));
-                    sendToSheet('log', id); // 非同步發送日誌至後台
-                    triggerEffect('stamp'); // 觸發特效與音效
+                    sendToSheet('log', id);
+                    triggerEffect('stamp');
                 }
-                closeModal(); 
-                render(); // 更新進度畫面
-            } else { 
-                alert("密碼錯誤！請向工作人員索取正確密碼。"); 
-            }
+                closeModal(); render();
+            } else { alert("密碼錯誤！"); }
         };
     }
 
-    // 點擊已收集印花，顯示提示視窗（查看小知識）
     function showTooltip(id) {
-        if (!myStamps.includes(id)) {
-            openVerifyModal(id);
-            return;
-        }
+        if (!myStamps.includes(id)) { openVerifyModal(id); return; }
         const s = STALLS.find(x => x.id === id);
         document.getElementById('modalIcon').innerText = s.icon;
         document.getElementById('modalTitle').innerText = s.name;
         document.getElementById('ecoTip').innerHTML = `<b>💡 環保小知識：</b><br>${s.tip}`;
-        document.getElementById('modalDesc').innerText = "✅ 您已成功收集此攤位的印花！";
-        
+        document.getElementById('modalDesc').innerText = "✅ 已收集印花！";
         document.getElementById('verifyArea').style.display = 'none';
         document.getElementById('redeemArea').style.display = 'none';
         document.getElementById('uiModal').style.display = 'block';
     }
 
-    // 打開領獎確認視窗
     function openRedeemModal(lv) {
-        if (myStamps.length < lv || redeemedHistory.includes(lv)) return; // 雙重防呆
-        
         document.getElementById('modalIcon').innerText = "🎁";
         document.getElementById('modalTitle').innerText = "領取嘉年華獎勵";
-        document.getElementById('ecoTip').innerText = "太棒了！感謝你為地球出一分力，快去換領你的綠色獎勵吧！";
-        document.getElementById('modalDesc').innerText = "確認換領前，請將此畫面示予獎勵換領處人員核實。";
-        
+        document.getElementById('ecoTip').innerText = "太棒了！快去換領你的綠色獎勵吧！";
+        document.getElementById('modalDesc').innerText = "確認領取前請示予工作人員核實。";
         document.getElementById('verifyArea').style.display = 'none';
         document.getElementById('redeemArea').style.display = 'block';
         document.getElementById('uiModal').style.display = 'block';
-        
         document.getElementById('redeemConfirmBtn').onclick = () => {
             redeemedHistory.push(lv);
             localStorage.setItem('vtc_redeemed_history', JSON.stringify(redeemedHistory));
             sendToSheet('redeem', lv);
-            triggerEffect('gift'); // 大獎特效
-            closeModal(); 
-            render();
+            triggerEffect('gift');
+            closeModal(); render();
         };
     }
 
-    // ==========================================
-    // JS 模組 6：核心工具函數 (時間驗證、API、特效)
-    // ==========================================
-    
-    // 動態密碼驗證邏輯：Edward 原始的「當前小時 + 分鐘 + SALT」算法
     function validate(code) {
         const now = new Date();
         const h = now.getHours().toString().padStart(2,'0');
@@ -690,98 +439,44 @@
         return code === (parseInt(h + m) + SALT).toString();
     }
 
-    // 將數據發送到 Google Sheet（不卡住瀏覽器 UI 的隱形 GET 請求）
     function sendToSheet(action, val) {
         const url = `${API_URL}?action=${action}&${action==='log'?'id':'lv'}=${encodeURIComponent(val)}&uid=${userId}`;
-        new Image().src = url; // 透過 new Image 送出請求，完美繞過跨域 CORS 阻擋
+        new Image().src = url;
     }
 
-    // 觸發音效與 Canvas Confetti 撒紙屑特效
     function triggerEffect(type) {
         const sound = document.getElementById(type === 'stamp' ? 'stampAudio' : 'giftAudio');
-        sound.play().catch(()=>{}); // 容錯機制
+        sound.play().catch(()=>{});
         confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
     }
 
-    // ==========================================
-    // JS 模組 7：介面切換控制與生命週期
-    // ==========================================
-    
-    // 頁籤切換（印花 vs 地圖）
     function switchTab(t) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab'));
         document.getElementById('tab-' + t).classList.add('active-tab');
-        
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById('nav-' + t).classList.add('active');
-        
-        unlockAudio(); // 使用者主動交互，藉此解除自動播放限制
+        if (!audioUnlocked) {
+            const s1 = document.getElementById('stampAudio');
+            const s2 = document.getElementById('giftAudio');
+            s1.play().then(()=>{s1.pause(); s1.currentTime=0;});
+            s2.play().then(()=>{s2.pause(); s2.currentTime=0;});
+            audioUnlocked = true;
+        }
     }
 
-    // 關閉 Modal 彈窗
-    function closeModal() {
-        document.getElementById('uiModal').style.display = 'none';
-        document.getElementById('vCodeInput').value = ''; // 清空密碼欄位
-    }
-
-    // ==========================================
-    // [新增] JS 模組 8：人機對話窗口邏輯
-    // ==========================================
-    
-    // 打開或關閉右下角的對話視窗
-    function toggleChat() {
-        const modal = document.getElementById('chatModal');
-        modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
-        unlockAudio();
-    }
-
-    // 模擬對話回覆
-    function askBot(question) {
-        const replyArea = document.getElementById('botReply');
-        replyArea.innerText = "⏳ 思考中...";
-        
-        // 延遲 800ms 假裝在思考，增加擬真度
+    function closeModal() { document.getElementById('uiModal').style.display = 'none'; document.getElementById('vCodeInput').value = ''; }
+    function toggleChat() { const m = document.getElementById('chatModal'); m.style.display = (m.style.display==='block')?'none':'block'; }
+    function askBot(q) {
+        const r = document.getElementById('botReply');
+        r.innerText = "⏳ 思考中...";
         setTimeout(() => {
-            if (question.includes('印花')) {
-                replyArea.innerText = "去攤位參觀和完成活動，向工作人員攞密碼輸入就可以蓋印！";
-            } else if (question.includes('獎勵')) {
-                replyArea.innerText = "獎勵換領處設喺大堂，只要你集齊 2個、5個 或 8個 印花，就可以去換領豐富嘅綠色獎勵！";
-            } else if (question.includes('貼士')) {
-                const tips = [
-                    "自備水樽，每日可以減少棄置一個即棄膠樽！🧂",
-                    "離開房間時熄燈熄冷氣，減少碳排放！💡",
-                    "試吓多選擇步行，是最健康的環保方式！🚶"
-                ];
-                replyArea.innerText = "環保小貼士：" + tips[Math.floor(Math.random() * tips.length)];
-            }
+            if (q.includes('印花')) r.innerText = "完成活動並向工作人員索取密碼即可蓋印！";
+            else if (q.includes('獎勵')) r.innerText = "集齊 2/5/8 個印花可到換領處領獎。";
+            else r.innerText = "隨身攜帶水樽，減少使用即棄膠樽！🧂";
         }, 800);
     }
 
-    // ==========================================
-    // 系統主初始化
-    // ==========================================
-    function init() {
-        createDots();   // 啟動背景點動畫
-        createLeaves(); // 啟動樹葉落葉動畫
-        
-        // 右上角實時時鐘，每秒跳動一次
-        setInterval(() => { 
-            document.getElementById('live-clock').innerText = new Date().toLocaleString('zh-HK'); 
-        }, 1000);
-        
-        // 檢查 URL 有無帶入掃描 QR Code 的參數（例如 ?id=QR1）
-        const qid = new URLSearchParams(window.location.search).get('id');
-        if (qid && STALLS.some(s => s.id === qid)) {
-            setTimeout(() => { 
-                myStamps.includes(qid) ? showTooltip(qid) : openVerifyModal(qid); 
-            }, 500); // 延遲半秒等畫面穩定後再彈出
-        }
-        
-        render(); // 執行畫面初次繪製
-    }
-
-    // 當整個 DOM 下載完成後即刻啟動
-    init();
+    window.onload = () => { createDots(); createLeaves(); updateClock(); render(); };
 </script>
 </body>
 </html>
