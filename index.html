@@ -438,6 +438,7 @@
             </div>
             
             <div id="redeemArea" style="display:none;">
+                <input type="number" id="vRedeemInput" class="redeem-input" placeholder="工作人員密碼">
                 <button class="btn-main" id="redeemConfirmBtn" style="background: var(--gold); color: white;">確認領取獎勵 🥳</button>
             </div>
             
@@ -665,16 +666,16 @@
         document.getElementById('ecoTip').innerText =  "💡 太棒了！感謝你為地球出一分力! 快去換領你的綠色獎勵吧！";
         document.getElementById('modalDesc').innerText = "請輸入工作人員提供的密碼以換領獎勵。";
         
-        document.getElementById('verifyArea').style.display = 'block';
-        document.getElementById('redeemArea').style.display = 'none';
+        document.getElementById('verifyArea').style.display = 'none';
+        document.getElementById('redeemArea').style.display = 'block';
         document.getElementById('uiModal').style.display = 'block';
         
         // 清空之前的輸入內容
-        document.getElementById('vCodeInput').value = "";
+        document.getElementById('vRedeemInput').value = "";
 
         // 綁定確認蓋印按鈕的點擊事件
-        document.getElementById('ConfirmBtn').onclick = () => {
-            const val = document.getElementById('vCodeInput').value;
+        document.getElementById('redeemConfirmBtn').onclick = () => {
+            const val = document.getElementById('vRedeemInput').value;
             
             // Special password for redemption
             if (val === "503") {
@@ -700,18 +701,6 @@
         const h = now.getHours().toString().padStart(2,'0');
         const m = now.getMinutes().toString().padStart(2,'0');
         return code === (parseInt(h + m) + SALT).toString();
-    }
-
-
-    function failMsg() {
-        Swal.fire({
-            icon: 'error',
-            title: '密碼錯誤',
-            text: '請向工作人員索取正確密碼。',
-            confirmButtonColor: '#2ecc71', // 使用你的 --green
-            background: 'rgba(255, 255, 255, 0.95)',
-            backdrop: `rgba(46, 204, 113, 0.1)` // 淡淡的綠色遮罩
-        });
     }
 
     // 將數據發送到 Google Sheet（不卡住瀏覽器 UI 的隱形 GET 請求）
