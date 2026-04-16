@@ -546,29 +546,37 @@
     setInterval(updateClock, 1000);
 
     
-    // 產生背景漂浮綠點
+    // 產生背景漂浮綠點 (優化：限制在 10% - 90% 寬度)
     function createDots() {
         const bg = document.getElementById('bgDots');
         for(let i=0; i<15; i++) {
             const dot = document.createElement('div');
             dot.className = 'dot';
-            dot.style.left = Math.random() * 100 + 'vw';
+            
+            // 邏輯：10 + (隨機 0-80) = 區間 10% 到 90%
+            dot.style.left = (Math.random() * 80 + 10) + 'vw';
+            
             dot.style.width = dot.style.height = (Math.random() * 15 + 5) + 'px';
             dot.style.animationDelay = (Math.random() * 5) + 's';
             bg.appendChild(dot);
         }
     }
 
-    // [新增] 產生隨機飄落的樹葉，增加綠化氛圍
+    // 產生隨機飄落的樹葉 (優化：限制在 10% - 90% 寬度)
     function createLeaves() {
         const bg = document.getElementById('bgDots');
-        const leafEmojis = ['🍃', '🍂', '🍁', '🌱','🌼', '☘️', '🌿', '🌸']; 
+        //const leafEmojis = ['🍃', '🍂', '🍁', '🌱','🌼', '☘️', '🌿', '🌸']; 
+        const leafEmojis = ['🍃', '🌱','🌼', '☘️', '🌿', '🌸'];
+        
         for(let i=0; i<8; i++) {
             const leaf = document.createElement('div');
             leaf.className = 'leaf';
             leaf.innerText = leafEmojis[Math.floor(Math.random() * leafEmojis.length)];
-            leaf.style.left = Math.random() * 100 + 'vw';
-            leaf.style.animationDuration = (Math.random() * 5 + 5) + 's'; // 隨機飄落速度
+            
+            // 邏輯：同樣限制在 10% 到 90% 之間
+            leaf.style.left = (Math.random() * 80 + 10) + 'vw';
+            
+            leaf.style.animationDuration = (Math.random() * 5 + 5) + 's';
             leaf.style.animationDelay = (Math.random() * 3) + 's';
             bg.appendChild(leaf);
         }
