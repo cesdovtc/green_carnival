@@ -33,9 +33,6 @@
 
             /* 這裡合併新加入的屬性 */
             overflow-x: hidden; /* 防止橫向滾動條出現 */
-            position: relative; 
-            width: 100%;
-
             color: #2c3e50;
         }
 
@@ -87,6 +84,10 @@
             animation: logoFloat 3s ease-in-out infinite;
         }
 
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0) translateZ(0); }
+            50% { transform: translateY(-5px) translateZ(0); }
+        }
 
         /* 漂浮綠點與葉子 */
         .dot, .leaf { 
@@ -770,7 +771,31 @@
         }, 800);
     }
 
-    window.onload = () => { createDots(); createLeaves(); updateClock(); render(); };
+    // ==========================================
+    // 系統主初始化
+    // ==========================================
+    function init() {
+        createDots();   // 啟動背景點動畫
+        createLeaves(); // 啟動樹葉落葉動畫
+        
+        // 右上角實時時鐘，每秒跳動一次
+        setInterval(() => { 
+            document.getElementById('live-clock').innerText = new Date().toLocaleString('zh-HK'); 
+        }, 1000);
+        
+        // 檢查 URL 有無帶入掃描 QR Code 的參數（例如 ?id=QR1）
+        const qid = new URLSearchParams(window.location.search).get('id');
+        if (qid && STALLS.some(s => s.id === qid)) {
+            setTimeout(() => { 
+                myStamps.includes(qid) ? showTooltip(qid) : openVerifyModal(qid); 
+            }, 500); // 延遲半秒等畫面穩定後再彈出
+        }
+        
+        render(); // 執行畫面初次繪製
+    }
+
+    // 當整個 DOM 下載完成後即刻啟動
+    init();
 </script>
 </body>
 </html>
