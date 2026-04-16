@@ -360,7 +360,7 @@
 </head>
 
 <body>
-    <div id="bgDotsLeafs"></div>
+    <div id="bgDots"></div>
 
     <audio id="stampAudio" preload="auto"><source src="stamp_award.mp3" type="audio/mpeg"></audio>
     <audio id="giftAudio" preload="auto"><source src="gift_award.mp3" type="audio/mpeg"></audio>
@@ -545,7 +545,7 @@
     
     // 產生背景漂浮綠點
     function createDots() {
-        const bg = document.getElementById('bgDotsLeafs');
+        const bg = document.getElementById('bgDots');
         for(let i=0; i<15; i++) {
             const dot = document.createElement('div');
             dot.className = 'dot';
@@ -558,7 +558,7 @@
 
     // [新增] 產生隨機飄落的樹葉，增加綠化氛圍
     function createLeaves() {
-        const bg = document.getElementById('bgDotsLeafs');
+        const bg = document.getElementById('bgDots');
         const leafEmojis = ['🍃', '🍂', '🍁', '🌱','🌼', '☘️', '🌿', '🌸']; 
         for(let i=0; i<8; i++) {
             const leaf = document.createElement('div');
@@ -777,11 +777,6 @@
     function init() {
         createDots();   // 啟動背景點動畫
         createLeaves(); // 啟動樹葉落葉動畫
-        
-        // 右上角實時時鐘，每秒跳動一次
-        setInterval(() => { 
-            document.getElementById('live-clock').innerText = new Date().toLocaleString('zh-HK'); 
-        }, 1000);
         
         // 檢查 URL 有無帶入掃描 QR Code 的參數（例如 ?id=QR1）
         const qid = new URLSearchParams(window.location.search).get('id');
