@@ -726,6 +726,7 @@
     // ==========================================
     
     // 動態密碼驗證邏輯：Edward 原始的「當前小時 + 分鐘 + SALT」算法
+    /*
     function validate(code, stallId) {
         
         // 優先檢查萬能密碼
@@ -766,6 +767,45 @@
         const isNearEdge = diff >= 57; 
 
         return diff <= 3 || isNearEdge;
+    }
+    */
+
+    function validate(code, stallId) {
+        // 1. 萬能管理員密碼
+        if (code === "503") return true;
+
+        // 2. 基本校驗：如果輸入不是 4 位數，直接判斷失敗
+        if (!code || code.length !== 4) return false;
+
+        // 3. 獲取攤位編號
+        const stallNum = parseInt(stallId.replace('QR', '')) || 0;
+        
+        // 4. 定義 16 個攤位的固定密碼
+        // 這裡你可以隨意修改這些數字，只要告訴工作人員即可
+        let correctCode = "";
+        
+        switch(stallNum) {
+            case 1:  correctCode = "1111"; break;
+            case 2:  correctCode = "2222"; break;
+            case 3:  correctCode = "3333"; break;
+            case 4:  correctCode = "4444"; break;
+            case 5:  correctCode = "5555"; break;
+            case 6:  correctCode = "6666"; break;
+            case 7:  correctCode = "7777"; break;
+            case 8:  correctCode = "8888"; break;
+            case 9:  correctCode = "9999"; break;
+            case 10: correctCode = "0000"; break;
+            case 11: correctCode = "1122"; break;
+            case 12: correctCode = "2233"; break;
+            case 13: correctCode = "3344"; break;
+            case 14: correctCode = "4455"; break;
+            case 15: correctCode = "5566"; break;
+            case 16: correctCode = "6677"; break;
+            default: return false; // 無效攤位
+        }
+
+        // 4. 比對密碼
+        return code === correctCode;
     }
 
     // 將數據發送到 Google Sheet（不卡住瀏覽器 UI 的隱形 GET 請求）
