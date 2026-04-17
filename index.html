@@ -8,7 +8,14 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
 
-    
+    /*
+    https://cesdovtc.github.io/green_carnival/index.html?id=QR1
+
+    https://green-carnival.vercel.app/index.html?id=QR1
+
+    https://green-carnival.netlify.app/index.html?id=QR1
+
+    */
     <style>
         /* ==========================================
            CSS 模組 1：全局變數與基礎設定
@@ -656,14 +663,16 @@
         document.getElementById('confirmBtn').onclick = () => {
             const val = document.getElementById('vCodeInput').value;
             if (validate(val, id)) {
+                closeModal(); 
+                render(); // 更新進度畫面
+                triggerEffect('stamp'); // 觸發特效與音效
+
                 if (!myStamps.includes(id)) {
                     myStamps.push(id);
                     localStorage.setItem('vtc_stamps_2026', JSON.stringify(myStamps));
                     sendToSheet('log', id); // 非同步發送日誌至後台
-                    triggerEffect('stamp'); // 觸發特效與音效
                 }
-                closeModal(); 
-                render(); // 更新進度畫面
+                
             } else { 
                 alert("密碼錯誤！請向工作人員索取正確密碼。");             
             }
@@ -709,12 +718,17 @@
             
             // Special password for redemption
             if (val === "503") {
-                redeemedHistory.push(lv);
-                localStorage.setItem('vtc_redeemed_history', JSON.stringify(redeemedHistory));
-                sendToSheet('redeem', lv);
-                triggerEffect('gift'); // 大獎特效    
+
                 closeModal(); 
                 render(); // 更新進度畫面
+                triggerEffect('gift'); // 大獎特效  
+                
+                if (!redeemedHistory.includes(lv)) {
+                    redeemedHistory.push(lv);
+                    localStorage.setItem('vtc_redeemed_history', JSON.stringify(redeemedHistory));
+                    sendToSheet('redeem', lv); // 非同步發送日誌至後台
+                }
+
             } else { 
                 alert("密碼錯誤！請向工作人員索取正確密碼。");                
             }            
@@ -808,10 +822,35 @@
         return code === correctCode;
     }
 
+	/*
     // 將數據發送到 Google Sheet（不卡住瀏覽器 UI 的隱形 GET 請求）
     function sendToSheet(action, val) {
         const url = `${API_URL}?action=${action}&${action==='log'?'id':'lv'}=${encodeURIComponent(val)}&uid=${userId}`;
         new Image().src = url; // 透過 new Image 送出請求，完美繞過跨域 CORS 阻擋
+    }
+	*/
+
+    // new-add (better version for concurrent requests)
+    function sendToSheet(action, val) {
+        // 1. 構建基礎 URL
+        const paramName = (action === 'log' ? 'id' : 'lv');
+        const url = `${API_URL}?action=${action}&${paramName}=${encodeURIComponent(val)}&uid=${userId}`;
+
+        // 2. 隨機延遲 (Jitter)：0 到 3000 毫秒
+        // 這是解決 300 人同時併發最有效的前端手段
+        const jitter = Math.floor(Math.random() * 3000);
+
+        setTimeout(() => {
+            // 3. 使用 fetch 並開啟 keepalive
+            // mode: 'no-cors' 模擬你原本 new Image() 的效果，不理會回傳值，只求送出
+            fetch(url, { 
+                mode: 'no-cors',
+                keepalive: true 
+            })
+            .then(() => console.log(`Data sent (action: ${action})`))
+            .catch(err => console.warn("Background log failed, but it's okay.", err));
+            
+        }, jitter);
     }
 
     // 觸發音效與 Canvas Confetti 撒紙屑特效
@@ -820,6 +859,10 @@
         sound.play().catch(()=>{}); // 容錯機制
         confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
     }
+
+
+    // 修改後的發送數據函數
+
 
     // ==========================================
     // JS 模組 7：介面切換控制與生命週期
@@ -894,7 +937,7 @@
         
         render(); // 執行畫面初次繪製
 
-	unlockAudio(); // 使用者主動交互，藉此解除自動播放限制
+	    unlockAudio(); // 使用者主動交互，藉此解除自動播放限制
     }
 
     // 當整個 DOM 下載完成後即刻啟動
