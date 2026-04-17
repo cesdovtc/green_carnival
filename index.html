@@ -8,6 +8,14 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
 
+    /*
+    https://cesdovtc.github.io/green_carnival/index.html?id=QR1
+
+    https://green-carnival.vercel.app/index.html?id=QR1
+
+    https://green-carnival.netlify.app/index.html?id=QR1
+
+    */
     <style>
         /* ==========================================
            CSS 模組 1：全局變數與基礎設定
@@ -655,13 +663,16 @@
         document.getElementById('confirmBtn').onclick = () => {
             const val = document.getElementById('vCodeInput').value;
             if (validate(val, id)) {
-                closeModal(); 
-                render(); // 更新進度畫面
-                triggerEffect('stamp'); // 觸發特效與音效
+                
 
                 if (!myStamps.includes(id)) {
                     myStamps.push(id);
                     localStorage.setItem('vtc_stamps_2026', JSON.stringify(myStamps));
+
+                    closeModal(); 
+                    render(); // 更新進度畫面
+                    triggerEffect('stamp'); // 觸發特效與音效
+
                     sendToSheet('log', id); // 非同步發送日誌至後台
                 }
                 
@@ -710,14 +721,15 @@
             
             // Special password for redemption
             if (val === "503") {
-
-                closeModal(); 
-                render(); // 更新進度畫面
-                triggerEffect('gift'); // 大獎特效  
-                
+        
                 if (!redeemedHistory.includes(lv)) {
                     redeemedHistory.push(lv);
                     localStorage.setItem('vtc_redeemed_history', JSON.stringify(redeemedHistory));
+
+                    closeModal(); 
+                    render(); // 更新進度畫面
+                    triggerEffect('gift'); // 大獎特效  
+
                     sendToSheet('redeem', lv); // 非同步發送日誌至後台
                 }
 
@@ -814,13 +826,13 @@
         return code === correctCode;
     }
 
-	/*
+    /*
     // 將數據發送到 Google Sheet（不卡住瀏覽器 UI 的隱形 GET 請求）
     function sendToSheet(action, val) {
         const url = `${API_URL}?action=${action}&${action==='log'?'id':'lv'}=${encodeURIComponent(val)}&uid=${userId}`;
         new Image().src = url; // 透過 new Image 送出請求，完美繞過跨域 CORS 阻擋
     }
-	*/
+    */
 
     // new-add (better version for concurrent requests)
     function sendToSheet(action, val) {
