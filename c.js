@@ -469,4 +469,7 @@
     }
 
     // 當整個 DOM 下載完成後即刻啟動
-    init();
+    //init();
+	
+	// 確保 DOM 載入後啟動  new-add 21/4
+	document.addEventListener('DOMContentLoaded', init);
