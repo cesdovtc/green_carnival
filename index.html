@@ -16,7 +16,7 @@
             /* 定義主題顏色變數，方便日後統一修改風格 */
             --green: #2ecc71;         /* 主綠色：按鈕、進度條、高亮 */
             --dark-green: #1b5e20;    /* 深綠色：標題、重要文字、深色背景 */
-            --gold: #f1c40f;          /* 金色：獎勵、高亮狀態、特殊按鈕 */
+            --gold: #f1c40f;          /* 金色：禮品、高亮狀態、特殊按鈕 */
             --soft-green: #e8f5e9;    /* 淺綠色：已完成狀態的背景、輕量背景 */
             --glass: rgba(255, 255, 255, 0.85); /* 玻璃擬態基礎背景色 */
             --chat-bg: #eafaf1;       /* 對話框氣泡的輕柔綠色背景 */
@@ -390,7 +390,7 @@
 
         <div class="glass-card" style="margin-top: 25px;">
             <div style="font-weight: 900; color: var(--dark-green); margin-bottom: 20px; font-size: 20px; display: flex; align-items: center;">
-                <span style="margin-right: 8px;">🎁</span> 獎勵換領處
+                <span style="margin-right: 8px;">🎁</span> 禮品換領
             </div>
             <div id="redeemButtons">
                 <button id="btn-2" class="btn-prize state-locked" onclick="openRedeemModal(2)"><span>細獎 (2個印花)</span><small id="status-2">鎖定中</small></button>
@@ -413,7 +413,7 @@
             <p style="font-size: 14px; margin: 6px 0;"><b>地點：</b> 職業訓練局 九龍灣大樓</p>
             <p style="font-size: 14px; color: #7f8c8d; line-height: 1.4;">歡迎大家參與可持續發展嘉年華 暨​VTC學生環保大使計劃嘉許禮！</p>
             
-            <img src="kbc1.png" style="width:100%; border-radius:15px; margin-top:10px; cursor: pointer;">
+            <img src="kbc.png" style="width:100%; border-radius:15px; margin-top:10px; cursor: pointer;">
             
             <h4 style="color: var(--dark-green); margin: 20px 0 10px 0; font-size: 15px;">🌱 我們的綠色願景</h4>
             <div class="eco-icon-grid">
@@ -435,7 +435,7 @@
         <div class="chat-body">
             <div class="bot-bubble" id="botReply">你好呀！我是你的綠色小助手。今天有甚麼我可以幫到你？</div>
             <button class="chat-option" onclick="askBot('我點樣可以集齊印花？')">👉 我點樣可以集齊印花？</button>
-            <button class="chat-option" onclick="askBot('獎勵換領處喺邊度？')">👉 獎勵換領處喺邊度？</button>
+            <button class="chat-option" onclick="askBot('禮品換領處喺邊度？')">👉 禮品換領處喺邊度？</button>
             <button class="chat-option" onclick="askBot('有咩環保小貼士？')">👉 有咩環保小貼士？</button>
         </div>
     </div>
@@ -459,7 +459,7 @@
             
             <div id="redeemArea" style="display:none;">
                 <input type="number" id="vRedeemInput" class="redeem-input" placeholder="工作人員密碼">
-                <button class="btn-main" id="redeemConfirmBtn" style="background: var(--gold); color: white;">確認領取獎勵 🥳</button>
+                <button class="btn-main" id="redeemConfirmBtn" style="background: var(--gold); color: white;">確認領取禮品 🥳</button>
             </div>
             
             <button class="btn-cancel" onclick="closeModal()">返回</button>
@@ -511,7 +511,7 @@
     // 從本地緩存讀取已收集的印花陣列
     let myStamps = JSON.parse(localStorage.getItem('vtc_stamps_2026')) || [];
     
-    // 從本地緩存讀取已領取的獎勵記錄陣列（防止重複領獎）
+    // 從本地緩存讀取已領取的禮品記錄陣列（防止重複領獎）
     let redeemedHistory = JSON.parse(localStorage.getItem('vtc_redeemed_history')) || [];
     
     // 控制是否已經解鎖 iOS/Android 的音效播放限制（移動端必須經由點擊才能放音效）
@@ -696,9 +696,9 @@
         if (myStamps.length < lv || redeemedHistory.includes(lv)) return; // 雙重防呆
         
         document.getElementById('modalIcon').innerText = "🎁";
-        document.getElementById('modalTitle').innerText = "領取嘉年華獎勵";
-        document.getElementById('ecoTip').innerText =  "💡 太棒了！感謝你為地球出一分力! 快去換領你的綠色獎勵吧！";
-        document.getElementById('modalDesc').innerText = "請輸入工作人員提供的密碼以換領獎勵。";
+        document.getElementById('modalTitle').innerText = "領取嘉年華禮品";
+        document.getElementById('ecoTip').innerText =  "💡 太棒了！感謝你為地球出一分力! 快去換領你的綠色禮品吧！";
+        document.getElementById('modalDesc').innerText = "請輸入工作人員提供的密碼以換領禮品。";
         
         document.getElementById('verifyArea').style.display = 'none';
         document.getElementById('redeemArea').style.display = 'block';
@@ -901,8 +901,8 @@
         setTimeout(() => {
             if (question.includes('印花')) {
                 replyArea.innerText = "去攤位參觀和完成活動，向工作人員攞密碼輸入就可以蓋印！";
-            } else if (question.includes('獎勵')) {
-                replyArea.innerText = "獎勵換領處設喺大堂，只要你集齊 2個、5個 或 8個 印花，就可以去換領豐富嘅綠色獎勵！";
+            } else if (question.includes('禮品')) {
+                replyArea.innerText = "禮品換領處設喺大堂，只要你集齊 2個、5個 或 8個 印花，就可以去換領豐富嘅綠色禮品！";
             } else if (question.includes('貼士')) {
                 const tips = [
                     "自備水樽，每日可以減少棄置一個即棄膠樽！🫙",
