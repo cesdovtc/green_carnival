@@ -32,7 +32,7 @@
             -webkit-overflow-scrolling: touch; /* 讓 iOS 捲動更流暢 */
             touch-action: pan-y;     /* 關鍵：只允許垂直滑動，禁止水平手勢拖拽 */
 
-            /* --- 新增：防盜取保護 --- */
+            /* --- 新增：防盜取保護 --- new-add on 21/4 (security) */
             -webkit-user-select: none;  /* 禁用 Safari 文字選取 */
             -ms-user-select: none;      /* 禁用 Edge 文字選取 */
             user-select: none;          /* 禁用標準文字選取 */
@@ -47,7 +47,7 @@
             -webkit-tap-highlight-color: transparent; /* 移除手機點擊時的藍色高亮框 */
         }
         
-        /* [Security Update] 確保輸入框依然可以正常打字 */
+        /* [Security Update] 確保輸入框依然可以正常打字 // new-add on 21/4 (security) */
         input, textarea, .code-input, .redeem-input {
             -webkit-user-select: text !important;
             user-select: text !important;
@@ -483,6 +483,37 @@
     </div>
 
 <script>
+        // new-add on 21/4 (security)
+        // 1. 禁用右鍵選單
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        // 2. 禁用開發者工具快捷鍵、儲存 (Ctrl+S) 及列印 (Ctrl+P)
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.keyCode === 123 || // F12
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || // Ctrl+Shift+I/J/C
+                (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 80)) || // Ctrl+U (源碼), S (儲存), P (列印)
+                (e.metaKey && e.altKey && e.keyCode === 73) // Mac Option+Command+I
+            ) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // 3. 阻止 Debugger (偵測到 F12 開啟時會強制暫停)
+        setInterval(function() {
+            (function(a) { return (function(a) { return (function(a) { debugger; }(a)); }(a)); }(1));
+        }, 1000);
+        
+        // 4. 阻止文字選取 (JS 層級補強)
+        document.onselectstart = function(e) { 
+            // 允許輸入框選取文字，否則用戶無法打字
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return true;
+            return false; 
+        };
+    })();
+
+
     // ==========================================
     // JS 模組 1：系統常數與資料庫設定
     // ==========================================
@@ -869,7 +900,7 @@
     function triggerEffect(type) {
         const sound = document.getElementById(type === 'stamp' ? 'stampAudio' : 'giftAudio');
         sound.play().catch(()=>{}); // 容錯機制
-        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
     }
 
 
