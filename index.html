@@ -31,11 +31,27 @@
             padding: 0;
             -webkit-overflow-scrolling: touch; /* 讓 iOS 捲動更流暢 */
             touch-action: pan-y;     /* 關鍵：只允許垂直滑動，禁止水平手勢拖拽 */
+
+            /* --- 新增：防盜取保護 --- */
+            -webkit-user-select: none;  /* 禁用 Safari 文字選取 */
+            -ms-user-select: none;      /* 禁用 Edge 文字選取 */
+            user-select: none;          /* 禁用標準文字選取 */
+            -webkit-touch-callout: none; /* 禁用 iOS 長按彈出選單 (防止另存圖片/拷貝) */
         }
 
         
-        /* 讓所有元素的邊框計算包含在寬高內，並統一使用微軟正黑體 */
-        * { box-sizing: border-box; font-family: "Microsoft JhengHei", sans-serif; }
+        /* 統一邊框計算與字體，並防止點擊高亮 */
+        * { 
+            box-sizing: border-box; 
+            font-family: "Microsoft JhengHei", sans-serif; 
+            -webkit-tap-highlight-color: transparent; /* 移除手機點擊時的藍色高亮框 */
+        }
+        
+        /* [Security Update] 確保輸入框依然可以正常打字 */
+        input, textarea, .code-input, .redeem-input {
+            -webkit-user-select: text !important;
+            user-select: text !important;
+        }
         
         body { 
             /* 頁面整體背景使用細緻的漸變綠色，模擬大自然感 */
