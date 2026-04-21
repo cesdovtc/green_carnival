@@ -34,7 +34,7 @@
 	                </p>
 	                <hr style="width: 50px; border: 1px solid #27ae60; margin: 20px 0;">
 	                <p style="font-size: 14px; color: #95a5a6;">
-	                    活動已圓滿結束，感謝支持綠色可持續發展。
+	                    活動已圓滿結束，感謝支持。
 	                </p>
 	            </div>
 	        `);
