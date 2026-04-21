@@ -1,10 +1,54 @@
+	// ==========================================
+	// 活動時間鎖 (2026-04-21)
+	// ==========================================
+	(function checkEventDate() {
+	    const now = new Date();
+	    // 獲取年、月、日
+	    const y = now.getFullYear();
+	    const m = now.getMonth() + 1; // 月份從0開始
+	    const d = now.getDate();
+	
+	    // 設定活動日期：2026年4月21日
+	    // 如果你希望活動結束後（22號開始）才鎖死，則判斷是否 > 21
+	    if (y > 2026 || (y === 2026 && m > 4) || (y === 2026 && m === 4 && d > 21)) {
+	        // 使用 document.write 直接覆蓋整個 HTML 內容，讓所有功能失效
+	        document.open();
+	        document.write(`
+	            <div style="
+	                height: 100vh; 
+	                display: flex; 
+	                flex-direction: column; 
+	                justify-content: center; 
+	                align-items: center; 
+	                text-align: center; 
+	                background: #f4f7f6; 
+	                color: #2c3e50; 
+	                font-family: 'PingFang HK', sans-serif; 
+	                padding: 20px;
+	            ">
+	                <div style="font-size: 60px; margin-bottom: 20px;">🗓️</div>
+	                <h2 style="margin-bottom: 10px;">The Event Has Concluded</h2>
+	                <p style="line-height: 1.6; color: #7f8c8d; max-width: 400px;">
+	                    Thank you for your participation. The Green Carnival 2026 Digital Stamp Collection System has officially ceased operations.
+	                </p>
+	                <hr style="width: 50px; border: 1px solid #27ae60; margin: 20px 0;">
+	                <p style="font-size: 14px; color: #95a5a6;">
+	                    活動已圓滿結束，電子印花收集系統已停止運作。<br>感謝支持綠色可持續發展。
+	                </p>
+	            </div>
+	        `);
+	        document.close();
+	        // 停止後續所有腳本執行
+	        throw new Error("Event ended. System stopped.");
+	    }
+	})();
+
 
     // ==========================================
     // JS 模組 1：系統常數與資料庫設定
     // ==========================================
-    
+
     // Google Apps Script 的後台 API 網址，負責將用戶的蓋印和領獎數據傳回 Google Sheet 試算表
-    //const API_URL = "https://script.google.com/macros/s/AKfycbztJOpwadOqZmgbVMZawxW7RvoaihSDERjWT3A7CtVOp1b7CA2j4ydAluv4udBWbUCk/exec"; 
     const API_URL = "https://script.google.com/macros/s/AKfycbwhlFCOQkSlELkFcFZVD6fQU_GEpnmuaaXRg8rALlsW4gvXeSWSTcUsc612IosrFEns/exec"; 
 
     // 密碼鹽值 (可更改此數字來調整動態密碼的偏移量，保持不變以相容 Edward 原有設定)
