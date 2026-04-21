@@ -142,7 +142,32 @@ Segmented Arrays: By breaking the path into _s1, _s2, and _s3, you ensure that t
 Tag Obfuscation: By hex-encoding both the opening and closing <script> tags, you avoid being flagged by simple security scanners that look for document.write('<script...').
 Immediate Execution: Because we are using document.write, the browser injects this into the page exactly where you placed it, ensuring the Stamp Collection UI has its logic ready the moment the page starts rendering.
 
+Method 6) - // identical to -c-/c.js 
 
+pls change my path from "c/c.js" to "./-c-/../-c-/c.js" that is identical as "-c-/c.js"
+To make this work with your new folder name and the "double-back" path logic, we need to update the character codes to include the hyphens and the specific directory structure.
+Here is the updated code using the segmented array method to load ./-c-/../-c-/c.js:
+<script>
+  (function() {
+    // Segment 1: "./-c-/"
+    var _p1 = [46, 47, 45, 99, 45, 47];
+    // Segment 2: "../"
+    var _p2 = [46, 46, 47];
+    // Segment 3: "-c-/c.js"
+    var _p3 = [45, 99, 45, 47, 99, 46, 106, 115];
+
+    // Combine into the tricky path: ./-c-/../-c-/c.js
+    var _final = String.fromCharCode.apply(null, _p1.concat(_p2, _p3));
+    
+    // Write the tag with hex-encoded 'script' strings for extra stealth
+    document.write('<\x73\x63\x72\x69\x70\x74 src="' + _final + '" defer></\x73\x63\x72\x69\x70\x74>');
+  })();
+</script>
+What changed in the logic?
+Hyphens (-): I added the character code 45, which represents the hyphen in your new folder name -c-.
+Path Reconstruction: The arrays now specifically build the path using your "tricky" navigation.
+Folder Consistency: This assumes your folder is named -c- and the file inside is c.js.
+This remains the most reliable way to keep your Stamp Collection UI functional while making the source code look like a collection of random numbers and hex codes. Just ensure that the folder on your server is renamed to exactly -c- (with the dashes) for this to load correctly!
 
 
 
