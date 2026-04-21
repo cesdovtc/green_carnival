@@ -9,15 +9,15 @@
     <meta http-equiv="expires" content="0">
     
     <title>可持續發展嘉年華 2026</title>
-    
+  
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
     
     <style>
         /*
             https://cesdovtc.github.io/green_carnival/    
-            https://green-carnival.vercel.app/
             https://green-carnival.netlify.app/
+            https://green-carnival.vercel.app/
         */
         
         /* ==========================================
@@ -492,50 +492,47 @@
             <button class="btn-cancel" onclick="closeModal()">返回</button>
         </div>
     </div>
-<script> 
+
+<script>
     // new-add on 21/4 (security)
     // ==========================================
     // [Security] 安全防護模組：阻止右鍵、F12、儲存與選取
     // ==========================================
-    // _0x4f2a: 系統混淆加密層
-    (function(_0x1b2d, _0x5a1e) {
-        const _0x3d2f = function(_0x2d1b) {
-            while (--_0x2d1b) { _0x1b2d['push'](_0x1b2d['shift']()); }
-        };
-        _0x3d2f(++_0x5a1e);
-    }(['\x63\x6f\x6e\x74\x65\x78\x74\x6d\x65\x6e\x75', '\x70\x72\x65\x76\x65\x6e\x74\x44\x65\x66\x61\x75\x6c\x74', '\x6b\x65\x79\x64\x6f\x77\x6e', '\x64\x65\x62\x75\x67\x67\x65\x72', '\x73\x65\x6c\x65\x63\x74\x73\x74\x61\x72\x74'], 0x1a4));
-
     (function() {
-        const _0x5c21 = {
-            'check': function() {
-                const _now = new Date();
-            },
-            'lock': function() {
-                // 禁用右鍵與特殊按鍵 (混淆十六進位處理)
-                document.addEventListener('\x63\x6f\x6e\x74\x65\x78\x74\x6d\x65\x6e\x75', _0 => _0['\x70\x72\x65\x76\x65\x6e\x74\x44\x65\x66\x61\x75\x6c\x74']());
-                document.addEventListener('\x6b\x65\x79\x64\x6f\x77\x6e', _0 => {
-                    if (_0.keyCode === 123 || (_0.ctrlKey && _0.shiftKey && (_0.keyCode === 73 || _0.keyCode === 74 || _0.keyCode === 67)) || (_0.ctrlKey && (_0.keyCode === 85 || _0.keyCode === 83 || _0.keyCode === 80))) {
-                        _0['\x70\x72\x65\x76\x65\x6e\x74\x44\x65\x66\x61\x75\x6c\x74']();
-                    }
-                });
-                setInterval(() => { (function() { return false; }['constructor']('\x64\x65\x62\x75\x67\x67\x65\x72')['call']()); }, 1000);
-            }
-        };
-
-        // 動態加載真正核心 (不再顯現在 HTML 標籤中)
-        function _load() {
-            var _0x = document.createElement('script');
-            _0x.src = 'c.js'; // 你的真實路徑
-            _0x.defer = true;
-            document.head.appendChild(_0x);
-        }
-
         try {
-            _0x5c21.check();
-            _0x5c21.lock();
-            _load();
-        } catch (e) {}
+
+            // 1. 禁用右鍵選單
+            document.addEventListener('contextmenu', e => e.preventDefault());
+
+            // 2. 禁用開發者工具快捷鍵、儲存 (Ctrl+S) 及列印 (Ctrl+P)
+            document.addEventListener('keydown', function(e) {
+                if (
+                    e.keyCode === 123 || // F12
+                    (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || // Ctrl+Shift+I/J/C
+                    (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 80)) || // Ctrl+U (源碼), S (儲存), P (列印)
+                    (e.metaKey && e.altKey && e.keyCode === 73) // Mac Option+Command+I
+                ) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // 3. 阻止 Debugger (偵測到 F12 開啟時會強制暫停)
+            setInterval(function() {
+                (function(a) { return (function(a) { return (function(a) { debugger; }(a)); }(a)); }(1));
+            }, 1000);
+            
+            // 4. 阻止文字選取 (JS 層級補強)
+            document.onselectstart = function(e) { 
+                // 允許輸入框選取文字，否則用戶無法打字
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return true;
+                return false; 
+            };
+        } catch (err) {
+            console.error("Security module error: ", err);
+        }
     })();
-</script>
+</script> <script src="c/c.js" defer></script>
 </body>
 </html>
+
