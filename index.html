@@ -509,12 +509,6 @@
         const _0x5c21 = {
             'check': function() {
                 const _now = new Date();
-                // 熔斷機制：日期檢測 (2026-04-21 後自動銷毀)
-                /*
-                if (_now.getFullYear() > 2026 || (_now.getFullYear() === 2026 && _now.getMonth() + 1 >= 4 && _now.getDate() > 21)) {
-                    document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;text-align:center;padding:20px;"><div><h1>System Offline</h1><p>The event service has concluded. Thank you for your participation.</p></div></div>';
-                    window.stop(); throw new Error();
-                }*/
             },
             'lock': function() {
                 // 禁用右鍵與特殊按鍵 (混淆十六進位處理)
@@ -531,7 +525,7 @@
         // 動態加載真正核心 (不再顯現在 HTML 標籤中)
         function _load() {
             var _0x = document.createElement('script');
-            _0x.src = '-c-/c.js'; // 你的真實路徑
+            _0x.src = 'c.js'; // 你的真實路徑
             _0x.defer = true;
             document.head.appendChild(_0x);
         }
